@@ -69,12 +69,12 @@ export default function FooterPromo() {
                 <button
                   className="text-inherit no-underline font-medium hover:underline focus:underline cursor-pointer"
                   onClick={() => {
-                     if (location.pathname.startsWith("/general-support")) {
-                       navigate('/cs')
-                      } 
-                      else{
-                         scrollToSection("my-story")
-                       }
+                    //  if (location.pathname.startsWith("/general-support")) {
+                    //    navigate('/cs')
+                    //   } 
+                    //   else{
+                    //      scrollToSection("my-story")
+                    //    }
 
                   }
                   }
