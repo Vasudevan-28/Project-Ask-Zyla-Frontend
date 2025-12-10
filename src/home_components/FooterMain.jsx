@@ -8,6 +8,16 @@ import { useNavigate } from "react-router-dom";
 export default function FooterMain() {
   const navigate = useNavigate();
 
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const headerHeight = window.innerWidth < 640 ? 50 : 60;
+      const elPosition =
+        el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+      window.scrollTo({ top: elPosition, behavior: "smooth" });
+    }
+  };
+
   return (
     <footer
       aria-label="Site footer"
@@ -34,18 +44,43 @@ export default function FooterMain() {
             <ul className="list-none m-0 p-0 text-[#4b4450]">
               <li className="mb-1">
                 <button
-                  className="hover:underline"
+                  className="hover:underline cursor-pointer"
                   onClick={() => {
-                    navigate("/aboutUs");
+                    navigate("/newAbout");
                   }}
                 >
                   My Story
                 </button>
               </li>
-              <li>
-                <a className="hover:underline" href="#">
-                  What Zyla Does ?
-                </a>
+              <li className="mb-1">
+                <button
+                  className="hover:underline cursor-pointer "
+                  onClick={() => {
+                    scrollToSection("main-story")
+                  }}
+                >
+                  What Zyla Does?
+                </button>
+              </li>
+              <li className="mb-1">
+                <button
+                  className="hover:underline cursor-pointer"
+                 onClick={() => {
+                    scrollToSection("features")
+                  }}
+                >
+                  FAQ
+                </button>
+              </li>
+              <li className="mb-1">
+                <button
+                  className="hover:underline cursor-pointer"
+                  onClick={() => {
+                    scrollToSection("feedback")
+                  }}
+                >
+                  Customer Feedback
+                </button>
               </li>
             </ul>
           </div>
@@ -56,7 +91,7 @@ export default function FooterMain() {
             <ul className="list-none m-0 p-0 text-[#4b4450]">
               <li className="mb-1">
                 <button
-                  className="hover:underline"
+                  className="hover:underline cursor-pointer"
                   onClick={() => {
                     // navigate("/settings", { state: { footRoute: "support" } });
                     navigate("/loading", { state: { nextPage: "/settings", footRoute: "support" } });
@@ -67,7 +102,7 @@ export default function FooterMain() {
               </li>
               <li className="mb-1">
                 <button
-                  className="hover:underline"
+                  className="hover:underline cursor-pointer"
                   onClick={() => {
                     // navigate("/privacy-policy");
                      navigate("/loading", { state: { nextPage: "/privacy-policy" } })
@@ -77,7 +112,7 @@ export default function FooterMain() {
                 </button>
               </li>
               <li className="mb-1">
-                <button className="hover:underline" onClick={() => { 
+                <button className="hover:underline cursor-pointer" onClick={() => { 
                   // navigate("/cookie-policy");
                    navigate("/loading", { state: { nextPage: "/cookie-policy" } })
                   }}>
@@ -86,7 +121,7 @@ export default function FooterMain() {
               </li>
               <li className="mb-1">
                 <button
-                  className="hover:underline"
+                  className="hover:underline cursor-pointer"
                   onClick={() => {
                     // navigate("/settings", { state: { footRoute: "feedback" } });
                     navigate("/loading", { state: { nextPage: "/settings", footRoute: "feedback" } });
@@ -98,7 +133,7 @@ export default function FooterMain() {
               </li>
               <li className="mb-1">
                 <button
-                  className="hover:underline"
+                  className="hover:underline cursor-pointer"
                   onClick={() => {
                     // navigate("/settings", { state: { footRoute: "rating" } });
                     navigate("/loading", { state: { nextPage: "/settings", footRoute: "rating" } });
@@ -127,7 +162,7 @@ export default function FooterMain() {
               </a>{" "}
               or email{" "}
               <a
-                className="hover:underline font-semibold text-[#374151]"
+                className="hover:underline cursor-pointer font-semibold text-[#374151]"
                 href="https://mail.google.com/mail/?view=cm&fs=1&to=askzyla.zeaisoft@gmail.com"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -139,7 +174,7 @@ export default function FooterMain() {
               <p className="text-[#374151]">Stay connected for more skin care love!</p>
             <div className="flex items-center gap-3 mt-2 text-[#6b6b6b]">
               <a
-                className="hover:text-[#1c0d25]"
+                className="hover:text-[#1c0d25] cursor-pointer"
                 href="https://mail.google.com/mail/?view=cm&fs=1&to=askzyla.zeaisoft@gmail.com"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -149,7 +184,7 @@ export default function FooterMain() {
               </a>
 
               <a
-                className="hover:text-[#1c0d25]"
+                className="hover:text-[#1c0d25] cursor-pointer"
                 href="https://www.facebook.com/profile.php?id=61584828928342"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -159,7 +194,7 @@ export default function FooterMain() {
               </a>
 
               <a
-                className="hover:text-[#1c0d25]"
+                className="hover:text-[#1c0d25] cursor-pointer"
                 href="https://www.instagram.com/askzyla?igsh=dDA1M2o0ODE2aXRr&utm_source=qr"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -169,7 +204,7 @@ export default function FooterMain() {
               </a>
 
               <a
-                className="hover:text-[#1c0d25]"
+                className="hover:text-[#1c0d25] cursor-pointer"
                 href="https://www.youtube.com"
                 target="_blank"
                 rel="noopener noreferrer"

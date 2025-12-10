@@ -73,6 +73,7 @@ import DashLayout from './layout/DashLayout.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
 import ChatPage from './pages/ChatPage.jsx'
 import Loading from './home_components/Loading.jsx'
+import AboutUsNew from './promotion_components/AboutUs/AboutusN.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -98,7 +99,7 @@ createRoot(document.getElementById('root')).render(
 
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
 
-      <Route path="/" element={<PromotionPage />} />
+      <Route path="/cs" element={<PromotionPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/phoneReset" element={<PhoneNumberReset />} />
       <Route path="/forgotPhonePassword" element={<ForgotPasswordPhone />} />
@@ -134,6 +135,8 @@ createRoot(document.getElementById('root')).render(
         <Route path='/aboutUs' element={<AboutUs />}  />
 
         <Route path='/loading' element={<Loading />}  />
+
+        <Route path='/newAbout' element={<AboutUsNew />}  />
 
 
 

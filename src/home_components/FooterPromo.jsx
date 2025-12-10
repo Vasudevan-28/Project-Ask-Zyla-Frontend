@@ -5,12 +5,18 @@ import { FaInstagram } from "react-icons/fa";
 import { LuYoutube } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 
+import { useLocation } from "react-router-dom";
+
 export default function FooterPromo() {
   const navigate = useNavigate();
+
+   const location = useLocation();
 
   const navSupport = () => {
     navigate("/general-support");
   };
+
+  
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
@@ -62,12 +68,21 @@ export default function FooterPromo() {
               <li className="mb-2">
                 <button
                   className="text-inherit no-underline font-medium hover:underline focus:underline cursor-pointer"
-                  onClick={() => scrollToSection("my-story")}
+                  onClick={() => {
+                     if (location.pathname.startsWith("/general-support")) {
+                       navigate('/cs')
+                      } 
+                      else{
+                         scrollToSection("my-story")
+                       }
+
+                  }
+                  }
                 >
                   My Story
                 </button>
               </li>
-              <li className="mb-2">
+              <li className="mb-2 cursor-pointer">
                 <button
                   className="text-inherit no-underline font-medium hover:underline focus:underline cursor-pointer"
                   onClick={() => scrollToSection("features")}
@@ -83,14 +98,14 @@ export default function FooterPromo() {
             <div className="font-bold mb-2 text-[#221322]">Quick Links</div>
             <ul className="list-none m-0 p-0" aria-label="Quick links">
               <li className="mb-2">
-                <button className="text-inherit no-underline font-medium hover:underline focus:underline" onClick={navSupport}>
+                <button className="text-inherit cursor-pointer no-underline font-medium hover:underline focus:underline" onClick={navSupport}>
                   Support
                 </button>{" "}
               </li>
               
                  <li className="mb-1">
                 <button
-                  className="text-inherit no-underline font-medium hover:underline focus:underline"
+                  className="text-inherit no-underline cursor-pointer font-medium hover:underline focus:underline"
                   onClick={() => {
                     navigate("/privacy-policy");
                   }}
@@ -99,26 +114,30 @@ export default function FooterPromo() {
                 </button>
               </li>
               <li className="mb-1">
-                <button className="text-inherit no-underline font-medium hover:underline focus:underline" onClick={() => { navigate("/cookie-policy");}}>
+                <button className="text-inherit cursor-pointer no-underline font-medium hover:underline focus:underline" onClick={() => { navigate("/cookie-policy");}}>
                   Cookie Policy
                 </button>
               </li>
            
               <li className="mb-2">
-                <a
-                  className="text-inherit no-underline font-medium hover:underline focus:underline"
-                  href="#"
+               <button
+                  className="text-inherit no-underline cursor-pointer font-medium hover:underline focus:underline"
+                  onClick={() => {
+                    navigate("/login");
+                  }}
                 >
-                  Login
-                </a>
+                  LogIn
+                </button>
               </li>
               <li className="mb-2">
-                <a
-                  className="text-inherit no-underline font-medium hover:underline focus:underline"
-                  href="#"
+               <button
+                  className="text-inherit cursor-pointer no-underline font-medium hover:underline focus:underline"
+                  onClick={() => {
+                    navigate("/signup");
+                  }}
                 >
                   SignUp
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -137,14 +156,9 @@ export default function FooterPromo() {
                 form
               </a>{" "}
               or email{" "}
-              {/* <a
-                className="text-inherit no-underline font-medium hover:underline focus:underline"
-                href="mailto:askzyla.zeaisoft@gmail.com"
-              >
-                askzyla.zeaisoft@gmail.com
-              </a> */}
+             
               <a
-                className="text-inherit no-underline font-medium hover:underline focus:underline"
+                className="text-inherit no-underline cursor-pointer font-medium hover:underline focus:underline"
                 href="https://mail.google.com/mail/?view=cm&fs=1&to=askzyla.zeaisoft@gmail.com"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -161,7 +175,7 @@ export default function FooterPromo() {
             >
               {/* <p>Follow Us On :</p> */}
               <a
-                className="text-inherit no-underline font-medium hover:underline focus:underline"
+                className="text-inherit cursor-pointer no-underline font-medium hover:underline focus:underline"
                 href="https://mail.google.com/mail/?view=cm&fs=1&to=askzyla.zeaisoft@gmail.com"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -169,7 +183,7 @@ export default function FooterPromo() {
                 <IoMailOutline size={18} />
               </a>
               <a
-                className="text-inherit no-underline font-medium hover:underline focus:underline"
+                className="text-inherit cursor-pointer no-underline font-medium hover:underline focus:underline"
                 href="https://www.facebook.com/profile.php?id=61584828928342"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -178,7 +192,7 @@ export default function FooterPromo() {
                 <IoLogoFacebook size={18} />
               </a>
               <a
-                className="text-inherit no-underline font-medium hover:underline focus:underline"
+                className="text-inherit cursor-pointer no-underline font-medium hover:underline focus:underline"
                 href="https://www.instagram.com/askzyla?igsh=dDA1M2o0ODE2aXRr&utm_source=qr"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -187,7 +201,7 @@ export default function FooterPromo() {
                 <FaInstagram size={18} />
               </a>
               <a
-                className="text-inherit no-underline font-medium hover:underline focus:underline"
+                className="text-inherit cursor-pointer no-underline font-medium hover:underline focus:underline"
                 href="https://www.youtube.com"
                 target="_blank"
                 rel="noopener noreferrer"

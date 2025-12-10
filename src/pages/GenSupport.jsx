@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { sendGenSupport } from "../settings_components/api/settingsAPI";
 import HeaderQP from "../home_components/HeaderQP";
 import FooterMain from "../home_components/FooterMain";
+import FooterPromo from "../home_components/FooterPromo";
 
 const SET_URL = "http://127.0.0.1:8484/settings";
 
@@ -244,7 +245,7 @@ setShowSuccess(true);
 
       </main>
 
-     <FooterMain />
+<FooterPromo />
     </div>
   );
 }

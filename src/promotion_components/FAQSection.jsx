@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { faqData } from "../Data/faq";
+import { faqData } from "../data/faq";
 import { motion } from "framer-motion";
 
 const FAQSection = () => {
