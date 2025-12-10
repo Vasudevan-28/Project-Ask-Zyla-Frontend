@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { feedbackList } from "../Data/feedback";
+import { feedbackList } from "../data/feedback";
 
 const FeedbackSection = () => {
   const [fbIndex, setFbIndex] = useState(0);
