@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none; 
+    scrollbar-width: none;    
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;            
+  }
+}
+
+/* @layer utilities {
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+  }
+
+  .animate-marquee {
+    animation: marquee 6s linear infinite;
+  }
+} */
+
+@layer utilities {
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* default: not moving */
+  .marquee-paused {
+    animation: marquee 6s linear infinite;
+    animation-play-state: paused;
+  }
+
+  /* start moving */
+  .marquee-running {
+    animation-play-state: running;
+  }
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes snake-border {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-50%, 0); }
+  50%  { transform: translate(-50%, -50%); }
+  75%  { transform: translate(0, -50%); }
+  100% { transform: translate(0, 0); }
+}
+
+@utility animate-snake-border {
+  animation: snake-border 3s linear infinite;
+}
+
+
+
+/* #root {
+  font-family: 'Courier New', Courier, monospace;
+} */
+
+/* #root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+} */

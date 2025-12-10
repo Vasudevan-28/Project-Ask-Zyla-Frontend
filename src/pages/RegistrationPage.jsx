@@ -1,0 +1,670 @@
+import React, { useState, useEffect } from "react";
+import Header from "../home_components/Header1.jsx";
+import { useLocation, useNavigate } from "react-router-dom";
+import { saveUserToDB, saveGoogleSignup, resetEmailPassword } from "../services/backendAPI.js";
+import { signupUser } from "../services/authservice.js";
+import { getAuth, onAuthStateChanged, sendEmailVerification } from "firebase/auth";
+
+function RegistrationPage() {
+  const locaState = useLocation();
+  const navigate = useNavigate();
+  const { email, isGoogle } = locaState.state || {};
+
+  const auth = getAuth();
+  const [user, setUser] = useState(null);
+
+  const [showPass, setShowPass] = useState(false);
+  const [showRetypePass, setShowRetypePass] = useState(false);
+
+  // Today in yyyy-mm-dd format (for max attribute on DOB)
+  const minDOB = "1950-01-01"
+  const today = new Date().toISOString().split("T")[0];
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+    });
+
+    return () => unsub();
+  }, [auth]);
+
+  // Form values
+  const [formData, setFormData] = useState({
+    firstName: "",
+    dob: "",
+    gender: "",
+    countryCode: "+1",
+    phone: "",
+    password: "",
+    retypePassword: "",
+    city: "",
+    state: "",
+    country: "",
+    timezone: "",
+  });
+
+  const [errors, setErrors] = useState({});
+  const [showPasswordRules, setShowPasswordRules] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Validate fields
+  const validateForm = () => {
+    let newErrors = {};
+    const requiredFields = [
+      "firstName",
+      "dob",
+      "gender",
+      "countryCode",
+      "phone",
+      "password",
+      "retypePassword",
+      "city",
+      "state",
+      "country",
+      "timezone",
+    ];
+
+    requiredFields.forEach((field) => {
+      if (!formData[field]) newErrors[field] = "Required";
+    });
+
+    // DOB validation (no future dates, optional min age)
+    if (formData.dob) {
+      const dob = new Date(formData.dob);
+      const now = new Date();
+
+      // Normalize today's date to midnight for clean comparison
+      now.setHours(0, 0, 0, 0);
+
+      if (isNaN(dob.getTime())) {
+        newErrors.dob = "Enter a valid date";
+      } else if (dob > now) {
+        newErrors.dob = "Date of birth cannot be in the future";
+      } else {
+        // Optional: minimum age check (example: 13 years)
+        const ageDiffMs = now.getTime() - dob.getTime();
+        const ageYears = ageDiffMs / (1000 * 60 * 60 * 24 * 365.25);
+        if (ageYears < 13) {
+          newErrors.dob = "You must be at least 13 years old";
+        }
+      }
+    }
+
+    // Phone digits check
+    if (formData.phone && !formData.phone.match(/^[0-9]+$/)) {
+      newErrors.phone = "Phone must contain only numbers";
+    }
+    if (formData.phone && formData.phone.length < 8) {
+      newErrors.phone = "Enter valid phone";
+    }
+
+    if (formData.password !== formData.retypePassword) {
+      newErrors.retypePassword = "Passwords do not match";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Submit registration
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    setLoading(true);
+
+    try {
+      const userData = {
+        firebase_uid: user?.uid,
+        name: formData.firstName,
+        email,
+        phone: formData.countryCode + formData.phone,
+        dob: formData.dob,
+        gender: formData.gender,
+        city: formData.city,
+        state: formData.state,
+        country: formData.country,
+        timezone: formData.timezone,
+        password: formData.password,
+        skin_profile: false,
+      };
+
+      if (isGoogle) {
+        // Set password for Google-linked account for future login
+        await saveGoogleSignup(userData);
+        await resetEmailPassword(email, formData.password);
+      } else {
+        // Firebase signup
+        const userCredential = await signupUser(email, formData.password);
+        const firebaseUser = userCredential.user;
+
+        // Send email verification
+        await sendEmailVerification(firebaseUser);
+
+        // Save to backend
+        const userDataEP = {
+          name: formData.firstName,
+          email,
+          phone: formData.countryCode + formData.phone,
+          dob: formData.dob,
+          gender: formData.gender,
+          city: formData.city,
+          state: formData.state,
+          country: formData.country,
+          timezone: formData.timezone,
+          password: formData.password,
+          firebase_uid: firebaseUser.uid,
+          created_at: new Date().toISOString(),
+        };
+
+        await saveUserToDB(userDataEP);
+      }
+
+      if (isGoogle) {
+        navigate("/successGoogle");
+      } else {
+        navigate("/successEmail");
+      }
+    } catch (err) {
+      alert(err.message || "Registration failed!");
+    }
+
+    setLoading(false);
+  };
+
+const formatDate = (date) => {
+  // If date is already in the correct format, return it as is
+  if (typeof date === 'string' && date.includes('-')) {
+    return date; // It's already in yyyy-mm-dd format
+  }
+  
+  const d = new Date(date);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+  const year = d.getFullYear();
+  return `${year}-${month}-${day}`;
+};
+
+const formattedDob = formData.dob ? formatDate(formData.dob) : '';
+
+
+  return (
+    <div className="min-h-screen bg-[#1A0D28] text-white font-['Anek_Devanagari'] p-4">
+      {/* <Header /> */}
+      <div className="max-w-2xl mx-auto py-8 px-8 sm:px-8 bg-white/20 backdrop-blur-xl rounded-3xl shadow-xl mt-6 border border-white/30">
+        <h2 className="text-2xl font-bold text-white">Registration</h2>
+        <p className="text-white/90 mt-1 mb-4">
+          Hello {email} ! Please complete the registration to continue.
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Name & DOB */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-1 text-white">Username</label>
+              <input
+                name="firstName"
+                value={formData.firstName}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
+                placeholder="Username"
+                className={`w-full p-2 rounded-md bg-white/20 text-white focus:outline-none ${
+                  errors.firstName ? "border border-red-500" : ""
+                }`}
+              />
+              {errors.firstName && (
+                <p className="text-red-500 text-xs">{errors.firstName}</p>
+              )}
+            </div>
+            <div>
+              <label className="block mb-1 text-white">Date of Birth</label>
+              {/* <input
+                type="date"
+                name="dob"
+                value={formData.dob}
+                onChange={(e) =>
+                  setFormData({ ...formData, dob: e.target.value })
+                }
+                max={today} // disallow future date selection
+                className={`w-full p-2 rounded-md bg-white/20 text-white focus:outline-none ${
+                  errors.dob ? "border border-red-500" : ""
+                }`}
+              />
+              {errors.dob && (
+                <p className="text-red-500 text-xs">{errors.dob}</p>
+              )} */}
+              <input
+  type="date"
+  name="dob"
+  value={formData.dob}
+  // value={formData.dob ? formatDate(formData.dob) : ''}
+  // value={formattedDob}
+  max={today}
+  min={minDOB}
+  onChange={(e) => {
+    const value = e.target.value;
+    setFormData({ ...formData, dob: value });
+
+    let err = "";
+    const dob = new Date(value);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    if (!value) {
+      err = "Required";
+    } else if (isNaN(dob.getTime())) {
+      err = "Enter a valid date";
+    } else if (dob > now) {
+      err = "Date cannot be in the future";
+    } else if (value < minDOB) {
+      err = "Date cannot be earlier than 1950";
+    } else {
+      const age = (now - dob) / (1000 * 60 * 60 * 24 * 365.25);
+      if (age < 13) err = "You must be at least 13 years old";
+    }
+
+    setErrors((prev) => ({ ...prev, dob: err }));
+  }}
+  className={`w-full p-2 rounded-md bg-white/20 text-white focus:outline-none ${
+    errors.dob ? "border border-red-500" : ""
+  }`}
+/>
+
+{errors.dob && (
+  <p className="text-red-500 text-xs">{errors.dob}</p>
+)}
+
+            </div>
+          </div>
+
+          {/* Gender & Phone */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-1 text-white">Gender</label>
+             
+                
+ <div className="relative">
+                <select
+                  name="gender"
+                  value={formData.gender}
+                      onChange={(e) =>
+                  setFormData({ ...formData, gender: e.target.value })
+                }
+                  className={`w-full p-2 rounded-lg bg-[#3A2C49] text-white focus:outline-none appearance-none pr-10
+                  ${errors.gender ? "border border-red-500" : ""}`}
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Female">Female</option>
+                  <option value="Male">Male</option>
+                  <option value="Other">Other</option>
+                </select>
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white text-lg">
+                  ▾
+                </span>
+              </div>
+
+              {errors.gender && (
+                <p className="text-red-500 text-xs">{errors.gender}</p>
+              )}
+            </div>
+            <div>
+              <label className="block mb-1 text-white">Phone</label>
+              <div className="flex gap-2">
+                <select
+                  name="countryCode"
+                  value={formData.countryCode}
+                  onChange={(e) =>
+                    setFormData({ ...formData, countryCode: e.target.value })
+                  }
+                  className={`p-2 rounded-lg bg-[#3A2C49] text-white focus:outline-none pr-10 appearance-none ${
+                    errors.countryCode ? "border border-red-500" : ""
+                  }`}
+                >
+                  <option value="+1">🇺🇸 +1</option>
+                  <option value="+91">🇮🇳 +91</option>
+                  <option value="+44">🇬🇧 +44</option>
+                  <option value="+61">🇦🇺 +61</option>
+                  <option value="+81">🇯🇵 +81</option>
+                </select>
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                  placeholder="Enter phone number"
+                  className={`w-full p-2 rounded-md bg-white/20 text-white focus:outline-none ${
+                    errors.phone ? "border border-red-500" : ""
+                  }`}
+                  maxLength={15}
+                />
+              </div>
+              {errors.phone && (
+                <p className="text-red-500 text-xs">{errors.phone}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Password Fields */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative">
+            <div className="relative">
+              <label className="block mb-1 text-white">Password</label>
+              <div className="relative" >
+
+                <input
+  type={showPass ? "text" : "password"}
+  name="password"
+  value={formData.password}
+  maxLength={16}
+  onChange={(e) => {
+    const value = e.target.value;
+
+    setFormData({ ...formData, password: value });
+
+    setErrors((prev) => ({
+      ...prev,
+      retypePassword:
+        formData.retypePassword && formData.retypePassword !== value
+          ? "Passwords do not match"
+          : "",
+    }));
+  }}
+  placeholder="*******"
+  className={`w-full p-2 rounded-md bg-white/20 text-white focus:outline-none ${
+    errors.password ? "border border-red-500" : ""
+  }`}
+  onFocus={() => setShowPasswordRules(true)}
+  onBlur={() => setShowPasswordRules(false)}
+/>
+
+                 {/* EYE ICON */}
+    <span
+      className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+      onClick={() => setShowPass(!showPass)}
+    >
+      {showPass ? (
+        /* Eye ON */
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18" />
+          <path strokeLinecap="round" strokeLinejoin="round"
+            d="M10.477 10.477A3 3 0 0113.5 13.5" />
+          <path strokeLinecap="round" strokeLinejoin="round"
+            d="M6.53 6.53C4.398 8.088 2.917 10.356 2.458 12
+               c1.273 4.057 5.064 7 9.542 7
+               1.83 0 3.558-.41 5.064-1.14M17.47 17.47
+               C19.602 15.912 21.083 13.644 21.542 12
+               20.269 7.943 16.478 5 12 5
+               c-.96 0-1.89.14-2.771.402" />
+        </svg>
+      ) : (
+        /* Eye OFF */
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round"
+            d="M2.458 12C3.732 7.943 7.523 5 12 5
+               c4.478 0 8.269 2.943 9.542 7
+               -1.273 4.057 -5.064 7 -9.542 7
+               -4.477 0 -8.268 -2.943 -9.542 -7z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+        
+      )}
+    </span>
+                </div>
+              {showPasswordRules && (
+                <div className="absolute top-full left-0 mt-2 w-full bg-[#3A2C49]/90 text-white p-3 rounded-lg shadow-lg z-10">
+                  <p className="font-semibold mb-1">Password must contain:</p>
+                  <ul className="text-sm list-disc list-inside space-y-1">
+                    <li
+                      className={`${
+                        /[A-Z]/.test(formData.password)
+                          ? "text-green-500"
+                          : ""
+                      }`}
+                    >
+                      {/[A-Z]/.test(formData.password) ? "✔" : ""} Min 1
+                      uppercase letter
+                    </li>
+                    <li
+                      className={`${
+                        /[a-z]/.test(formData.password)
+                          ? "text-green-500"
+                          : ""
+                      }`}
+                    >
+                      {/[a-z]/.test(formData.password) ? "✔" : ""} Min 1
+                      lowercase letter
+                    </li>
+                    <li
+                      className={`${
+                        /\d/.test(formData.password)
+                          ? "text-green-500"
+                          : ""
+                      }`}
+                    >
+                      {/\d/.test(formData.password) ? "✔" : ""} Min 1 number
+                    </li>
+                    <li
+                      className={`${
+                        /[!@#*$%]/.test(formData.password)
+                          ? "text-green-500"
+                          : ""
+                      }`}
+                    >
+                      {/[!@#*$%]/.test(formData.password) ? "✔" : ""} Min 1
+                      symbol (! @ # * $ %)
+                    </li>
+                    <li
+                      className={`${
+                        formData.password.length >= 8
+                          ? "text-green-500"
+                          : ""
+                      }`}
+                    >
+                      {formData.password.length >= 8 ? "✔" : ""} At least 8
+                      characters
+                    </li>
+                  </ul>
+                </div>
+              )}
+              {errors.password && (
+                <p className="text-red-500 text-xs">{errors.password}</p>
+              )}
+            </div>
+         <div className="relative">
+  <label className="block mb-1 text-white">Retype Password</label>
+
+  {/* Input + Icon wrapper (fixed height) */}
+  <div className="relative h-12"> 
+    <input
+      type={showRetypePass ? "text" : "password"}
+      name="retypePassword"
+      value={formData.retypePassword}
+      maxLength={16}
+      onChange={(e) => {
+        const value = e.target.value;
+
+        setFormData({ ...formData, retypePassword: value });
+
+        setErrors((prev) => ({
+          ...prev,
+          retypePassword:
+            value && value !== formData.password
+              ? "Passwords do not match"
+              : "",
+        }));
+      }}
+      placeholder="*******"
+      className={`w-full p-2 rounded-md bg-white/20 text-white focus:outline-none ${
+        errors.retypePassword ? "border border-red-500" : ""
+      }`}
+    />
+
+    {/* Eye Icon stays fixed */}
+    <span
+      className="absolute right-3 mt-2 cursor-pointer"
+      onClick={() => setShowRetypePass(!showRetypePass)}
+    >
+      {showRetypePass ? (
+        <svg xmlns="http://www.w3.org/2000/svg"
+          className="w-6 h-6"
+          fill="none" viewBox="0 0 24 24"
+          stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18" />
+          <path strokeLinecap="round" strokeLinejoin="round"
+            d="M10.477 10.477A3 3 0 0113.5 13.5" />
+          <path strokeLinecap="round" strokeLinejoin="round"
+            d="M6.53 6.53C4.398 8.088 2.917 10.356 2.458 12
+                c1.273 4.057 5.064 7 9.542 7
+                1.83 0 3.558-.41 5.064-1.14M17.47 17.47
+                C19.602 15.912 21.083 13.644 21.542 12
+                20.269 7.943 16.478 5 12 5
+                c-.96 0-1.89.14-2.771.402" />
+        </svg>
+      ) : (
+        <svg xmlns="http://www.w3.org/2000/svg"
+          className="w-6 h-6"
+          fill="none" viewBox="0 0 24 24"
+          stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round"
+            d="M2.458 12C3.732 7.943 7.523 5 12 5
+                c4.478 0 8.269 2.943 9.542 7
+                -1.273 4.057 -5.064 7 -9.542 7
+                -4.477 0 -8.268 -2.943 -9.542 -7z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+      )}
+    </span>
+  </div>
+
+  {/* Error message placed BELOW wrapper so it doesn't push icon */}
+  {errors.retypePassword && (
+    <p className="text-red-500 text-xs mt-1">{errors.retypePassword}</p>
+  )}
+</div>
+
+          </div>
+
+          {/* Address Dropdowns */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* City */}
+            <div className="relative">
+              <label className="block mb-1 text-white">City</label>
+              <select
+                name="city"
+                value={formData.city}
+                onChange={(e) =>
+                  setFormData({ ...formData, city: e.target.value })
+                }
+                className={`w-full p-2 rounded-lg bg-[#3A2C49] text-white focus:outline-none appearance-none pr-10 ${
+                  errors.city ? "border border-red-500" : ""
+                }`}
+              >
+                <option value="">Select City</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Mumbai">Mumbai</option>
+              </select>
+                
+                                <span className="pointer-events-none absolute right-3 top-3/4 -translate-y-1/2 text-white text-lg">▾</span>
+
+              {errors.city && (
+                <p className="text-red-500 text-xs">{errors.city}</p>
+              )}
+            </div>
+
+            {/* State */}
+            <div className="relative">
+              <label className="block mb-1 text-white">State</label>
+              <select
+                name="state"
+                value={formData.state}
+                onChange={(e) =>
+                  setFormData({ ...formData, state: e.target.value })
+                }
+                className={`w-full p-2 rounded-lg bg-[#3A2C49] text-white focus:outline-none appearance-none pr-10 ${
+                  errors.state ? "border border-red-500" : ""
+                }`}
+              >
+                <option value="">Select State</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+              </select>
+                              <span className="pointer-events-none absolute right-3 top-3/4 -translate-y-1/2 text-white text-lg">▾</span>
+
+              {errors.state && (
+                <p className="text-red-500 text-xs">{errors.state}</p>
+              )}
+            </div>
+
+            {/* Country */}
+            <div className="relative">
+              <label className="block mb-1 text-white">Country</label>
+              <select
+                name="country"
+                value={formData.country}
+                onChange={(e) =>
+                  setFormData({ ...formData, country: e.target.value })
+                }
+                className={`w-full p-2 rounded-lg bg-[#3A2C49] text-white focus:outline-none appearance-none pr-10 ${
+                  errors.country ? "border border-red-500" : ""
+                }`}
+              >
+                <option value="">Select Country</option>
+                <option value="India">India</option>
+                <option value="USA">USA</option>
+                <option value="UK">UK</option>
+              </select>
+                              <span className="pointer-events-none absolute right-3 top-3/4 -translate-y-1/2 text-white text-lg">▾</span>
+
+              {errors.country && (
+                <p className="text-red-500 text-xs">{errors.country}</p>
+              )}
+            </div>
+
+            {/* Timezone */}
+            <div className="relative">
+              <label className="block mb-1 text-white">Timezone</label>
+              <select
+                name="timezone"
+                value={formData.timezone}
+                onChange={(e) =>
+                  setFormData({ ...formData, timezone: e.target.value })
+                }
+                className={`w-full p-2 rounded-lg bg-[#3A2C49] text-white focus:outline-none appearance-none pr-10 ${
+                  errors.timezone ? "border border-red-500" : ""
+                }`}
+              >
+                <option value="">Select Timezone</option>
+                <option value="IST">IST</option>
+                <option value="EST">EST</option>
+                <option value="GMT">GMT</option>
+              </select>
+                              <span className="pointer-events-none absolute right-3 top-3/4 -translate-y-1/2 text-white text-lg">▾</span>
+
+              {errors.timezone && (
+                <p className="text-red-500 text-xs">{errors.timezone}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="pt-4">
+            <button
+              type="submit"
+              className="w-full bg-[rgba(58,44,73,1)] text-white py-3 rounded-md font-semibold tracking-wide hover:opacity-90"
+              disabled={loading}
+            >
+              {loading ? "Processing..." : "CONTINUE"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default RegistrationPage;
