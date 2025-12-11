@@ -176,7 +176,7 @@ export default function DashboardPage() {
               } rounded-lg`}
               type="button"
             >
-              Add Product
+              Add Routine
             </button>
           </div>
         </div>
