@@ -336,12 +336,11 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
               "cursor-default border-transparent bg-transparent text-transparent opacity-0 pointer-events-none";
 
             const normalClasses =
-              "border-slate-800/10 bg-white  shadow-sm " +
-              "dark:border-white/10 dark:bg-white/5";
+              "border-slate-800/10 bg-white/5 border-white/10 shadow-sm " 
 
             const todayClasses =
               "bg-zyla-light-bg  font-black border-none shadow-none " +
-              "dark:bg-white/5  dark:border-white/20 dark:ring-[3px] dark:ring-purple-500/30";
+              "bg-white/5  border-white/20 ring-[3px] ring-purple-500/30";
 
             const selectedClasses =
               "border-none bg-gradient-to-b from-[#a78bfa] to-[#8b5cf6] text-white shadow-md";
