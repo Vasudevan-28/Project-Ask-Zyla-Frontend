@@ -98,7 +98,8 @@ export default function FooterPromo() {
             <div className="font-bold mb-2 text-[#221322]">Quick Links</div>
             <ul className="list-none m-0 p-0" aria-label="Quick links">
               <li className="mb-2">
-                <button className="text-inherit cursor-pointer no-underline font-medium hover:underline focus:underline" onClick={navSupport}>
+                <button className="text-inherit cursor-pointer no-underline font-medium hover:underline focus:underline" 
+                onClick={navSupport}>
                   Support
                 </button>{" "}
               </li>

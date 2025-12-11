@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 
 
 
-const SET_URL = "http://127.0.0.1:8484/settings"
+// const SET_URL = "http://127.0.0.1:8484/settings"
 
 function Rating({ onBack }) {
   const [rating, setRating] = useState(3);

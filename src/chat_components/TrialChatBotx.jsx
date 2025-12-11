@@ -3,6 +3,8 @@ import ChatMessage from "./TrialChatMessage";
 // import Thinking from "../../gifs/thinking-zyla.gif";
 import Thinking from "../gifs/thinking-zyla.gif";
 
+import ZylaChatPic from "../assets/Zyla-no-bg.png"
+
 export default function TrialChatbot({scrollerRef, messages, loading, ttsSupported, speakingId, handleSpeak, input, setInput, handleSubmit, speechSupported, isListening, toggleListening, idToken, bgTheme}) {
     return (
          <div className="flex-1 flex flex-col p-1 custom-scrollbar min-h-[580px] ">
@@ -14,7 +16,7 @@ export default function TrialChatbot({scrollerRef, messages, loading, ttsSupport
                   ${ bgTheme == "light" ? " bg-white" : "bg-white/10"}
                 `}>
                 <img
-                  src="src/assets/Zyla-no-bg.png"
+                src={ZylaChatPic}
                   className="ml-4 w-12 h-12 rounded-full  border-white/30 object-cover  "
                   alt=""
                 />

@@ -2,6 +2,8 @@ import { useContext } from "react";
 // import ProductCard from "./ProductCard";
 import ChatMessage from "./ChatMessage";
 
+import ZylaChatPic from "../assets/Zyla-no-bg.png"
+
 import Thinking from "../gifs/thinking-zyla.gif";
 
 import { ThemeContext } from "../contexts/ThemeContext";
@@ -22,7 +24,7 @@ export default function Chatbot({scrollerRef, messages, loading, ttsSupported, s
                 ${isLight ? " bg-white" : "bg-white/10"}
                 `}>
                 <img
-                  src="src/assets/Zyla-no-bg.png"
+                  src={ZylaChatPic}
                   className="ml-4 w-12 h-12 rounded-full  border-white/30 object-cover  "
                   alt=""
                 />

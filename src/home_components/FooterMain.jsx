@@ -104,8 +104,8 @@ export default function FooterMain() {
                 <button
                   className="hover:underline cursor-pointer"
                   onClick={() => {
-                    // navigate("/privacy-policy");
-                     navigate("/loading", { state: { nextPage: "/privacy-policy" } })
+                    navigate("/privacy-policy");
+                    //  navigate("/loading", { state: { nextPage: "/privacy-policy" } })
                   }}
                 >
                   Privacy Policy
@@ -113,8 +113,8 @@ export default function FooterMain() {
               </li>
               <li className="mb-1">
                 <button className="hover:underline cursor-pointer" onClick={() => { 
-                  // navigate("/cookie-policy");
-                   navigate("/loading", { state: { nextPage: "/cookie-policy" } })
+                  navigate("/cookie-policy");
+                  //  navigate("/loading", { state: { nextPage: "/cookie-policy" } })
                   }}>
                   Cookie Policy
                 </button>
