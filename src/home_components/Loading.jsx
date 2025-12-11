@@ -32,7 +32,8 @@ export default function Loading() {
       ease: "easeInOut",
       onComplete: () => {
         // Forward state to next page
-        navigate(nextPage, { state: extraState });
+        // navigate(nextPage, { state: extraState });
+        navigate(nextPage, { state: extraState, replace: true });
       },
     });
 
