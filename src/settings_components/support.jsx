@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { getSupport, updateSupport, setAuthToken } from "./api/settingsAPI";
+import { getSupport, updateSupport, setAuthToken, submitSupportRequest } from "./api/settingsAPI";
 import { VscArrowCircleLeft } from "react-icons/vsc";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ThemeContext } from "../contexts/ThemeContext";
@@ -51,14 +51,22 @@ function Support({ onBack }) {
       setSaving(true);
       // await updateSupport(combined); // PUT /support { message }
       
-       await fetch(`${SET_URL}/support`, {
-        // headers: { Authorization: AUTH_TOKEN },
-        method : 'PUT',
-        headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
-         body: JSON.stringify({
-    message: combined
-  })
-      })
+  //      await fetch(`${SET_URL}/support`, {
+  //       // headers: { Authorization: AUTH_TOKEN },
+  //       method : 'PUT',
+  //       headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
+  //        body: JSON.stringify({
+  //   message: combined
+  // })
+      // })
+
+const res = await submitSupportRequest(idToken, combined);
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(data?.detail || "Failed to submit support request");
+  }
+
       toast.success("Support request submitted")
       setIssue("")
       setHelp("")

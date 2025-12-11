@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 import LockIcon from "./assets/Privacy.png";
-import { getProfile, updateProfile, setAuthToken, getUserProfile } from "./api/settingsAPI";
+import { getProfile, updateProfile, setAuthToken, getUserProfile, updateSettProfile } from "./api/settingsAPI";
 import { getAuth, onAuthStateChanged, onIdTokenChanged } from "firebase/auth";
 
 function Profile({ onBack }) {
@@ -149,12 +149,16 @@ function Profile({ onBack }) {
       };
 
       // const res = await updateProfile(payload);
-        const res = await fetch(`http://127.0.0.1:8484/settings/profile`, {
-        // headers: { Authorization: AUTH_TOKEN },
-        method : "PUT",
-        headers: { Authorization: `Bearer ${idToken}`,  "Content-Type": "application/json", },
-         body: JSON.stringify(payload)
-      })
+      //   const res = await fetch(`http://127.0.0.1:8484/settings/profile`, {
+      //   // headers: { Authorization: AUTH_TOKEN },
+      //   method : "PUT",
+      //   headers: { Authorization: `Bearer ${idToken}`,  "Content-Type": "application/json", },
+      //    body: JSON.stringify(payload)
+      // })
+
+      const res = await updateSettProfile(idToken, payload);
+
+
         const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(await res.text());
 

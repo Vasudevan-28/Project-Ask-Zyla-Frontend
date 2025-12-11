@@ -1,5 +1,7 @@
 
-const TRIAL_CHAT_ENDPOINT = "http://localhost:8484/chatApp/trial/chat";
+// const TRIAL_CHAT_ENDPOINT = "http://localhost:8484/chatApp/trial/chat";
+
+const TRIAL_CHAT_ENDPOINT = import.meta.env.VITE_API_URL_TRIAL
 
 
 function authHeaders(token, hasBody = false) {

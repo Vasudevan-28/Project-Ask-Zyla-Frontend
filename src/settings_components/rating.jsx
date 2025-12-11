@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { getRating, updateRating, setAuthToken } from "./api/settingsAPI";
+import { getRating, updateRating, setAuthToken, submitSettRating } from "./api/settingsAPI";
 import { VscArrowCircleLeft } from "react-icons/vsc";
 import { FaStar } from "react-icons/fa";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -49,14 +49,23 @@ function Rating({ onBack }) {
 
       // await updateRating(rating);
 
-        await fetch(`${SET_URL}/rating`, {
-        // headers: { Authorization: AUTH_TOKEN },
-        method : 'PUT',
-        headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
-         body: JSON.stringify({
-    rating: rating
-  })
-      })
+  //       await fetch(`${SET_URL}/rating`, {
+  //       // headers: { Authorization: AUTH_TOKEN },
+  //       method : 'PUT',
+  //       headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
+  //        body: JSON.stringify({
+  //   rating: rating
+  // })
+  //     })
+
+        const res = await submitSettRating(idToken, rating);
+
+         const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(data?.detail || "Failed to save rating");
+  }
+
       toast.success("Ratings saved successfully!")
       // setSuccess("Rating saved successfully!");
       setSuccess("");

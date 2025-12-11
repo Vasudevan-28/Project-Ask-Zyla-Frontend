@@ -10,21 +10,7 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 // ✅ Firebase configuration
 const firebaseConfig = {
-  // apiKey: "AIzaSyB8W2XVgnbSThSwqOX3Y3z8uf8jGNu7OTY",
-  // authDomain: "test-az-331c3.firebaseapp.com",
-  // projectId: "test-az-331c3",
-  // storageBucket: "test-az-331c3.firebasestorage.app",
-  // messagingSenderId: "792129436523",
-  // appId: "1:792129436523:web:1431d110a6ca2070a1aa2e",
-  // measurementId: "G-T3HE2C4S58",
-
-  // apiKey: "AIzaSyANlX1y79Gv45VyNUM5OVxAhnCMjBZcRfI",
-  // authDomain: "ask-zyla-prototype.firebaseapp.com",
-  // projectId: "ask-zyla-prototype",
-  // storageBucket: "ask-zyla-prototype.firebasestorage.app",
-  // messagingSenderId: "200458351621",
-  // appId: "1:200458351621:web:980f687729ff7fd396986c"
-
+  
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -69,7 +55,7 @@ export const requestForToken = async () => {
   try {
     const token = await getToken(messaging, {
       vapidKey:
-        "BJwE0gCY278U9YqOgeCP4LTkObWUAFoejVBcnyxOB6dopJ2O72vzDxsGfkfiKy5qV8KRScSC-ouk72W7NnU8W28", // from Firebase Console
+        import.meta.env.VITE_FIREBASE_VAPID, // from Firebase Console
     });
 
     if (token) {

@@ -1,4 +1,6 @@
-const API_URL = "http://127.0.0.1:8484";
+// const API_URL = "http://127.0.0.1:8484";
+
+const API_URL = import.meta.env.VITE_API_URL
 
 // ---------------------- SAVE USER ----------------------
 export const saveUserToDB = async (userData) => {
@@ -135,7 +137,7 @@ import axios from "axios";
 export const resetEmailPassword = async (email, new_password) => {
   try {
     const res = await axios.post(
-      `http://localhost:8484/resetpassemail`, 
+      `${API_URL}/resetpassemail`, 
       { email, new_password }
     );
     return res.data;
@@ -214,7 +216,7 @@ export const deleteAccountAPI = async (email) => {
 };
 
 export const clearCacheAPI = async (token) => {
-  return await fetch(`http://localhost:8484/sensitive/clear_cache`,
+  return await fetch(`${API_URL}/sensitive/clear_cache`,
     {
       method : "POST",
       headers : { "Authorization" : `Bearer ${token}`, "Content-Type": "application/json"},

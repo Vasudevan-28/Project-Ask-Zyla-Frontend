@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import ProductCard from "./ProductCard";
+// import ProductCard from "./ProductCard";
 import ChatMessage from "./ChatMessage";
 
 import Thinking from "../gifs/thinking-zyla.gif";
@@ -60,7 +60,7 @@ export default function Chatbot({scrollerRef, messages, loading, ttsSupported, s
                         showImage={isLastAssistant}
                       />
 
-                      {m.role === "assistant" && m.hits?.length > 0 && (
+                      {/* {m.role === "assistant" && m.hits?.length > 0 && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ml-12">
                           {m.hits.map((h, i) => (
                             <div
@@ -71,7 +71,7 @@ export default function Chatbot({scrollerRef, messages, loading, ttsSupported, s
                             </div>  
                           ))}
                         </div>
-                      )}
+                      )} */}
                     </div>
                   );
                 })}

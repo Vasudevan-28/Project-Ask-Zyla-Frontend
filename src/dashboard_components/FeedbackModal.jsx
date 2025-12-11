@@ -43,7 +43,7 @@ export default function FeedbackModal({ onClose, onSubmit }) {
 
   return (
     <div className="fixed inset-0 z-250002 flex items-center justify-center bg-black/40">
-      <div className="bg-white dark:bg-white/90 dark:text-purple-900 rounded-lg w-96 max-w-[90vw] p-6 shadow-xl">
+      <div className="bg-white text-[#1d0e2d] rounded-lg w-96 max-w-[90vw] p-6 shadow-xl">
         <div className="font-semibold mb-4 text-lg">How was your experience?</div>
         {/* Emotion buttons */}
         <div className="mb-6">
@@ -63,7 +63,7 @@ export default function FeedbackModal({ onClose, onSubmit }) {
                 <span
                   className={`text-xs font-semibold ${
                     selectedEmotion === emotion.value
-                      ? "text-purple-900"
+                      ? "text-[#1d0e2d]"
                       : "text-gray-400"
                   }`}
                 >
@@ -101,7 +101,7 @@ export default function FeedbackModal({ onClose, onSubmit }) {
           </button>
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 rounded font-semibold bg-linear-to-r from-purple-500 to-purple-700 text-white hover:opacity-90 transition-all"
+            className="px-4 py-2 rounded font-semibold bg-[#1d0e2d] text-white hover:opacity-90 transition-all"
             type="button"
           >
             Submit & Logout

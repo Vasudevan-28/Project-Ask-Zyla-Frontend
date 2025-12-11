@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { getFeedback, updateFeedback, setAuthToken } from "./api/settingsAPI";
+import { getFeedback, updateFeedback, setAuthToken, submitSettFeedback } from "./api/settingsAPI";
 import { VscArrowCircleLeft } from "react-icons/vsc";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ThemeContext } from "../contexts/ThemeContext";
@@ -51,15 +51,27 @@ function Feedback({ onBack }) {
       setSaving(true);
       // await updateFeedback(feedback.trim());
 
-      await fetch(`${SET_URL}/feedback`, {
-        // headers: { Authorization: AUTH_TOKEN },
-        method : 'PUT',
-        headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
-         body: JSON.stringify({
+  //     await fetch(`${SET_URL}/feedback`, {
+  //       method : 'PUT',
+  //       headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
+  //        body: JSON.stringify({
+  //   feedback: feedback.trim(),
+  //   name: name,
+  // })
+  //     })
+
+       const feedbackData = {
     feedback: feedback.trim(),
     name: name,
-  })
-      })
+  };
+
+  const res = await submitSettFeedback(idToken, feedbackData);
+
+  if (!res.ok) {
+    throw new Error("Server returned an error");
+  }
+
+
       toast.success("Feedback submitted. Thank you!")
       setSuccess("");
       setFeedback("")

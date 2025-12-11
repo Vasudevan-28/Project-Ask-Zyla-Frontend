@@ -1,6 +1,7 @@
 
-const API_URL = "http://localhost:8484";
+// const API_URL = "http://localhost:8484";
 // const API_URL = "https://project-ask-zyla-devteam.onrender.com"
+const API_URL = import.meta.env.VITE_API_URL
 const TODO_API = `${API_URL}/todoCall`
 const PRO_API = `${API_URL}/prods`
 

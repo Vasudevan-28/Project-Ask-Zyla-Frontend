@@ -21,6 +21,7 @@ import Location from "./location";
 import { getAuth, onAuthStateChanged, deleteUser, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 
 import { useNavigate } from "react-router-dom";
+import { updateCityAndState } from "./api/settingsAPI";
 
 // Common row style (inner row)
 const rowClasses =
@@ -298,15 +299,17 @@ function Setting({
       //   city: city || undefined,
       //   state: state || undefined,
       // });
-        await fetch(`http://127.0.0.1:8484/settings/profile`, {
-        // headers: { Authorization: AUTH_TOKEN },
-        method : 'PUT',
-        headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
-         body: JSON.stringify({
-    city: city || undefined,
-    state: state || undefined
-  })
-      })
+  //       await fetch(`http://127.0.0.1:8484/settings/profile`, {
+  //       // headers: { Authorization: AUTH_TOKEN },
+  //       method : 'PUT',
+  //       headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
+  //        body: JSON.stringify({
+  //   city: city || undefined,
+  //   state: state || undefined
+  // })
+  //     })
+
+      await updateCityAndState(idToken, city, state)
 
       // if (!res.ok) throw new Error(await res.text());
       // const data1 = await res.json();

@@ -95,9 +95,9 @@ createRoot(document.getElementById('root')).render(
 
 
       </Route>
+        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
               <Route path='/cookie-policy' element={<CookiePolicy />} />
 
-        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
 
       <Route path="/" element={<PromotionPage />} />
       <Route path="/login" element={<Login />} />

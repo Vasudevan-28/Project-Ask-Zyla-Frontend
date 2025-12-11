@@ -1,7 +1,7 @@
 
-const SKIN_API_URL = "http://localhost:8484/chatApp";
+// const SKIN_API_URL = "http://localhost:8484/chatApp";
 
-// const SKIN_API_URL = "https://project-ask-zyla-devteam.onrender.com/chatApp"
+const SKIN_API_URL = import.meta.env.VITE_API_URL_CHAT
 
 
 function authHeaders(token, hasBody = false) {
@@ -65,7 +65,7 @@ export const SkinProfileApiService = {
 
   async  saveSkinAnswers(userId, payload) {
   const res = await fetch(
-    `http://localhost:8484/chatApp/skin-answers-add/${userId}`,
+    `${SKIN_API_URL}/skin-answers-add/${userId}`,
     {
       method: "PUT",
       headers: {

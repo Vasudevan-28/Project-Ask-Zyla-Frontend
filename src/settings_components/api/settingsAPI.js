@@ -1,7 +1,8 @@
 import axios from "axios";
 
-// Backend base URL
-const BASE_URL = "http://127.0.0.1:8484/settings";
+// const SETT_URL = "http://127.0.0.1:8484/settings";
+
+const SETT_URL = import.meta.env.VITE_API_URL_SETT
 
 // Hold the current auth token ("Bearer <token>")
 let authToken = null;
@@ -15,7 +16,7 @@ export function setAuthToken(token) {
 
 // Create axios instance
 const apiClient = axios.create({
-  baseURL: BASE_URL,
+  baseURL: SETT_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -107,7 +108,7 @@ export async function updateSupport(message) {
 }
 
 export async function sendGenSupport(name, email, combined){
-    const data =   await fetch(`${BASE_URL}/general-support`, {
+    const data =   await fetch(`${SETT_URL}/general-support`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -122,7 +123,7 @@ export async function sendGenSupport(name, email, combined){
 
 export async function getUserProfile(token) {
      
-      const res = await fetch(`${BASE_URL}/profile`, {
+      const res = await fetch(`${SETT_URL}/profile`, {
         // headers: { Authorization: AUTH_TOKEN },
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -132,7 +133,7 @@ export async function getUserProfile(token) {
 
 
 export async function submitLogOutFeedback(token, feedbackData) {
-  const res = await fetch(`${BASE_URL}/feedback-submit`, {
+  const res = await fetch(`${SETT_URL}/feedback-submit`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -144,10 +145,83 @@ export async function submitLogOutFeedback(token, feedbackData) {
   return res;
 }
 
+export async function submitSettFeedback(idToken, feedbackData) {
+  const res = await fetch(`${SETT_URL}/feedback`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(feedbackData),
+  });
+
+  return res;
+}
+
+export async function updateCityAndState(idToken, city, state) {
+  const res = await fetch(`${SETT_URL}/profile`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      city: city || undefined,
+      state: state || undefined,
+    }),
+  });
+
+  return res;
+}
+
+export async function submitSupportRequest(idToken, message) {
+  const res = await fetch(`${SETT_URL}/support`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      message: message, // EXACT as your original
+    }),
+  });
+
+  return res;
+}
+
+
+
+
+export async function updateSettProfile(idToken, payload) {
+  const res = await fetch(`${SETT_URL}/profile`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return res; // caller handles json() and errors
+}
+
+export async function submitSettRating(idToken, rating) {
+  const res = await fetch(`${SETT_URL}/rating`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ 
+      rating : rating }),
+  });
+
+  return res; // caller will handle .ok or .json
+}
 
 
 export async function updateUserLocation(token, profileData) {
-  const res = await fetch(`${BASE_URL}/profile`, {
+  const res = await fetch(`${SETT_URL}/profile`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
