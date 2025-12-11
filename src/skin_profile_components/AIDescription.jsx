@@ -15,7 +15,7 @@ export default function AIDescription({zylaSum}) {
 
   return (
     <div className="lg:col-span-4">
-      <div className={` h-fit mb-4  ${isLight ? "bg-white" : "bg-white/10" }  h-[calc(100vh-8rem)]  rounded-2xl shadow-2xl p-5 lg:p-6 sticky top-4 text-white min-h-72`}>
+      <div className={` h-fit mb-4  ${isLight ? "bg-white/60" : "bg-white/10" }  h-[calc(100vh-8rem)]  rounded-2xl shadow-2xl p-5 lg:p-6 sticky top-4 text-white min-h-72`}>
 
         <h2 className={`font-medium text-center mb-4 text-xl  lg:text-2xl 
            ${isLight ? "text-black" : "text-slate-50" }
@@ -39,8 +39,8 @@ export default function AIDescription({zylaSum}) {
           </div>
         </div> */}
 
-        <div className={`bg-black/30 border  border-white/10 w-full rounded-xl p-4 h-fit flex flex-col justify-between
-           ${isLight ? "text-slate-800" : "text-slate-50" }
+        <div className={` border  border-white/10 w-full rounded-xl p-4 h-fit flex flex-col justify-between
+           ${isLight ? "text-slate-800 bg-white/80" : "text-slate-50 bg-white/10" }
           `}>
   {(!zylaSum || zylaSum.trim() === "") ? (
     <div className="flex justify-center py-10">
@@ -50,7 +50,9 @@ export default function AIDescription({zylaSum}) {
     <div className="space-y-2 pr-1">
       {genDesArray.map((point, index) => (
         <div key={index} className="flex items-start gap-3 text-sm lg:text-[15px]">
-          <span className="shrink-0 w-6 h-6 rounded-full bg-white/15 flex items-center justify-center text-xs font-semibold">
+          <span className={`shrink-0 w-6 h-6 rounded-full  flex items-center justify-center text-xs font-semibold
+             ${isLight ? "bg-black/10" : "bg-black/20" }
+            `}>
             {index + 1}
           </span>
           <p className={`leading-snug 
