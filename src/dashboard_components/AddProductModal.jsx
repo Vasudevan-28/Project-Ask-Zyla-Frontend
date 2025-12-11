@@ -51,7 +51,7 @@ export default function AddProductModal({ onClose, onAdd, routines = {} }) {
       await onAdd({ routine, slot: slotNum, name, type, desc, reminder_time: reminderTime });
       setShowSuccess(true);
     } catch (e) {
-      setError("Failed to add product. Please try again.");
+      setError("Failed to add routine. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -64,7 +64,7 @@ export default function AddProductModal({ onClose, onAdd, routines = {} }) {
       await onAdd({ routine, slot: Number(slot), name, type, desc, reminder_time: reminderTime });
       setShowSuccess(true);
     } catch (e) {
-      setError("Failed to add product.");
+      setError("Failed to add routine.");
     } finally {
       setIsSubmitting(false);
     }
@@ -79,7 +79,7 @@ export default function AddProductModal({ onClose, onAdd, routines = {} }) {
     <>
       <div className="fixed inset-0 z-250000 flex items-center justify-center bg-black/40">
         <div className="bg-white  rounded-lg p-6 w-96 max-w-lg shadow-xl flex flex-col gap-3">
-          <div className="font-semibold text-xl mb-1">Add Product</div>
+          <div className="font-semibold text-xl mb-1">Add Routine</div>
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="text-sm font-medium">Routine</label>
@@ -174,7 +174,7 @@ export default function AddProductModal({ onClose, onAdd, routines = {} }) {
               type="button"
               disabled={isSubmitting}
             >
-              Add Product
+              Add Routine
             </button>
           </div>
         </div>
