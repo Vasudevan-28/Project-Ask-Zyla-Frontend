@@ -6,7 +6,6 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 // import HeaderMain from '../team-pages/HeaderMain';
 import HeaderMain from '../home_components/HeaderMain';
 // import Header from '../team-pages/dash_components/Header';
-
 import { ThemeContext } from "../contexts/ThemeContext";
 // import FooterMain from '../team-pages/FooterMain';
 import FooterMain from '../home_components/FooterMain';
@@ -94,7 +93,7 @@ const cycleOptions = [
 ];
 
 const buttonStyle = `
-${isLight ? "bg-[#B9A3C7]" : "bg-white/50"}
+${isLight ? "bg-[#B9A3C7]" : "bg-white/30"}
 `
 
 useEffect(() => {
@@ -289,7 +288,7 @@ useEffect(() => {
             currentValues.map((value) => (
               <span
                 key={value}
-                className="inline-block bg-[#B9A3C7] text-white mb-1 px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm"
+                className={`inline-block ${buttonStyle} text-white mb-1 px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm`}
               >
                 {value}
               </span>
@@ -316,8 +315,8 @@ useEffect(() => {
               className={`flex items-center space-x-2 p-2 rounded-xl  transition-all cursor-pointer ${
                 currentValue === option
                   // ? 'bg-[#B9A3C7] text-white border-[#CA88B1]'
-                  // : 'bg-gray-50 border-gray-200 hover:bg-purple-50 text-black/90  hover:border-[#CA88B1]'
-                   ? 'bg-[#B9A3C7] text-white/90  '
+                  // ? 'bg-gray-50 border-gray-200 hover:bg-purple-50 text-black/90  hover:border-[#CA88B1]'
+                   ? ` text-white/90  ${buttonStyle} `
                   // : 'bg-gray-50 border-gray-200 text-black/90 hover:bg-purple-50 hover:border-[#CA88B1]'
                   : `${isLight ? "bg-white text-slate-900 border border-slate-300 " : "bg-white/10 text-slate-50"}`
 
@@ -331,12 +330,12 @@ useEffect(() => {
                 // className="w-3 h-3 text-[#994A97] border-gray-300 focus:ring-[#994A97]"
                 className='hidden'
               />
-              <span className="text-xs font-medium ">{option}</span>
+              <span className="text-xs font-medium">{option}</span>
             </label>
           ))}
         </div>
       ) : (
-        <span className="inline-block bg-[#B9A3C7] text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-sm">
+        <span className={`inline-block   ${isLight ? "bg-[#B9A3C7]" : "bg-white/10"} text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-sm`}>
           {currentValue}
         </span>
       )}
@@ -351,7 +350,7 @@ useEffect(() => {
   }
 
   const renderMenstrual = (label, field, hasValue, onChange, question) => (
-  <div className={`${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-sm p-4 border-l-4 border-[#CA88B1]`}>
+  <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-sm p-4 border-l-4 border-[#CA88B1]`}>
     <div className="flex items-center gap-4">
       <label className="block text-base font-semibold ">
         { isEditing ? question : label}
@@ -359,9 +358,11 @@ useEffect(() => {
 
       {isEditing ? (
         <div className="flex gap-3">
-         <label className={`flex items-center space-x-1 px-3 py-1 rounded-full shadow-sm
-                ${hasValue ? ' bg-[#B9A3C7] text-white border-[#CA88B1]' 
-                  : 'bg-white/50 border text-black/90  border-gray-400 hover:bg-gray-400'}
+         <label  className={`flex items-center space-x-1 px-3 py-1 rounded-full shadow-sm
+                ${hasValue ? `  border-[#CA88B1] text-white ${isLight ? "bg-[#B9A3C7]" : "bg-white/30"} `
+                  : `  
+                  ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"} 
+                  `}
               `}>
             <input
               type="radio"
@@ -371,8 +372,13 @@ useEffect(() => {
             />
             <span className="text-sm font-medium">Yes</span>
           </label>
-           <label className={`flex items-center space-x-1 px-3 py-1 rounded-full shadow-sm
-              ${hasValue ? 'bg-white/50 border border-gray-400 hover:bg-gray-400' : 'bg-[#994A97] text-white border-[#CA88B1]'}
+           <label  className={`flex items-center space-x-1 cursor-pointer px-3 py-1.5 rounded-full shadow-sm
+              ${hasValue ? `  hover:bg-gray-400   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"}  `
+               : `  border-[#CA88B1]
+               ${isLight ? "bg-[#B9A3C7] text-white" : "bg-white/30"}
+                
+               `}
+
               `}>
             <input
               type="radio"
@@ -385,11 +391,13 @@ useEffect(() => {
         </div>
       ) : (
         <span
-          className={`inline-block px-3 py-1.5 rounded-full text-xs shadow-sm font-medium ${
-            hasValue
-              ? 'bg-[#B9A3C7] text-white'
-              : 'bg-linear-to-l from-gray-400 to-gray-300 text-gray-700'
-          }`}
+          className={`inline-block px-3 py-1.5 rounded-full text-xs shadow-sm font-medium 
+             ${hasValue ? 
+              `  border-[#CA88B1] ${isLight ? "bg-[#B9A3C7] text-white" : "bg-white/30"}`
+              :
+              ` hover:bg-gray-400   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"}  `
+              }
+            `}
         >
           {hasValue ? 'Yes' : 'No'}
         </span>
@@ -502,9 +510,11 @@ useEffect(() => {
           </label>
           {isEditing ? (
             <div className="flex gap-3">
-               <label className={`flex items-center space-x-1 px-3 py-1.5 rounded-full shadow-sm
-                ${tempData.menstrualCycle?.reminders ? ' bg-[#B9A3C7] text-white border-[#CA88B1]' 
-                  : 'bg-white/50 border text-black/90  border-gray-400 hover:bg-gray-400'}
+               <label className={`flex items-center space-x-1 px-3 py-1 rounded-full shadow-sm
+                ${tempData.menstrualCycle?.reminders ? `  border-[#CA88B1] text-white ${isLight ? "bg-[#B9A3C7]" : "bg-white/30"} `
+                  : `  
+                  ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"} 
+                  `}
               `}>
                 <input
                   type="radio"
@@ -516,8 +526,13 @@ useEffect(() => {
                 />
                 <span className="text-xs font-medium">Yes</span>
               </label>
-              <label className={`flex items-center space-x-1 px-3 py-1 rounded-full shadow-sm
-                ${tempData.menstrualCycle?.reminders ? 'bg-white/50 border text-black/90  border-gray-400 hover:bg-gray-400' : 'bg-[#994A97] text-white border-[#CA88B1]'}
+              <label className={`flex items-center space-x-1 cursor-pointer px-3 py-1.5 rounded-full shadow-sm
+              ${tempData.menstrualCycle?.reminders ? `  hover:bg-gray-400   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"}  `
+               : `  border-[#CA88B1]
+               ${isLight ? "bg-[#B9A3C7] text-white" : "bg-white/30"}
+                
+               `}
+
               `}>
                 <input
                   type="radio"
@@ -532,11 +547,11 @@ useEffect(() => {
             </div>
           ) : (
             <span
-              className={`inline-block px-3 py-1.5 rounded-full text-xs shadow-lg font-medium ${
-                tempData.menstrualCycle?.reminders
-                  ? 'bg-[#B9A3C7] text-white'
-                  : 'bg-gray-200 text-gray-700'
-              }`}
+              className={`inline-block px-3 py-1.5 rounded-full text-xs shadow-lg font-medium ${tempData.menstrualCycle?.reminders ? `  hover:bg-gray-400   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"}  `
+               : `  border-[#CA88B1]
+               ${isLight ? "bg-[#B9A3C7] text-white" : "bg-white/30"}
+                
+               `} `}
             >
               {tempData.menstrualCycle?.reminders ? 'Yes' : 'No'}
             </span>
@@ -558,8 +573,10 @@ useEffect(() => {
         <div className="space-y-2">
           <div className="flex gap-3">
             <label className={`flex items-center space-x-1 px-3 py-1 rounded-full shadow-sm
-                ${hasValue ? ' bg-[#B9A3C7] text-white border-[#CA88B1]' 
-                  : 'bg-white/50 border text-black/90  border-gray-400 hover:bg-gray-400'}
+                ${hasValue ? `  border-[#CA88B1] text-white ${isLight ? "bg-[#B9A3C7]" : "bg-white/30"} `
+                  : `  
+                  ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"} 
+                  `}
               `}>
               <input
                 type="radio"
@@ -570,8 +587,13 @@ useEffect(() => {
               />
               <span className="text-xs font-medium">Yes</span>
             </label>
-            <label className={`flex items-center space-x-1 px-3 py-1.5 rounded-full shadow-sm
-              ${hasValue ? 'bg-white/50 border border-gray-400 hover:bg-gray-400' : 'bg-[#994A97] text-white border-[#CA88B1]'}
+            <label className={`flex items-center space-x-1 cursor-pointer px-3 py-1.5 rounded-full shadow-sm
+              ${hasValue ? `  hover:bg-gray-400   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"}  `
+               : `  border-[#CA88B1]
+               ${isLight ? "bg-[#B9A3C7] text-white" : "bg-white/30"}
+                
+               `}
+
               `}>
               <input
                 type="radio"
@@ -596,7 +618,7 @@ useEffect(() => {
                 }))
               }
               rows="2"
-              className={`w-full px-2 py-1  ${isLight ? "bg-white text-slate-700 border border-slate-700/60" : "bg-white/30 text-slate-50"}   text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-[#c94bc4]`}
+              className={`w-full px-2 py-1  ${isLight ? "bg-white text-slate-700 placeholder-slate-400 border border-slate-700/60" : "bg-white/30 text-slate-50"}   text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-[#c94bc4]`}
               placeholder={`Specify ${label.toLowerCase()}...`}
             />
           )}
@@ -604,11 +626,11 @@ useEffect(() => {
       ) : (
         <div className='flex gap-2' >
           {hasValue ? (
-            <span className="inline-block px-3 py-1.5 rounded-full text-xs shadow-sm font-medium bg-[#B9A3C7] text-white">
+            <span className={`inline-block px-3 py-1.5 rounded-full text-xs shadow-sm font-medium   ${isLight ? "bg-[#B9A3C7] text-white" : "bg-white/10"}`}>
               Yes
             </span>
           ) : (
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-linear-to-l from-gray-400 to-gray-300 text-gray-700">
+            <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium   ${isLight ? "bg-[#B9A3C7] text-white " : "bg-white/10"}`}>
               No
             </span>
           )}
@@ -648,35 +670,6 @@ if (loading) {
   }
 
 
-//   if (profileCleared) {
-//   return (
-//     <div className={`min-h-screen relative ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}`}>
-//       <HeaderMain />
-
-//       <div className="fixed inset-0 flex items-center min-h-screen justify-center ">
-//         <div className="w-full max-w-md  bg-white/90 rounded-xl p-6 shadow-xl space-y-4">
-//           <h3 className="text-xl font-semibold text-gray-800 text-center">
-//             Answer about your skin
-//           </h3>
-
-//           <div className="flex justify-end gap-3 pt-2">
-//             <button
-//               className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition"
-//               onClick={() => navigate('/questionnaire')}
-//             >
-//               Skin Questions
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     <div className='absolute bottom-0'>
-
-//       <FooterMain />
-//     </div>
-//     </div>
-//   );
-// }
-
 if (profileCleared) {
   return (
     <div className={`min-h-screen flex flex-col ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}`}>
@@ -710,7 +703,7 @@ if (profileCleared) {
 
       </div>
 
-      <FooterMain /> {/* stays at bottom now */}
+      <FooterMain /> 
 
     </div>
   );
@@ -722,7 +715,7 @@ if (profileCleared) {
     <div>
     <div className={`min-h-200 relative ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"} `}>
         <HeaderMain />
-      <div className="max-w-7xl mx-auto  ">
+      <div className="max-w-7xl mx-auto pb-16 ">
         <div className=" flex justify-end pt-16  items-center mb-4">
          
 
@@ -767,19 +760,19 @@ if (profileCleared) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               
-              <div className={`${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-lg p-4 border-l-4 border-[#994A97]`}>
+              <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-lg p-4 border-l-4 border-[#994A97]`}>
                 {renderMultiSelect('Concerns', 'concerns', concernOptions, tempData.concerns, "Choose your most important concerns?")}
               </div>
 
-              <div className={`${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"} rounded-xl shadow-sm p-4 border-l-4 border-[#CA88B1]`}>
+              <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} rounded-xl shadow-sm p-4 border-l-4 border-[#CA88B1]`}>
                 {renderMultiSelect('Skin Type', 'skinType', skinTypeOptions, tempData.skinType, "What is your Skin Type?")}
               </div>
 
-              <div className={`${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-sm p-4 border-l-4 border-[#994A97]`}>
+              <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-sm p-4 border-l-4 border-[#994A97]`}>
                 {renderMultiSelect('Goals', 'goals', goalOptions, tempData.goals, "What result do you want to Achieve with Skincare?")}
               </div>
 
-              <div className={`${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-sm p-4 border-l-4 border-[#CA88B1]`}>
+              <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-sm p-4 border-l-4 border-[#CA88B1]`}>
                 {renderSingleSelect(
                   'Skincare Routine Follow-Up',
                   'skincareRoutine',
@@ -789,7 +782,7 @@ if (profileCleared) {
                 )}
               </div>
 
-              <div className={`${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-sm p-4 border-l-4 border-[#994A97]`}>
+              <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-sm p-4 border-l-4 border-[#994A97]`}>
                 {renderYesNoSection(
                   'Allergies or Sensitivities',
                   'allergies',
@@ -800,7 +793,7 @@ if (profileCleared) {
                 )}
               </div>
 
-              <div className={`${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-lg p-4 border-l-4 border-[#994A97]`}>
+              <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-lg p-4 border-l-4 border-[#994A97]`}>
                 {renderYesNoSection(
                   'Other Symptoms',
                   'otherSymptoms',
