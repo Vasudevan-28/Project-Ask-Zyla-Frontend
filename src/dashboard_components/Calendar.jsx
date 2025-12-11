@@ -294,7 +294,7 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
           </div>
 
            <button
-            className="min-w-9 rounded-lg border border-transparent px-2 py-1 text-center text-sm font-semibold text-slate-700 hover:bg-slate-100
+            className="min-w-9 rounded-lg border border-transparent px-2 py-1 text-center text-sm font-semibold  hover:bg-slate-100
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-300
                         dark:hover:bg-white/10"
             onClick={nextMonth}
