@@ -7,6 +7,7 @@ import Header from "../home_components/Header1";
 import HeaderQP from "../home_components/HeaderQP";
 import ZaLogo from "../assets/ZaLogo.png"
 import ZylaForgotPassword from "../zyla_components/ZylaForgotPassword";
+import HeaderAuth from "../authentication_components/HeaderAuth";
  
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -68,6 +69,7 @@ export default function ForgotPassword() {
 <div className="min-h-screen flex items-center justify-between  bg-[#1A0D28] p-10">
   {/* <HeaderMain /> */}
   {/* <HeaderQP /> */}
+  <HeaderAuth />
  <div className="flex items-center justify-center ml-10">
 
   <ZylaForgotPassword />
@@ -77,7 +79,7 @@ export default function ForgotPassword() {
                       bg-white/20
                       ">
  
-          <div className="flex justify-center  mb-4" >
+          {/* <div className="flex justify-center  mb-4" >
                 <div className="flex items-center gap-0.5">
                   <img src={ZaLogo} alt="ZA logo" className="h-[56px] w-auto block" />
                   <div className="font-['Playfair_Display'] -mb-1 font-bold leading-[0.9] mt-3 select-none">
@@ -85,10 +87,10 @@ export default function ForgotPassword() {
                     <div className="text-[30px]  text-[#1c0d25]">Zyla</div>
                   </div>
                 </div>
-          </div>
+          </div> */}
 
         <h2
-          className="text-center text-2xl sm:text-3xl mt-8 font-semibold mb-3 text-white"
+          className="text-center text-2xl sm:text-3xl  font-semibold mb-3 text-white"
         >
           Forgot Password
         </h2>

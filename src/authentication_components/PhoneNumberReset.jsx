@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import HeaderAuth from "./HeaderAuth";
  
 export default function PhoneNumberReset() {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function PhoneNumberReset() {
  
   return (
 <div className="min-h-screen flex items-center justify-center bg-[#1A0D28] p-4">
+  <HeaderAuth />
  
       {/* Card */}
 <div className="w-full max-w-xl bg-[#3A3146]/60 backdrop-blur-xl shadow-2xl rounded-3xl p-10">

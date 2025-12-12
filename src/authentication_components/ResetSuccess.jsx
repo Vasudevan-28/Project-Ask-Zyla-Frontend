@@ -1,11 +1,14 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import HeaderAuth from "./HeaderAuth";
 
 export default function ResetSuccess() {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#1A0D28] p-4">
+      <HeaderAuth />
+
       {/* Popup Card */}
       <motion.div
         initial={{ opacity: 0, scale: 0.6, y: 60 }}

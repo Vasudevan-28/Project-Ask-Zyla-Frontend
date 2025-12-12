@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { setupRecaptcha, sendOTP, verifyOTP } from "../services/authservice";
 // import { phoneOtpAttempt } from "../team-pages/services/backendAPI";
 import { phoneOtpAttempt } from "../services/backendAPI";
+import HeaderAuth from "./HeaderAuth";
  
 export default function ForgotPasswordPhone() {
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ export default function ForgotPasswordPhone() {
  
   return (
 <div className="min-h-screen flex items-center justify-center bg-[#1A0D28] p-4">
+  <HeaderAuth />
 <div className="w-full max-w-xl bg-[#3A3146]/60 backdrop-blur-xl shadow-2xl rounded-3xl p-10">
  
         {/* Title */}

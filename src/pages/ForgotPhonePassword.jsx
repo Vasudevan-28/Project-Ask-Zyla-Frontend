@@ -5,6 +5,7 @@ import { sendEmailOtp, getEmailForPhone } from "../services/backendAPI";
 
 import ZaLogo from "../assets/ZaLogo.png"
 import ZylaForgotPhone from "../zyla_components/ZylaForgotPhone";
+import HeaderAuth from "../authentication_components/HeaderAuth";
  
 export default function ForgotPhonePassword() {
   const navigate = useNavigate();
@@ -75,7 +76,7 @@ const handleSendOtp = async () => {
   return (
 <div className="min-h-screen flex items-center justify-between px-10 bg-[#1A0D28] p-4">
 
-
+<HeaderAuth />
  <div className="flex items-center justify-center ml-10">
 
   <ZylaForgotPhone />
@@ -85,10 +86,8 @@ const handleSendOtp = async () => {
       <div className="w-full max-w-xl bg-white/20 backdrop-blur-xl shadow-xl rounded-3xl 
                       p-6 sm:p-8 md:p-10 border border-white/30">
 
-
+{/* 
           <div className="flex justify-center  mb-7" >
-        
-                          {/* <img src={ZaLogo} alt="ZA logo" className="h-[56px] w-auto block" /> */}
         
                            <div className="flex items-center gap-0.5">
                                   <img src={ZaLogo} alt="ZA logo" className="h-[56px] w-auto block" />
@@ -97,7 +96,7 @@ const handleSendOtp = async () => {
                                     <div className="text-[30px]  text-[#1c0d25]">Zyla</div>
                                   </div>
                                 </div>
-                  </div>
+                  </div> */}
         
  
         <h2

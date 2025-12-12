@@ -10,6 +10,7 @@ import ZylaLogin from "../zyla_components/ZylaLogin";
 import Header from "../home_components/Header";
 
 import logo from "../assets/ZaLogo.png";
+import HeaderAuth from "../authentication_components/HeaderAuth";
 
 const MAX_ATTEMPTS = 3;              
 const LOCK_DURATION_MS = 1.5 * 60 * 1000;  
@@ -254,6 +255,8 @@ export default function Login() {
             <div className="text-[22px] text-[#1c0d25]">Zyla</div>
           </div>
         </div> */}
+
+        <HeaderAuth />
   
     <div className="min-h-screen flex flex-col md:flex-row bg-[#1d0e2d] relative overflow-hidden">
 

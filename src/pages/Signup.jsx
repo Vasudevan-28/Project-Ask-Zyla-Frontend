@@ -3,6 +3,7 @@ import videoBg from "../assets/zyla.gif";
 import { useNavigate } from "react-router-dom";
 import { loginWithGoogle } from "../services/authservice";
 import ZylaSignup from "../zyla_components/ZylaSignup";
+import HeaderAuth from "../authentication_components/HeaderAuth";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -47,6 +48,8 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-[#1A0D28] relative">
+      <HeaderAuth />
+
       {/* LEFT GIF */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6 md:p-0">
         {/* <img
