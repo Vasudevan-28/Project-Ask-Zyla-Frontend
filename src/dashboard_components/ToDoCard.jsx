@@ -117,7 +117,7 @@ export default function ToDoCard({ selectedDate, userToken }) {
                 onClick={() => toggle(task.id)}
                 className={`w-5 h-5 rounded-full border-[2px] flex items-center justify-center transition-colors ${
                   task.checked
-                    ? " text-white bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] border-purple-900 dark:border-purple-300  "
+                    ? " text-white bg-linear-to-b cursor-pointer from-[#a78bfa] to-[#8b5cf6] border-purple-900 dark:border-purple-300  "
                     : "bg-transparent border-gray-400 dark:border-gray-500 "
                 } ${!isToday && "opacity-50 cursor-not-allowed"}`}
                 style={{ minWidth: 20, minHeight: 20 }}
