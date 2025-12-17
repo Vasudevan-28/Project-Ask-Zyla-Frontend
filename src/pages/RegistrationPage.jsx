@@ -16,7 +16,7 @@ function RegistrationPage() {
   const [showPass, setShowPass] = useState(false);
   const [showRetypePass, setShowRetypePass] = useState(false);
 
-  const [toastMsg, setToastMsg] = useState(true);
+  const [toastMsg, setToastMsg] = useState("");
 
 
   const minDOB = "1950-01-01"

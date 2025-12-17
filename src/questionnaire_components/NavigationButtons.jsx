@@ -239,7 +239,7 @@ if (cycleSkipped.current || !hasAllCycles) {
       <button
         onClick={handleNext}
         disabled={isDisabled}
-        className={`px-8 py-1.5 rounded font-semibold text-white transition duration-300 transform hover:scale-105 ${
+        className={`px-8 py-1.5 rounded font-semibold cursor-pointer text-white transition duration-300 transform hover:scale-105 ${
           !isDisabled
             ? ` ${isLight ? "bg-linear-to-r from-[#9c4f9a] to-[#4b1839]" : "bg-white/10"} `
             : `${isLight ? "bg-linear-to-r from-[#9c4f9a] to-[#4b1839] cursor-not-allowed opacity-50" : "bg-white/10 cursor-not-allowed opacity-50"} `
