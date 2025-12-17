@@ -14,6 +14,9 @@ export default function ForgotPassword() {
  
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
  
   // Shake animation
   const shakeVariant = {
@@ -27,43 +30,87 @@ export default function ForgotPassword() {
     visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
   };
  
+  // const handleSendOtp = async () => {
+  //   setError("");
+
+  //   // Email validation
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  //   if (!email.trim()) {
+  //     setError("Enter valid email ID");
+  //     return;
+  //   }
+
+  //   if (!emailRegex.test(email.trim())) {
+  //     setError("Enter a valid email address");
+  //     return;
+  //   }
+ 
+  //   try {
+  //     const res = await sendEmailOtp(email);
+ 
+  //     if (res.message === "OTP sent to email") {
+  //       navigate("/verification", {
+  //         state: { email, otp_expiry: res.otp_expiry },
+  //       });
+  //     } else {
+  //       setError("Something went wrong.");
+  //     }
+  //   } catch (err) {
+  //     if (
+  //       err.message.includes("Too many OTP") ||
+  //       err.message.includes("429")
+  //     ) {
+  //       setError("❌ Too many OTP requests. Try again after 30 minutes.");
+  //     } else {
+  //       setError("❌ " + (err.message || "Something went wrong."));
+  //     }
+  //   }
+  // };
+
   const handleSendOtp = async () => {
-    setError("");
+  if (loading) return; // prevent double clicks
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  setError("");
 
-    if (!email.trim()) {
-      setError("Enter valid email ID");
-      return;
-    }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailRegex.test(email.trim())) {
-      setError("Enter a valid email address");
-      return;
+  if (!email.trim()) {
+    setError("Enter valid email ID");
+    return;
+  }
+
+  if (!emailRegex.test(email.trim())) {
+    setError("Enter a valid email address");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const res = await sendEmailOtp(email);
+
+    if (res.message === "OTP sent to email") {
+      navigate("/verification", {
+        state: { email, otp_expiry: res.otp_expiry },
+      });
+    } else {
+      setError("Something went wrong.");
     }
- 
-    try {
-      const res = await sendEmailOtp(email);
- 
-      if (res.message === "OTP sent to email") {
-        navigate("/verification", {
-          state: { email, otp_expiry: res.otp_expiry },
-        });
-      } else {
-        setError("Something went wrong.");
-      }
-    } catch (err) {
-      if (
-        err.message.includes("Too many OTP") ||
-        err.message.includes("429")
-      ) {
-        setError("❌ Too many OTP requests. Try again after 30 minutes.");
-      } else {
-        setError("❌ " + (err.message || "Something went wrong."));
-      }
+  } catch (err) {
+    if (
+      err.message?.includes("Too many OTP") ||
+      err.message?.includes("429")
+    ) {
+      setError("❌ Too many OTP requests. Try again after 30 minutes.");
+    } else {
+      setError("❌ " + (err.message || "Something went wrong."));
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
+
  
   return (
 <div className="min-h-screen flex items-center justify-between  bg-[#1A0D28] p-10">
@@ -79,15 +126,7 @@ export default function ForgotPassword() {
                       bg-white/20
                       ">
  
-          {/* <div className="flex justify-center  mb-4" >
-                <div className="flex items-center gap-0.5">
-                  <img src={ZaLogo} alt="ZA logo" className="h-[56px] w-auto block" />
-                  <div className="font-['Playfair_Display'] -mb-1 font-bold leading-[0.9] mt-3 select-none">
-                    <div className="text-[20px]  text-[#1c0d25] ">Ask</div>
-                    <div className="text-[30px]  text-[#1c0d25]">Zyla</div>
-                  </div>
-                </div>
-          </div> */}
+        
 
         <h2
           className="text-center text-2xl sm:text-3xl  font-semibold mb-3 text-white"
@@ -136,18 +175,35 @@ export default function ForgotPassword() {
             className="text-xs sm:text-sm font-medium text-white cursor-pointer"
           >
             Reset with phone number?
-          </button>
+          </button> 
         </div>
  
         {/* CONTINUE BUTTON */}
-        <button
+        {/* <button
           onClick={handleSendOtp}
           className="w-full text-white py-3 cursor-pointer rounded-lg font-semibold shadow-lg transition
                      bg-[#3A2C49] hover:bg-[#281E35]"
         >
           CONTINUE
-        </button>
+        </button> */}
  
+          <button
+  onClick={handleSendOtp}
+  disabled={loading}
+  className={`w-full flex items-center justify-center gap-2 text-white py-3 rounded-lg font-semibold shadow-lg transition
+    ${loading ? "bg-[#281E35] cursor-not-allowed" : "bg-[#3A2C49] hover:bg-[#281E35]"}`}
+>
+  {loading ? (
+    <>
+      <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      Sending OTP...
+    </>
+  ) : (
+    "CONTINUE"
+  )}
+</button>
+
+
       </div>
 </div>
   );

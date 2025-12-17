@@ -16,7 +16,9 @@ function RegistrationPage() {
   const [showPass, setShowPass] = useState(false);
   const [showRetypePass, setShowRetypePass] = useState(false);
 
-  // Today in yyyy-mm-dd format (for max attribute on DOB)
+  const [toastMsg, setToastMsg] = useState(true);
+
+
   const minDOB = "1950-01-01"
   const today = new Date().toISOString().split("T")[0];
 
@@ -154,6 +156,7 @@ function RegistrationPage() {
           timezone: formData.timezone,
           password: formData.password,
           firebase_uid: firebaseUser.uid,
+          skin_profile: false,
           created_at: new Date().toISOString(),
         };
 
@@ -166,26 +169,28 @@ function RegistrationPage() {
         navigate("/successEmail");
       }
     } catch (err) {
-      alert(err.message || "Registration failed!");
+      // alert(err.message || "Registration failed!");
+      setToastMsg(err?.message || "Registration failed!");
+  setTimeout(() => setToastMsg(""), 3000);
     }
 
     setLoading(false);
   };
 
-const formatDate = (date) => {
-  // If date is already in the correct format, return it as is
-  if (typeof date === 'string' && date.includes('-')) {
-    return date; // It's already in yyyy-mm-dd format
-  }
+// const formatDate = (date) => {
+//   // If date is already in the correct format, return it as is
+//   if (typeof date === 'string' && date.includes('-')) {
+//     return date; // It's already in yyyy-mm-dd format
+//   }
   
-  const d = new Date(date);
-  const day = String(d.getDate()).padStart(2, '0');
-  const month = String(d.getMonth() + 1).padStart(2, '0'); // Month is zero-based
-  const year = d.getFullYear();
-  return `${year}-${month}-${day}`;
-};
+//   const d = new Date(date);
+//   const day = String(d.getDate()).padStart(2, '0');
+//   const month = String(d.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+//   const year = d.getFullYear();
+//   return `${year}-${month}-${day}`;
+// };
 
-const formattedDob = formData.dob ? formatDate(formData.dob) : '';
+// const formattedDob = formData.dob ? formatDate(formData.dob) : '';
 
 
   return (
@@ -663,6 +668,36 @@ const formattedDob = formData.dob ? formatDate(formData.dob) : '';
           </div>
         </form>
       </div>
+      {/* {toastMsg && (
+  <div className="fixed top-5 right-5 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+    This is error message
+  </div>
+)} */}
+
+{toastMsg && (
+  <div className="fixed top-6 right-6 z-50 animate-slide-in">
+    <div className="flex items-start max-w-sm bg-gradient-to-br from-red-500 to-red-600 text-white px-4 py-3 rounded-xl shadow-2xl shadow-red-500/30 border border-red-400/30 backdrop-blur-sm">
+      <div className="flex items-center justify-center flex-shrink-0 w-5 h-5 mt-0.5 mr-3">
+        <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
+        </svg>
+      </div>
+      <div className="flex-1">
+        <p className="font-semibold text-sm leading-tight">Error</p>
+        <p className="text-sm opacity-90 mt-1 leading-relaxed">{toastMsg}</p>
+      </div>
+      <button 
+        className="ml-4 flex-shrink-0 text-white/80 hover:text-white transition-colors"
+        onClick={() => setToastMsg(false)}
+      >
+        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

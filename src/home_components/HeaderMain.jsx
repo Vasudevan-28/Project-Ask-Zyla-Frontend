@@ -95,7 +95,7 @@ const notificationBtnRef = useRef(null);
     };
 
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 10000); 
+    const interval = setInterval(fetchNotifications, 100000); 
     return () => clearInterval(interval);
   }, [userToken]);
 

@@ -32,6 +32,9 @@ export default function Login() {
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isValidPhone = (phone) => /^\+?[0-9]{10,15}$/.test(phone);
 
+  const [loading, setLoading] = useState(false);
+
+
   useEffect(() => {
     try {
       const raw = localStorage.getItem(LOCK_STORAGE_KEY);
@@ -117,101 +120,195 @@ export default function Login() {
     }
   };
 
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+
+  //   // If locked, stop here
+  //   if (isLocked) {
+  //     setPasswordError(
+  //       `Too many failed attempts. Try again in ${remainingSeconds} second${
+  //         remainingSeconds === 1 ? "" : "s"
+  //       }.`
+  //     );
+  //     return;
+  //   }
+
+  //   setEmailPhoneError("");
+  //   setPasswordError("");
+
+  //   const id = identifier.trim();
+  //   const looksLikeEmail = id.includes("@");
+
+  //   // -------------------------
+  //   // Frontend Validation
+  //   // -------------------------
+  //   if (!id) {
+  //     setEmailPhoneError("Please enter Email or Phone");
+  //     return;
+  //   }
+
+  //   if (looksLikeEmail && !isValidEmail(id)) {
+  //     setEmailPhoneError("Please enter a valid Email ID");
+  //     return;
+  //   }
+
+  //   if (!looksLikeEmail && !isValidPhone(id)) {
+  //     setEmailPhoneError("Please enter a valid phone number");
+  //     return;
+  //   }
+
+  //   if (!password || password.length < 1) {
+  //     setPasswordError("Please enter a correct password");
+  //     return;
+  //   }
+
+  //   try {
+  //     // Firebase Email login check
+  //     if (looksLikeEmail) {
+  //       const firebaseUser = await loginUser(id, password);
+
+  //       if (!firebaseUser.user.emailVerified) {
+  //         setEmailPhoneError("Please verify your email before logging in.");
+  //         return;
+  //       }
+  //     }
+
+  //     // Backend Login
+  //     const result = await loginWithBackend(id, password);
+
+  //     if (result.message === "success") {
+  //       console.log(result.skin_profile);
+  //       console.log("skin_profile:", result.skin_profile, typeof result.skin_profile);
+
+        
+  //       localStorage.removeItem(LOCK_STORAGE_KEY);
+  //       setLockoutUntil(null);
+  //       setRemainingSeconds(0);
+
+  //       if (result.skin_profile === false) {
+  //         navigate("/questionnaire");
+  //       } else {
+  //         navigate("/dashboard");
+  //       }
+  //     } else {
+        
+  //       navigate("/register", {
+  //         state: {
+  //           email: result.firebaseUser.email,
+  //           isGoogle: false,
+  //         },
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+
+  //     if (error.code === "auth/wrong-password") {
+        
+  //       registerFailedAttempt();
+  //     } else if (error.code === "auth/user-not-found") {
+  //       setEmailPhoneError("Account does not exist");
+  //     } else if (error.code === "auth/invalid-credential") {
+  //       registerFailedAttempt();
+  //       setPasswordError("Invalid email or password");
+  //     } else {
+  //       setPasswordError("Invalid login details");
+  //     }
+  //   }
+  // };
+
   const handleLogin = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    // If locked, stop here
-    if (isLocked) {
-      setPasswordError(
-        `Too many failed attempts. Try again in ${remainingSeconds} second${
-          remainingSeconds === 1 ? "" : "s"
-        }.`
-      );
-      return;
-    }
+  if (loading) return; // prevent double click
 
-    setEmailPhoneError("");
-    setPasswordError("");
+  // If locked, stop here
+  if (isLocked) {
+    setPasswordError(
+      `Too many failed attempts. Try again in ${remainingSeconds} second${
+        remainingSeconds === 1 ? "" : "s"
+      }.`
+    );
+    return;
+  }
 
-    const id = identifier.trim();
-    const looksLikeEmail = id.includes("@");
+  setEmailPhoneError("");
+  setPasswordError("");
 
-    // -------------------------
-    // Frontend Validation
-    // -------------------------
-    if (!id) {
-      setEmailPhoneError("Please enter Email or Phone");
-      return;
-    }
+  const id = identifier.trim();
+  const looksLikeEmail = id.includes("@");
 
-    if (looksLikeEmail && !isValidEmail(id)) {
-      setEmailPhoneError("Please enter a valid Email ID");
-      return;
-    }
+  if (!id) {
+    setEmailPhoneError("Please enter Email or Phone");
+    return;
+  }
 
-    if (!looksLikeEmail && !isValidPhone(id)) {
-      setEmailPhoneError("Please enter a valid phone number");
-      return;
-    }
+  if (looksLikeEmail && !isValidEmail(id)) {
+    setEmailPhoneError("Please enter a valid Email ID");
+    return;
+  }
 
-    if (!password || password.length < 1) {
-      setPasswordError("Please enter a correct password");
-      return;
-    }
+  if (!looksLikeEmail && !isValidPhone(id)) {
+    setEmailPhoneError("Please enter a valid phone number");
+    return;
+  }
 
-    try {
-      // Firebase Email login check
-      if (looksLikeEmail) {
-        const firebaseUser = await loginUser(id, password);
+  if (!password) {
+    setPasswordError("Please enter a correct password");
+    return;
+  }
 
-        if (!firebaseUser.user.emailVerified) {
-          setEmailPhoneError("Please verify your email before logging in.");
-          return;
-        }
+  try {
+    setLoading(true);
+
+    // Firebase email verification check
+    if (looksLikeEmail) {
+      const firebaseUser = await loginUser(id, password);
+
+      if (!firebaseUser.user.emailVerified) {
+        setEmailPhoneError("Please verify your email before logging in.");
+        return;
       }
+    }
 
-      // Backend Login
-      const result = await loginWithBackend(id, password);
+    // Backend login
+    const result = await loginWithBackend(id, password);
 
-      if (result.message === "success") {
-        console.log(result.skin_profile);
-        console.log("skin_profile:", result.skin_profile, typeof result.skin_profile);
+    if (result.message === "success") {
+      localStorage.removeItem(LOCK_STORAGE_KEY);
+      setLockoutUntil(null);
+      setRemainingSeconds(0);
 
-        
-        localStorage.removeItem(LOCK_STORAGE_KEY);
-        setLockoutUntil(null);
-        setRemainingSeconds(0);
-
-        if (result.skin_profile === false) {
-          navigate("/questionnaire");
-        } else {
-          navigate("/dashboard");
-        }
+      if (result.skin_profile === false) {
+        navigate("/questionnaire");
       } else {
-        
-        navigate("/register", {
-          state: {
-            email: result.firebaseUser.email,
-            isGoogle: false,
-          },
-        });
+        navigate("/dashboard");
       }
-    } catch (error) {
-      console.error(error);
-
-      if (error.code === "auth/wrong-password") {
-        
-        registerFailedAttempt();
-      } else if (error.code === "auth/user-not-found") {
-        setEmailPhoneError("Account does not exist");
-      } else if (error.code === "auth/invalid-credential") {
-        registerFailedAttempt();
-        setPasswordError("Invalid email or password");
-      } else {
-        setPasswordError("Invalid login details");
-      }
+    } else {
+      navigate("/register", {
+        state: {
+          email: result.firebaseUser.email,
+          isGoogle: false,
+        },
+      });
     }
-  };
+  } catch (error) {
+    console.error(error);
+
+    if (error.code === "auth/wrong-password") {
+      registerFailedAttempt();
+    } else if (error.code === "auth/user-not-found") {
+      setEmailPhoneError("Account does not exist");
+    } else if (error.code === "auth/invalid-credential") {
+      registerFailedAttempt();
+      setPasswordError("Invalid email or password");
+    } else {
+      setPasswordError("Invalid login details");
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleGoogleLogin = async () => {
     try {
@@ -248,13 +345,6 @@ export default function Login() {
   return (
     <div className="flex flex-col relative bg-linear-to-r from-[#e9d9e3] via-[#25123a] to-[#1d0e2d]  " >
 
-   {/* <div className="flex items-center h-20 mb-0 ml-6 bg-transparent gap-0.5">
-          <img src={logo} alt="ZA logo" className="h-[38px] w-auto block" />
-          <div className="font-['Playfair_Display'] -mb-1 mt-1 font-bold leading-[0.9] select-none">
-            <div className="text-[12px] text-[#1c0d25]">Ask</div>
-            <div className="text-[22px] text-[#1c0d25]">Zyla</div>
-          </div>
-        </div> */}
 
         <HeaderAuth />
   
@@ -403,7 +493,7 @@ export default function Login() {
             </motion.div>
 
             {/* Sign In Button */}
-            <motion.button
+            {/* <motion.button
               whileHover={{ scale: isLocked ? 1 : 1.05 }}
               className="w-full text-white py-2.5 rounded-lg font-semibold cursor-pointer shadow-lg disabled:opacity-50"
               style={{ backgroundColor: "rgba(58, 44, 73, 1)" }}
@@ -411,7 +501,26 @@ export default function Login() {
               disabled={isLocked}
             >
               SIGN IN
-            </motion.button>
+            </motion.button> */}
+
+            <motion.button
+  whileHover={{ scale: loading || isLocked ? 1 : 1.05 }}
+  disabled={loading || isLocked}
+  onClick={handleLogin}
+  className={`w-full flex items-center justify-center gap-2 text-white py-2.5 rounded-lg font-semibold shadow-lg transition
+    ${loading || isLocked ? "opacity-70 cursor-not-allowed" : ""}`}
+  style={{ backgroundColor: "rgba(58, 44, 73, 1)" }}
+>
+  {loading ? (
+    <>
+      <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      Signing in...
+    </>
+  ) : (
+    "SIGN IN"
+  )}
+</motion.button>
+
 
             {/* OR Divider */}
             <div className="flex items-center my-2">
