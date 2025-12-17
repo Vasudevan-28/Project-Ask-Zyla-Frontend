@@ -3,7 +3,6 @@ import { ThemeContext } from "../contexts/ThemeContext";
 import ZaLogo from "../assets/ZaLogo.png";
 import ZylaToggleImg from "../assets/ZylaToggle.png";
 import ProfilePopup from "../dashboard_components/ProfilePopup";
-// import NotificationToggle from "../dashboard_components/NotificationToggle";
 import FeedbackModal from "../dashboard_components/FeedbackModal";
 import { getAuth, signOut,  onIdTokenChanged } from "firebase/auth";
 import { useLocation } from "react-router-dom";
@@ -202,9 +201,6 @@ return (
     <div
       className={
         "fixed top-0 left-0 right-0 h-2 z-99999 bg-transparent"
-        // (theme === "light"
-        //   ? "bg-gray-100 shadow-sm"
-        //   : "bg-[#1a0e28] shadow-sm")
       }
     />
 
