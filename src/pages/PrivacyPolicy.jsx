@@ -72,7 +72,7 @@ export default function PrivacyPolicy() {
     },
     {
       title: "Contact Us",
-      content: ["📧 EMAIL ID: help@askzyla.com"],
+      content: ["📧 EMAIL ID: askzyla.zeaisoft@gmail.com"],
     },
   ];
 
