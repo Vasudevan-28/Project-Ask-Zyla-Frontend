@@ -75,13 +75,6 @@ function Profile({ onBack }) {
         setLoading(true);
         setLoadError("");
 
-        // const data = await getProfile();
-
-         
-      // const res = await fetch(`http://127.0.0.1:8484/settings/profile`, {
-      //   // headers: { Authorization: AUTH_TOKEN },
-      //   headers: { Authorization: `Bearer ${idToken}` },
-      // })
 
       const res = await getUserProfile(idToken)
 
@@ -264,7 +257,7 @@ function Profile({ onBack }) {
             </div>
           ) : (
             <p className="text-[11px] text-gray-500 text-center">
-              Make sure the backend server is running at http://127.0.0.1:8000
+              Make sure the backend server is running 
             </p>
           )}
           <button
@@ -375,9 +368,23 @@ function Profile({ onBack }) {
             {/* Gender (read-only) */}
             <div className="flex justify-between py-1.5 text-[13px] ">
               <span className="opacity-75">Gender</span>
-              <span className="font-semibold text-right">
+              {/* <span className="font-semibold text-right">
                 {form.gender || "-"}
-              </span>
+              </span> */}
+              {isEditing ? (
+                <input
+                  name="gender"
+                  type="text"
+                  className="border  rounded-md px-2 py-1 text-[13px] text-right w-[55%] focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  value={form.gender}
+                  onChange={handleChange}
+                />
+              ) : (
+                <span className="font-semibold text-right">
+                  {/* {form.dob || "-"} */}
+                  {form.gender || "-"}
+                </span>
+              )}
             </div>
 
             {/* City */}

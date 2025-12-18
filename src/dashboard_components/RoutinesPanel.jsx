@@ -125,7 +125,7 @@ export default function RoutinesPanel({
         >
           {list.length === 0 ? (
             <div style={{ opacity: 0.45, fontSize: 14 }}>
-              No products. Add one using Add Product.
+              No routines. Add one using Add Routine.
             </div>
           ) : (
             list.map((p) => <Row key={p.id} p={p} routineKey={keyName} isMany={isMany} />)
