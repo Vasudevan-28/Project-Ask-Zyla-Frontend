@@ -106,9 +106,19 @@ export default function ForgotPasswordPhone() {
  
                 {/* PHONE INPUT */}
 <input
-                  type="number"
+ type="text"
+                pattern="[0-9]*"
+                inputMode="numeric"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    if (value.length <= 10) {
+     setPhone(value);
+    }}}
+                // placeholder="enter your phone number"
+                maxLength={10}
+
+                  // onChange={(e) => setPhone(e.target.value)}
                   placeholder="Enter phone number"
                   className="w-full px-4 py-3 rounded-lg bg-white text-gray-700 outline-none placeholder-gray-400"
                 />
