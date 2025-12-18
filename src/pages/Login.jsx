@@ -7,7 +7,7 @@ import { loginUser, loginWithGoogle } from "../services/authservice";
 import { loginWithBackend } from "../services/backendAPI";
 import GifCompo from "../zyla_components/ZylaPromotion";
 import ZylaLogin from "../zyla_components/ZylaLogin";
-import Header from "../home_components/Header";
+import Header from "../home_components/HeaderPromo";
 
 import logo from "../assets/ZaLogo.png";
 import HeaderAuth from "../authentication_components/HeaderAuth";

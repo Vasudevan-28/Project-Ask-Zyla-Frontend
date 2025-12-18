@@ -147,7 +147,7 @@ function Rating({ onBack }) {
         )}
 
         <h2
-        className="text-[#ec8bcc]"
+        className={`${isLight ? "text-black" : "text-white"}   font-medium`}
           style={{
             // color: "#7d195c",
             fontSize: "18px",
@@ -206,7 +206,8 @@ function Rating({ onBack }) {
     rounded-xl
     text-base
     border-none
-    bg-linear-to-r from-[#994A97] to-[#CA88B1]
+      cursor-pointer
+      ${isLight ? "bg-linear-to-r from-[#994A97] to-[#CA88B1]" :  "bg-white/10 hover:bg-white/20"}
     ${saving ? "opacity-80 cursor-default" : "cursor-pointer hover:opacity-90"}
   `}
 >

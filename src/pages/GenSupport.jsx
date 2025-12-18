@@ -7,6 +7,7 @@ import { sendGenSupport } from "../settings_components/api/settingsAPI";
 import HeaderQP from "../home_components/HeaderQP";
 import FooterMain from "../home_components/FooterMain";
 import FooterPromo from "../home_components/FooterPromo";
+import Header from "../home_components/HeaderPromo";
 
 
 
@@ -101,7 +102,8 @@ setShowSuccess(true);
        bg-[#1A0D28] text-slate-50
       `}
     >
-   <HeaderQP />
+      <Header />
+   {/* <HeaderQP /> */}
       {/* Centered Form Card */}
       <main className="flex-1 flex mt-18 items-center justify-center px-6 py-6">
         <section

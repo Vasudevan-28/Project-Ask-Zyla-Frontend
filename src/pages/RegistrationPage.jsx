@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Header from "../home_components/Header1.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveUserToDB, saveGoogleSignup, resetEmailPassword } from "../services/backendAPI.js";
 import { signupUser } from "../services/authservice.js";
@@ -10,13 +9,15 @@ function RegistrationPage() {
   const navigate = useNavigate();
   const { email, isGoogle } = locaState.state || {};
 
+  // const email = (rawMail || "").toLowerCase()
+
   const auth = getAuth();
   const [user, setUser] = useState(null);
 
   const [showPass, setShowPass] = useState(false);
   const [showRetypePass, setShowRetypePass] = useState(false);
 
-  const [toastMsg, setToastMsg] = useState("");
+  const [toastMsg, setToastMsg] = useState(true);
 
 
   const minDOB = "1950-01-01"
@@ -118,7 +119,7 @@ function RegistrationPage() {
     try {
       const userData = {
         firebase_uid: user?.uid,
-        name: formData.firstName,
+        name: formData.firstName.trim(),
         email,
         phone: formData.countryCode + formData.phone,
         dob: formData.dob,
@@ -145,7 +146,7 @@ function RegistrationPage() {
 
         // Save to backend
         const userDataEP = {
-          name: formData.firstName,
+          name: formData.firstName.trim(),
           email,
           phone: formData.countryCode + formData.phone,
           dob: formData.dob,
@@ -176,75 +177,79 @@ function RegistrationPage() {
 
     setLoading(false);
   };
+const locationData = {
+  India: {
+    states: {
+      "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Trichy", "Salem"],
+      Karnataka: ["Bangalore", "Mysore", "Mangalore", "Hubli", "Belgaum"],
+      Kerala: ["Kochi", "Trivandrum", "Calicut", "Thrissur", "Alappuzha"],
+      Telangana: ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam"],
+      Maharashtra: ["Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad"],
+    },
+    timezones: ["IST"],
+  },
+  USA: {
+    states: {
+      California: ["Los Angeles", "San Diego", "San Jose", "SF", "Sacramento"],
+      Texas: ["Houston", "Dallas", "Austin", "San Antonio", "El Paso"],
+      Florida: ["Miami", "Orlando", "Tampa", "Jacksonville", "Naples"],
+      NewYork: ["NYC", "Buffalo", "Albany", "Rochester", "Yonkers"],
+      Illinois: ["Chicago", "Naperville", "Aurora", "Peoria", "Rockford"],
+    },
+    timezones: ["EST", "CST", "PST"],
+  },
+  UK: {
+    states: {
+      England: ["London", "Manchester", "Liverpool", "Leeds", "Bristol"],
+      Scotland: ["Edinburgh", "Glasgow", "Aberdeen", "Dundee", "Inverness"],
+      Wales: ["Cardiff", "Swansea", "Newport", "Wrexham", "Barry"],
+      NIreland: ["Belfast", "Lisburn", "Bangor", "Newry", "Armagh"],
+      London: ["Westminster", "Camden", "Greenwich", "Hackney", "Croydon"],
+    },
+    timezones: ["GMT"],
+  },
+};
 
-// const formatDate = (date) => {
-//   // If date is already in the correct format, return it as is
-//   if (typeof date === 'string' && date.includes('-')) {
-//     return date; // It's already in yyyy-mm-dd format
-//   }
-  
-//   const d = new Date(date);
-//   const day = String(d.getDate()).padStart(2, '0');
-//   const month = String(d.getMonth() + 1).padStart(2, '0'); // Month is zero-based
-//   const year = d.getFullYear();
-//   return `${year}-${month}-${day}`;
-// };
-
-// const formattedDob = formData.dob ? formatDate(formData.dob) : '';
 
 
-  return (
-    <div className="min-h-screen bg-[#1A0D28] text-white font-['Anek_Devanagari'] p-4">
-      {/* <Header /> */}
-      <div className="max-w-2xl mx-auto py-8 px-8 sm:px-8 bg-white/20 backdrop-blur-xl rounded-3xl shadow-xl mt-6 border border-white/30">
-        <h2 className="text-2xl font-bold text-white">Registration</h2>
-        <p className="text-white/90 mt-1 mb-4">
-          Hello {email} ! Please complete the registration to continue.
-        </p>
+return (
+  <div className="min-h-screen bg-[#1A0D28] text-white font-['Anek_Devanagari'] p-4">
+    <div className="max-w-2xl mx-auto py-8 px-8 bg-white/20 backdrop-blur-xl rounded-3xl shadow-xl mt-6 border border-white/30">
+      <h2 className="text-2xl font-bold text-white">Registration</h2>
+      <p className="text-white/90 mt-1 mb-4">
+        Hello {email}! Please complete the registration to continue.
+      </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Name & DOB */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 text-white">Username</label>
-              <input
-                name="firstName"
-                value={formData.firstName}
-                onChange={(e) =>
-                  setFormData({ ...formData, firstName: e.target.value })
-                }
-                placeholder="Username"
-                className={`w-full p-2 rounded-md bg-white/20 text-white focus:outline-none ${
-                  errors.firstName ? "border border-red-500" : ""
-                }`}
-              />
-              {errors.firstName && (
-                <p className="text-red-500 text-xs">{errors.firstName}</p>
-              )}
-            </div>
-            <div>
-              <label className="block mb-1 text-white">Date of Birth</label>
-              {/* <input
-                type="date"
-                name="dob"
-                value={formData.dob}
-                onChange={(e) =>
-                  setFormData({ ...formData, dob: e.target.value })
-                }
-                max={today} // disallow future date selection
-                className={`w-full p-2 rounded-md bg-white/20 text-white focus:outline-none ${
-                  errors.dob ? "border border-red-500" : ""
-                }`}
-              />
-              {errors.dob && (
-                <p className="text-red-500 text-xs">{errors.dob}</p>
-              )} */}
-              <input
+      <form onSubmit={handleSubmit} className="space-y-6">
+
+        {/* Username & DOB */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block mb-1 text-white">Username</label>
+            <input
+              name="firstName"
+              value={formData.firstName}
+              placeholder="Username"
+              onChange={(e) =>
+                setFormData({ ...formData, firstName: e.target.value })
+              }
+              className={`w-full h-12 p-2 rounded-md bg-white/20 text-white focus:outline-none ${
+                errors.firstName ? "border border-red-500" : ""
+              }`}
+            />
+            {errors.firstName && (
+              <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-white">Date of Birth</label>
+          
+
+                       <input
   type="date"
   name="dob"
   value={formData.dob}
-  // value={formData.dob ? formatDate(formData.dob) : ''}
-  // value={formattedDob}
   max={today}
   min={minDOB}
   onChange={(e) => {
@@ -276,89 +281,101 @@ function RegistrationPage() {
   }`}
 />
 
-{errors.dob && (
-  <p className="text-red-500 text-xs">{errors.dob}</p>
-)}
-
-            </div>
+            {errors.dob && (
+              <p className="text-red-500 text-xs mt-1">{errors.dob}</p>
+            )}
           </div>
+        </div>
 
-          {/* Gender & Phone */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 text-white">Gender</label>
-             
-                
- <div className="relative">
-                <select
-                  name="gender"
-                  value={formData.gender}
-                      onChange={(e) =>
+        {/* Gender & Phone */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          {/* Gender */}
+          <div>
+            <label className="block mb-1 text-white">Gender</label>
+            <div className="relative h-12">
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={(e) =>
                   setFormData({ ...formData, gender: e.target.value })
                 }
-                  className={`w-full p-2 rounded-lg bg-[#3A2C49] text-white focus:outline-none appearance-none pr-10
-                  ${errors.gender ? "border border-red-500" : ""}`}
-                >
-                  <option value="">Select Gender</option>
-                  <option value="Female">Female</option>
-                  <option value="Male">Male</option>
-                  <option value="Other">Other</option>
-                </select>
-                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white text-lg">
-                  ▾
-                </span>
-              </div>
-
-              {errors.gender && (
-                <p className="text-red-500 text-xs">{errors.gender}</p>
-              )}
+                className={`w-full h-full p-2 rounded-lg bg-[#3A2C49] text-white appearance-none pr-10 focus:outline-none ${
+                  errors.gender ? "border border-red-500" : ""
+                }`}
+              >
+                <option value="">Select Gender</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+              </select>
+              <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white">
+                ▾
+              </span>
             </div>
-            <div>
-              <label className="block mb-1 text-white">Phone</label>
-              <div className="flex gap-2">
+            {errors.gender && (
+              <p className="text-red-500 text-xs mt-1">{errors.gender}</p>
+            )}
+          </div>
+
+          {/* Phone */}
+          <div>
+            <label className="block mb-1 text-white">Phone</label>
+            <div className="flex gap-2">
+              <div className="relative h-12 w-30">
                 <select
-                  name="countryCode"
                   value={formData.countryCode}
                   onChange={(e) =>
                     setFormData({ ...formData, countryCode: e.target.value })
                   }
-                  className={`p-2 rounded-lg bg-[#3A2C49] text-white focus:outline-none pr-10 appearance-none ${
-                    errors.countryCode ? "border border-red-500" : ""
-                  }`}
+                  className="w-19 h-full p-2 rounded-lg bg-[#3A2C49] text-white appearance-none pr-6 focus:outline-none"
                 >
-                  <option value="+1">🇺🇸 +1</option>
-                  <option value="+91">🇮🇳 +91</option>
-                  <option value="+44">🇬🇧 +44</option>
-                  <option value="+61">🇦🇺 +61</option>
-                  <option value="+81">🇯🇵 +81</option>
+                   <option value="+1">🇺🇸 +1</option>
+                   <option value="+91">🇮🇳 +91</option>
+                   <option value="+44">🇬🇧 +44</option>
+                   <option value="+61">🇦🇺 +61</option>
+                   <option value="+81">🇯🇵 +81</option>
                 </select>
-                <input
-                  type="text"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  placeholder="Enter phone number"
-                  className={`w-full p-2 rounded-md bg-white/20 text-white focus:outline-none ${
-                    errors.phone ? "border border-red-500" : ""
-                  }`}
-                  maxLength={15}
-                />
+                <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2">
+                  ▾
+                </span>
               </div>
-              {errors.phone && (
-                <p className="text-red-500 text-xs">{errors.phone}</p>
-              )}
+
+              <input
+                type="text"
+                pattern="[0-9]*"
+                inputMode="numeric"
+                value={formData.phone}
+                // onChange={(e) =>
+                //   setFormData({ ...formData, phone: e.target.value })
+                // }
+                onChange={(e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    if (value.length <= 10) {
+      setFormData({ ...formData, phone: value });
+    }}}
+                // placeholder="enter your phone number"
+                maxLength={10}
+                className={`flex-1  h-12 p-2 rounded-md bg-white/20 text-white focus:outline-none ${
+                  errors.phone ? "border border-red-500" : ""
+                }`}
+              />
             </div>
+            {errors.phone && (
+              <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+            )}
           </div>
+        </div>
 
-          {/* Password Fields */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative">
-            <div className="relative">
-              <label className="block mb-1 text-white">Password</label>
-              <div className="relative" >
 
-                <input
+
+           {/* Password Fields */}
+           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative">
+             <div className="relative">
+               <label className="block mb-1 text-white">Password</label>
+               <div className="relative" >
+
+                 <input
   type={showPass ? "text" : "password"}
   name="password"
   value={formData.password}
@@ -553,126 +570,172 @@ function RegistrationPage() {
 
           </div>
 
-          {/* Address Dropdowns */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* City */}
-            <div className="relative">
-              <label className="block mb-1 text-white">City</label>
-              <select
-                name="city"
-                value={formData.city}
-                onChange={(e) =>
-                  setFormData({ ...formData, city: e.target.value })
-                }
-                className={`w-full p-2 rounded-lg bg-[#3A2C49] text-white focus:outline-none appearance-none pr-10 ${
-                  errors.city ? "border border-red-500" : ""
-                }`}
-              >
-                <option value="">Select City</option>
-                <option value="Chennai">Chennai</option>
-                <option value="Bangalore">Bangalore</option>
-                <option value="Mumbai">Mumbai</option>
-              </select>
-                
-                                <span className="pointer-events-none absolute right-3 top-3/4 -translate-y-1/2 text-white text-lg">▾</span>
 
-              {errors.city && (
-                <p className="text-red-500 text-xs">{errors.city}</p>
+
+
+        {/* City, State, Country, Timezone */}
+        {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {[
+            ["city", "City", ["Chennai", "Bangalore", "Mumbai"]],
+            ["state", "State", ["Tamil Nadu", "Karnataka", "Kerala"]],
+            ["country", "Country", ["India", "USA", "UK"]],
+            ["timezone", "Timezone", ["IST", "EST", "GMT"]],
+          ].map(([key, label, options]) => (
+            <div key={key}>
+              <label className="block mb-1 text-white">{label}</label>
+              <div className="relative h-12">
+                <select
+                  value={formData[key]}
+                  onChange={(e) =>
+                    setFormData({ ...formData, [key]: e.target.value })
+                  }
+                  className={`w-full h-full p-2 rounded-lg bg-[#3A2C49] text-white appearance-none pr-10 focus:outline-none ${
+                    errors[key] ? "border border-red-500" : ""
+                  }`}
+                >
+                  <option value="">Select {label}</option>
+                  {options.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">
+                  ▾
+                </span>
+              </div>
+              {errors[key] && (
+                <p className="text-red-500 text-xs mt-1">{errors[key]}</p>
               )}
             </div>
+          ))}
+        </div> */}
 
-            {/* State */}
-            <div className="relative">
-              <label className="block mb-1 text-white">State</label>
-              <select
-                name="state"
-                value={formData.state}
-                onChange={(e) =>
-                  setFormData({ ...formData, state: e.target.value })
-                }
-                className={`w-full p-2 rounded-lg bg-[#3A2C49] text-white focus:outline-none appearance-none pr-10 ${
-                  errors.state ? "border border-red-500" : ""
-                }`}
-              >
-                <option value="">Select State</option>
-                <option value="Tamil Nadu">Tamil Nadu</option>
-                <option value="Karnataka">Karnataka</option>
-                <option value="Kerala">Kerala</option>
-              </select>
-                              <span className="pointer-events-none absolute right-3 top-3/4 -translate-y-1/2 text-white text-lg">▾</span>
+        {/* Location Section */}
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-              {errors.state && (
-                <p className="text-red-500 text-xs">{errors.state}</p>
-              )}
-            </div>
-
-            {/* Country */}
-            <div className="relative">
-              <label className="block mb-1 text-white">Country</label>
-              <select
-                name="country"
-                value={formData.country}
-                onChange={(e) =>
-                  setFormData({ ...formData, country: e.target.value })
-                }
-                className={`w-full p-2 rounded-lg bg-[#3A2C49] text-white focus:outline-none appearance-none pr-10 ${
-                  errors.country ? "border border-red-500" : ""
-                }`}
-              >
-                <option value="">Select Country</option>
-                <option value="India">India</option>
-                <option value="USA">USA</option>
-                <option value="UK">UK</option>
-              </select>
-                              <span className="pointer-events-none absolute right-3 top-3/4 -translate-y-1/2 text-white text-lg">▾</span>
-
-              {errors.country && (
-                <p className="text-red-500 text-xs">{errors.country}</p>
-              )}
-            </div>
-
-            {/* Timezone */}
-            <div className="relative">
-              <label className="block mb-1 text-white">Timezone</label>
-              <select
-                name="timezone"
-                value={formData.timezone}
-                onChange={(e) =>
-                  setFormData({ ...formData, timezone: e.target.value })
-                }
-                className={`w-full p-2 rounded-lg bg-[#3A2C49] text-white focus:outline-none appearance-none pr-10 ${
-                  errors.timezone ? "border border-red-500" : ""
-                }`}
-              >
-                <option value="">Select Timezone</option>
-                <option value="IST">IST</option>
-                <option value="EST">EST</option>
-                <option value="GMT">GMT</option>
-              </select>
-                              <span className="pointer-events-none absolute right-3 top-3/4 -translate-y-1/2 text-white text-lg">▾</span>
-
-              {errors.timezone && (
-                <p className="text-red-500 text-xs">{errors.timezone}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="pt-4">
-            <button
-              type="submit"
-              className="w-full bg-[rgba(58,44,73,1)] text-white py-3 rounded-md font-semibold tracking-wide hover:opacity-90"
-              disabled={loading}
-            >
-              {loading ? "Processing..." : "CONTINUE"}
-            </button>
-          </div>
-        </form>
-      </div>
-      {/* {toastMsg && (
-  <div className="fixed top-5 right-5 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50">
-    This is error message
+  {/* Country */}
+  <div>
+    <label className="block mb-1 text-white">Country</label>
+    <div className="relative h-12">
+      <select
+        value={formData.country}
+        onChange={(e) => {
+          const country = e.target.value;
+          setFormData({
+            ...formData,
+            country,
+            state: "",
+            city: "",
+            timezone: "",
+          });
+        }}
+        className={`w-full h-full p-2 rounded-lg bg-[#3A2C49] text-white appearance-none pr-10 focus:outline-none ${
+          errors.country ? "border border-red-500" : ""
+        }`}
+      >
+        <option value="">Select Country</option>
+        {Object.keys(locationData).map((c) => (
+          <option key={c} value={c}>{c}</option>
+        ))}
+      </select>
+      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">▾</span>
+    </div>
+    {errors.country && <p className="text-red-500 text-xs mt-1">{errors.country}</p>}
   </div>
-)} */}
+
+  {/* State */}
+  <div>
+    <label className="block mb-1 text-white">State</label>
+    <div className="relative h-12">
+      <select
+        value={formData.state}
+        disabled={!formData.country}
+        onChange={(e) => {
+          const state = e.target.value;
+          setFormData({
+            ...formData,
+            state,
+            city: "",
+            timezone: "",
+          });
+        }}
+        className={`w-full h-full p-2 rounded-lg appearance-none pr-10 focus:outline-none ${
+          !formData.country ? "bg-gray-500/30 cursor-not-allowed" : "bg-[#3A2C49]"
+        } text-white`}
+      >
+        <option value="">Select State</option>
+        {formData.country &&
+          Object.keys(locationData[formData.country].states).map((s) => (
+            <option key={s} value={s}>{s}</option>
+          ))}
+      </select>
+      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">▾</span>
+    </div>
+  </div>
+
+  {/* City */}
+  <div>
+    <label className="block mb-1 text-white">City</label>
+    <div className="relative h-12">
+      <select
+        value={formData.city}
+        disabled={!formData.state}
+        onChange={(e) =>
+          setFormData({ ...formData, city: e.target.value })
+        }
+        className={`w-full h-full p-2 rounded-lg appearance-none pr-10 focus:outline-none ${
+          !formData.state ? "bg-gray-500/30 cursor-not-allowed" : "bg-[#3A2C49]"
+        } text-white`}
+      >
+        <option value="">Select City</option>
+        {formData.country &&
+          formData.state &&
+          locationData[formData.country].states[formData.state].map((city) => (
+            <option key={city} value={city}>{city}</option>
+          ))}
+      </select>
+      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">▾</span>
+    </div>
+  </div>
+
+  {/* Timezone */}
+  <div>
+    <label className="block mb-1 text-white">Timezone</label>
+    <div className="relative h-12">
+      <select
+        value={formData.timezone}
+        disabled={!formData.city}
+        onChange={(e) =>
+          setFormData({ ...formData, timezone: e.target.value })
+        }
+        className={`w-full h-full p-2 rounded-lg appearance-none pr-10 focus:outline-none ${
+          !formData.city ? "bg-gray-500/30 cursor-not-allowed" : "bg-[#3A2C49]"
+        } text-white`}
+      >
+        <option value="">Select Timezone</option>
+        {formData.country &&
+          locationData[formData.country].timezones.map((tz) => (
+            <option key={tz} value={tz}>{tz}</option>
+          ))}
+      </select>
+      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">▾</span>
+    </div>
+  </div>
+
+</div>
+
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-[#3A2C49] py-3 rounded-md font-semibold hover:opacity-90"
+        >
+          {loading ? "Processing..." : "CONTINUE"}
+        </button>
+      </form>
+    </div>
+
 
 {toastMsg && (
   <div className="fixed top-6 right-6 z-50 animate-slide-in">
@@ -683,8 +746,8 @@ function RegistrationPage() {
         </svg>
       </div>
       <div className="flex-1">
-        <p className="font-semibold text-sm leading-tight">Error</p>
-        <p className="text-sm opacity-90 mt-1 leading-relaxed">{toastMsg}</p>
+        <p className="font-semibold text-sm font-mono leading-tight">Error</p>
+        <p className="text-sm opacity-90 mt-1 font-mono leading-relaxed">{toastMsg}</p>
       </div>
       <button 
         className="ml-4 flex-shrink-0 text-white/80 hover:text-white transition-colors"
@@ -698,8 +761,11 @@ function RegistrationPage() {
   </div>
 )}
 
-    </div>
-  );
+
+  </div>
+);
+
+
 }
 
 export default RegistrationPage;

@@ -6,7 +6,7 @@ import { ThemeContext } from "../contexts/ThemeContext";
 
 import toast from "react-hot-toast"
 
-const SET_URL = "http://127.0.0.1:8484/settings"
+// const SET_URL = "http://127.0.0.1:8484/settings"
 
 function Support({ onBack }) {
   const [issue, setIssue] = useState("");
@@ -228,8 +228,8 @@ const res = await submitSupportRequest(idToken, combined);
       rounded-md 
       text-sm font-semibold tracking-wider uppercase 
       text-white 
-      shadow-[0_4px_10px_rgba(125,25,92,0.4)]
-      bg-linear-to-r from-[#994A97] to-[#CA88B1]
+      cursor-pointer
+      ${isLight ? "bg-linear-to-r from-[#994A97] to-[#CA88B1]" :  "bg-white/10 hover:bg-white/20"}
       ${saving ? "opacity-70 cursor-not-allowed" : "hover:opacity-90"}
     `}
   >

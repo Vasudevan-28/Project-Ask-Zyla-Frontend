@@ -234,14 +234,17 @@ function Profile({ onBack }) {
 };
 
   if (loading) {
-    return (
-      <section className={panelClass}>
-        <div className="flex flex-col items-center mt-3 text-[13px] text-red-500">
-          Loading...
-        </div>
-      </section>
-    );
-  }
+  return (
+    <section className={panelClass}>
+      <div className="flex items-center justify-center h-full">
+        <div className={`w-8 h-8 border-3 border-t-transparent rounded-full animate-spin
+                ${isLight ? "border-slate-800" : "border-white"}
+          `}/>
+      </div>
+    </section>
+  );
+}
+
 
   if (loadError && !initialForm) {
     const isDatabaseError = loadError.includes("Database unavailable");

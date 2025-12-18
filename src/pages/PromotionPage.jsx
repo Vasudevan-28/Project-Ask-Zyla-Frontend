@@ -7,14 +7,14 @@ import AccessPathSection from "../promotion_components/AccessPathSection";
 import FAQSection from "../promotion_components/FAQSection";
 import FeedbackSection from "../promotion_components/FeedbackSection";
 // import Footer from "../team-pages/Footer";
-import Footer from "../home_components/FooterPromo";
-import Header from "../home_components/Header";
+import FooterPromo from "../home_components/FooterPromo";
+import HeaderPromo from "../home_components/HeaderPromo";
 import FooterMain from "../home_components/FooterMain"
 
 export default function PromotionPage() {
   return (
     <>
-      <Header/>
+      <HeaderPromo />
       <HeroSection />
       <div className="w-full h-px bg-[#FFD700]"></div>
       <StorySection />
@@ -26,7 +26,7 @@ export default function PromotionPage() {
       <FAQSection />
       <div className="w-full h-px bg-[#FFD700]"></div>
       <FeedbackSection />
-      <Footer/>
+      <FooterPromo />
       {/* <FooterMain /> */}
     </>
   );

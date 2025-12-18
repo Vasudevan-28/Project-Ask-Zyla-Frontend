@@ -88,7 +88,7 @@ function ButtonRow({ icon, label, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="w-full text-left bg-transparent border-none focus:outline-none focus:ring-0"
+      className="w-full text-left bg-transparent cursor-pointer border-none focus:outline-none focus:ring-0"
       style={{ outline: "none", boxShadow: "none" }}
     >
       <div className={rowClasses}>
@@ -451,7 +451,7 @@ function Setting({
       <ButtonRow
         icon={<MdOutlinePrivacyTip className="w-6 h-6 " />}
         label="Privacy"
-        onClick={onOpenPrivacy}
+        onClick={() => navigate('/privacy-policy')}
       />
 
       {/* Clear data */}

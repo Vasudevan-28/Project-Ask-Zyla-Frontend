@@ -4,20 +4,32 @@ import { useNavigate } from "react-router-dom";
 import { loginWithGoogle } from "../services/authservice";
 import ZylaSignup from "../zyla_components/ZylaSignup";
 import HeaderAuth from "../authentication_components/HeaderAuth";
+import { checkGoogleUser } from "../services/backendAPI";
+
+import toast from "react-hot-toast";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleEmailSignup = (e) => {
+  const handleEmailSignup = async (e) => {
     e.preventDefault();
     if (!email.trim()) {
       setError("Please enter your email.");
       return;
     }
     setError("");
-    navigate("/register", { state: { email } });
+    
+    const checks = await checkGoogleUser(email.trim())
+    
+    if (checks.exists){
+      toast.error("Email already exists")
+      return
+    } else{
+      navigate("/register", { state: { email } });
+    }
+
   };
 
   const handleGoogleSignup = async () => {
@@ -76,12 +88,12 @@ export default function Signup() {
                 placeholder="example@gmail.com"
                 className="w-full px-4 py-3 rounded-lg bg-white shadow-md border border-gray-200 outline-none focus:ring-2 focus:ring-purple-300"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value.toLowerCase())}
               />
               {error && <p className="text-sm mt-1" style={{ color: "#D9161A" }}>{error}</p>}
             </div>
             <button
-              className="w-full text-white py-2 rounded-lg font-semibold shadow-lg transition bg-[rgba(58,44,73,1)] hover:bg-[#2d223a]"
+              className="w-full text-white cursor-pointer py-2 rounded-lg font-semibold shadow-lg transition bg-[rgba(58,44,73,1)] hover:bg-[#2d223a]"
               type="submit"
             >
               SIGN UP

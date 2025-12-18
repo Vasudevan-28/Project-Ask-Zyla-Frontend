@@ -15,7 +15,6 @@ function authHeaders(token, hasBody = false) {
 
 
 export const TrialChatApiService = {
-
     async fetchTrial() {
          const res = await fetch(`${TRIAL_CHAT_ENDPOINT}/trialUser`, {
         method: "POST",
@@ -24,7 +23,6 @@ export const TrialChatApiService = {
         },
         credentials: "include",
       });
-
       return res
     },
 
