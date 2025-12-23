@@ -85,19 +85,6 @@ const handleSendOtp = async () => {
 
       <div className="w-full max-w-xl bg-white/20 backdrop-blur-xl shadow-xl rounded-3xl 
                       p-6 sm:p-8 md:p-10 border border-white/30">
-
-{/* 
-          <div className="flex justify-center  mb-7" >
-        
-                           <div className="flex items-center gap-0.5">
-                                  <img src={ZaLogo} alt="ZA logo" className="h-[56px] w-auto block" />
-                                  <div className="font-['Playfair_Display'] -mb-1 font-bold leading-[0.9] mt-3 select-none">
-                                    <div className="text-[20px]  text-[#1c0d25] ">Ask</div>
-                                    <div className="text-[30px]  text-[#1c0d25]">Zyla</div>
-                                  </div>
-                                </div>
-                  </div> */}
-        
  
         <h2
           className="text-center text-2xl sm:text-3xl font-semibold mb-3 text-white"
@@ -129,10 +116,28 @@ const handleSendOtp = async () => {
 </select>
  
                 {/* PHONE INPUT */}
-<input
+{/* <input
                   type="number"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Enter phone number"
+                  className="w-full px-4 py-3 rounded-lg bg-white text-gray-700 outline-none placeholder-gray-400"
+                /> */}
+
+                  <input
+                  type="text"
+                  pattern="[0-9]*"
+                  inputMode="numeric"
+                  value={phone}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "");
+                    if (value.length <= 10) {
+                      setPhone(value);
+                    }
+                  }}
+                  // placeholder="enter your phone number"
+                  maxLength={10}
+                  // onChange={(e) => setPhone(e.target.value)}
                   placeholder="Enter phone number"
                   className="w-full px-4 py-3 rounded-lg bg-white text-gray-700 outline-none placeholder-gray-400"
                 />

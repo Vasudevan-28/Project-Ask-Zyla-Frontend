@@ -1,4 +1,3 @@
-// src/components/ProfilePopup.jsx
 import React from "react";
 
 export default function ProfilePopup({ onSettings = () => {}, onLogout = () => {} }) {

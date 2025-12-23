@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
-import videoBg from "../assets/zyla.gif";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 import { loginUser, loginWithGoogle } from "../services/authservice";
 import { loginWithBackend } from "../services/backendAPI";
-import GifCompo from "../zyla_components/ZylaPromotion";
+// import GifCompo from "../zyla_components/ZylaPromotion";
+// import Header from "../home_components/HeaderPromo";
 import ZylaLogin from "../zyla_components/ZylaLogin";
-import Header from "../home_components/HeaderPromo";
 
-import logo from "../assets/ZaLogo.png";
+// import logo from "../assets/ZaLogo.png";
 import HeaderAuth from "../authentication_components/HeaderAuth";
 
 const MAX_ATTEMPTS = 3;              
@@ -102,7 +101,7 @@ export default function Login() {
           JSON.stringify({ attempts: 0, lockoutUntil: newLockoutUntil })
         );
         setLockoutUntil(newLockoutUntil);
-        setPasswordError("Too many failed attempts. Please try again in 1 minute.");
+        setPasswordError("Too many failed attempts. Please try again in 1.5 minute.");
       } else {
         localStorage.setItem(
           LOCK_STORAGE_KEY,
@@ -120,108 +119,12 @@ export default function Login() {
     }
   };
 
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-
-  //   // If locked, stop here
-  //   if (isLocked) {
-  //     setPasswordError(
-  //       `Too many failed attempts. Try again in ${remainingSeconds} second${
-  //         remainingSeconds === 1 ? "" : "s"
-  //       }.`
-  //     );
-  //     return;
-  //   }
-
-  //   setEmailPhoneError("");
-  //   setPasswordError("");
-
-  //   const id = identifier.trim();
-  //   const looksLikeEmail = id.includes("@");
-
-  //   // -------------------------
-  //   // Frontend Validation
-  //   // -------------------------
-  //   if (!id) {
-  //     setEmailPhoneError("Please enter Email or Phone");
-  //     return;
-  //   }
-
-  //   if (looksLikeEmail && !isValidEmail(id)) {
-  //     setEmailPhoneError("Please enter a valid Email ID");
-  //     return;
-  //   }
-
-  //   if (!looksLikeEmail && !isValidPhone(id)) {
-  //     setEmailPhoneError("Please enter a valid phone number");
-  //     return;
-  //   }
-
-  //   if (!password || password.length < 1) {
-  //     setPasswordError("Please enter a correct password");
-  //     return;
-  //   }
-
-  //   try {
-  //     // Firebase Email login check
-  //     if (looksLikeEmail) {
-  //       const firebaseUser = await loginUser(id, password);
-
-  //       if (!firebaseUser.user.emailVerified) {
-  //         setEmailPhoneError("Please verify your email before logging in.");
-  //         return;
-  //       }
-  //     }
-
-  //     // Backend Login
-  //     const result = await loginWithBackend(id, password);
-
-  //     if (result.message === "success") {
-  //       console.log(result.skin_profile);
-  //       console.log("skin_profile:", result.skin_profile, typeof result.skin_profile);
-
-        
-  //       localStorage.removeItem(LOCK_STORAGE_KEY);
-  //       setLockoutUntil(null);
-  //       setRemainingSeconds(0);
-
-  //       if (result.skin_profile === false) {
-  //         navigate("/questionnaire");
-  //       } else {
-  //         navigate("/dashboard");
-  //       }
-  //     } else {
-        
-  //       navigate("/register", {
-  //         state: {
-  //           email: result.firebaseUser.email,
-  //           isGoogle: false,
-  //         },
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-
-  //     if (error.code === "auth/wrong-password") {
-        
-  //       registerFailedAttempt();
-  //     } else if (error.code === "auth/user-not-found") {
-  //       setEmailPhoneError("Account does not exist");
-  //     } else if (error.code === "auth/invalid-credential") {
-  //       registerFailedAttempt();
-  //       setPasswordError("Invalid email or password");
-  //     } else {
-  //       setPasswordError("Invalid login details");
-  //     }
-  //   }
-  // };
-
+ 
   const handleLogin = async (e) => {
   e.preventDefault();
 
-  if (loading) return; // prevent double click
+  if (loading) return; 
 
-  // If locked, stop here
   if (isLocked) {
     setPasswordError(
       `Too many failed attempts. Try again in ${remainingSeconds} second${
@@ -508,7 +411,7 @@ export default function Login() {
   disabled={loading || isLocked}
   onClick={handleLogin}
   className={`w-full flex items-center justify-center gap-2 text-white py-2.5 rounded-lg font-semibold shadow-lg transition
-    ${loading || isLocked ? "opacity-70 cursor-not-allowed" : ""}`}
+    ${loading || isLocked ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
   style={{ backgroundColor: "rgba(58, 44, 73, 1)" }}
 >
   {loading ? (

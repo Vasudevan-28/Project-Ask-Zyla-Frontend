@@ -48,18 +48,18 @@ export const loginWithGoogle = async () => {
     const result = await signInWithPopup(auth, provider);
     const firebaseUser = result.user;
 
-    // 1️⃣ Check if user exists in MongoDB
+    // Check if user exists in MongoDB
     const googleCheck = await checkGoogleUser(firebaseUser.email);
 
     if (googleCheck.exists) {
-      // 👉 Already registered → go to dashboard
+      //  Already registered → go to dashboard
       return {
         status: "existing",
         skin_profile: googleCheck.skin_profile === true,
         firebaseUser,
       };
     } else {
-      // 👉 New Google user → must finish signup
+      //  New Google user → must finish signup
       return {
         status: "new",
         skin_profile: false,
@@ -143,55 +143,57 @@ export const verifyOTP = async (otp) => {
   }
 };
 
-export const resetFirebasePassword = async (email, newPassword) => {
-  // const apiKey = process.env.REACT_APP_FIREBASE_API_KEY;
-  const apiKey = "AIzaSyB8W2XVgnbSThSwqOX3Y3z8uf8jGNu7OTY";
+// export const resetFirebasePassword = async (email, newPassword) => {
+//   // const apiKey = process.env.REACT_APP_FIREBASE_API_KEY;
+//   const apiKey = "AIzaSyB8W2XVgnbSThSwqOX3Y3z8uf8jGNu7OTY";
 
-  // STEP 1 — Generate OOB reset code (WITHOUT sending email)
-  const oobURL = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${apiKey}`;
+//   // STEP 1 — Generate OOB reset code (WITHOUT sending email)
+//   const oobURL = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${apiKey}`;
 
-  const oobRes = await fetch(oobURL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      requestType: "PASSWORD_RESET",
-      email: email,
-    }),
-  });
+//   const oobRes = await fetch(oobURL, {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({
+//       requestType: "PASSWORD_RESET",
+//       email: email,
+//     }),
+//   });
 
-  const oobData = await oobRes.json();
+//   const oobData = await oobRes.json();
 
-  if (!oobData.oobCode) {
-    console.error("Firebase OOB Error:", oobData);
-    throw new Error("Failed to generate Firebase reset code");
-  }
+//   if (!oobData.oobCode) {
+//     console.error("Firebase OOB Error:", oobData);
+//     throw new Error("Failed to generate Firebase reset code");
+//   }
 
-  const oobCode = oobData.oobCode;
+//   const oobCode = oobData.oobCode;
 
-  // STEP 2 — Use oobCode to set new password
-  const resetURL = `https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key=${apiKey}`;
+//   // STEP 2 — Use oobCode to set new password
+//   const resetURL = `https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key=${apiKey}`;
 
-  const resetRes = await fetch(resetURL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      oobCode,
-      newPassword,
-    }),
-  });
+//   const resetRes = await fetch(resetURL, {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({
+//       oobCode,
+//       newPassword,
+//     }),
+//   });
 
-  const resetData = await resetRes.json();
+//   const resetData = await resetRes.json();
 
-  if (!resetData.email) {
-    console.error("Firebase Password Update Error:", resetData);
-    throw new Error("Failed to update Firebase password");
-  }
+//   if (!resetData.email) {
+//     console.error("Firebase Password Update Error:", resetData);
+//     throw new Error("Failed to update Firebase password");
+//   }
 
-  return resetData;
-};
+//   return resetData;
+// };
 
 
 // Update Firebase password
+
+
 export const updatePasswordInFirebase = async (newPassword) => {
   try {
     const user = auth.currentUser;

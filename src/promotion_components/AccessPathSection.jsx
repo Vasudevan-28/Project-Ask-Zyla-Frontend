@@ -102,7 +102,7 @@ const AccessPathSection = () => {
       {step.text}
     </p>
 
-    <Lightbutton>
+    <Lightbutton onClick={() => navigate('/signup')} >
       {step.btn}
     </Lightbutton>
   </div>

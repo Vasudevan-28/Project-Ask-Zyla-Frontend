@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-function Lightbutton({ children}) {
+function Lightbutton({ children, onClick}) {
   const navigate = useNavigate()
 
   // const openTab  = () => {
@@ -9,7 +9,8 @@ function Lightbutton({ children}) {
 
   return (
     <button
-      onClick={() => {navigate('/TrialChat')}}
+      // onClick={() => {navigate('/TrialChat')}}
+      onClick={onClick}
       className="
         relative inline-block px-4 sm:px-6 py-2 sm:py-3 rounded-xl
         font-semibold text-white text-sm sm:text-base

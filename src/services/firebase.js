@@ -1,4 +1,3 @@
-// src/services/firebase.js
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -8,7 +7,6 @@ import {
 } from "firebase/auth";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
-// ✅ Firebase configuration
 const firebaseConfig = {
   
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -21,24 +19,20 @@ const firebaseConfig = {
 
 
 
-// 🚀 Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// 🔐 Auth
 export const auth = getAuth(app);
 
-// 🌐 Social login providers
 export const googleProvider = new GoogleAuthProvider();
 export const facebookProvider = new FacebookAuthProvider();
 
-// 📱 Setup ReCAPTCHA for phone number auth
 export const setupRecaptcha = (containerId = "recaptcha-container") => {
   const verifier = new RecaptchaVerifier(
     containerId,
     {
       size: "invisible", // or 'normal' if you want to display the captcha box
       callback: (response) => {
-        console.log("✅ ReCAPTCHA verified successfully!");
+        console.log("ReCAPTCHA verified successfully!");
       },
     },
     auth

@@ -55,7 +55,7 @@ export default function Chatbot({scrollerRef, messages, loading, ttsSupported, s
                       <ChatMessage
                         role={m.role}
                         text={m.text}
-                        hits={m.hits}
+                        // hits={m.hits}
                         canSpeak={ttsSupported}
                         isSpeaking={speakingId === idx}
                         onSpeak={() => handleSpeak(m.text, idx)}

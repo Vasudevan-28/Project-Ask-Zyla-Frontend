@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import Conversations from "../chatbot_components/Conversations";
 import Chatbot from "../chatbot_components/Chatbotx";
-import { onAuthStateChanged, getAuth } from "firebase/auth";
-import HeaderMain from "../home_components/HeaderMain";
-import FooterMain from "../home_components/FooterMain";
+import { onIdTokenChanged, getAuth } from "firebase/auth";
+// import HeaderMain from "../home_components/HeaderMain";
+// import FooterMain from "../home_components/FooterMain";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { ChatBotApiService } from "../services/chatbot_api";
 
@@ -56,6 +56,8 @@ export default function ChatPage() {
   const [speakingId, setSpeakingId] = useState(null);
 
   const recognitionRef = useRef(null);
+  const voiceRef = useRef(null)
+  
 
 const [randomQs, setRandomQs] = useState([]);
 
@@ -63,25 +65,37 @@ const [randomQs, setRandomQs] = useState([]);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-      console.log(u)
-    });
-       return () => unsub();
-  }, [auth]);
+  const unsub = onIdTokenChanged(auth, async (u) => {
+    setUser(u);
 
+    if (!u) {
+      setIdToken(null);
+      return;
+    }
 
+    try {
+      const token = await u.getIdToken();
+      setIdToken(token);
+    } catch (err) {
+      console.error("Failed to get ID token:", err);
+    }
+  });
+
+  return () => unsub();
+}, []);
 
 useEffect(() => {
   const shuffled = [...QUICK_QUESTIONS].sort(() => 0.5 - Math.random());
   setRandomQs(shuffled.slice(0, 5));
 }, []);
-  
+
+
 
   useEffect(() => {
     if (
-      !("webkitSpeechRecognition" in window) &&
-      !("SpeechRecognition" in window)
+      typeof window === "undefined" ||
+      (!("webkitSpeechRecognition" in window) &&
+        !("SpeechRecognition" in window))
     ) {
       setSpeechSupported(false);
       return;
@@ -89,95 +103,116 @@ useEffect(() => {
 
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognitionRef.current = new SpeechRecognition();
-    recognitionRef.current.continuous = false;
-    recognitionRef.current.interimResults = true;
-    recognitionRef.current.lang = "en-US";
 
-    recognitionRef.current.onstart = () => {
-      setIsListening(true);
-    };
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
 
-    recognitionRef.current.onresult = (event) => {
-      const transcript = Array.from(event.results)
-        .map((result) => result[0])
-        .map((result) => result.transcript)
-        .join("");
+    recognition.onstart = () => setIsListening(true);
 
-      setInput(transcript);
-    };
+    recognition.onresult = (event) => {
+      let finalTranscript = "";
 
-    recognitionRef.current.onerror = (event) => {
-      console.error("Speech recognition error:", event);
-      setIsListening(false);
+      for (let i = 0; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        }
+      }
 
-      if (event.error === "not-allowed") {
-        alert(
-          "Microphone access denied. Allow microphone permissions to use voice input."
-        );
-      } else if (event.error === "network") {
-        alert("Speech recognition service is not reachable.");
+      if (finalTranscript) {
+        setInput(finalTranscript);
       }
     };
 
-    recognitionRef.current.onend = () => {
-      setIsListening(false);
-    };
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
 
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-    };
+    recognitionRef.current = recognition;
+
+    return () => recognition.stop();
   }, []);
 
   useEffect(() => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) {
       setTtsSupported(false);
-    }
-  }, []);
-
-
-  useEffect(() => {
-    let mounted = true;
-
-    async function fetchToken() {
-      if (!user) return;
-      try {
-        const token = await user.getIdToken(false);
-        if (mounted) {
-          setIdToken(token);
-        }
-      } catch (err) {
-        console.error("Failed to get ID token:", err);
-      }
-    }
-
-    fetchToken();
-
-    return () => {
-      mounted = false;
-    };
-  }, [user]);
-
-  const toggleListening = () => {
-    if (!speechSupported || !recognitionRef.current) {
-      alert("Speech recognition is not supported in your browser.");
       return;
     }
 
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices.length) return;
+
+      voiceRef.current =
+        voices.find(
+          (v) =>
+            v.lang === "en-US" &&
+            v.name.toLowerCase().includes("female")
+        ) ||
+        voices.find((v) => v.lang === "en-US") ||
+        voices[0];
+    };
+
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }, []);
+
+
+  const toggleListening = () => {
+    if (!speechSupported || !recognitionRef.current) return;
+
     try {
-      if (isListening) {
-        recognitionRef.current.stop();
-      } else {
-        recognitionRef.current.start();
-      }
-    } catch (err) {
-      console.error("Error starting/stopping recognition:", err);
+      isListening
+        ? recognitionRef.current.stop()
+        : recognitionRef.current.start();
+    } catch (e) {
+      console.log(e)
     }
   };
 
 
+  const utteranceRef = useRef(null)
+
+const handleSpeak = (text, id) => {
+  if (!ttsSupported || !voiceRef.current) return;
+
+  const synth = window.speechSynthesis;
+
+  if (speakingId === id) {
+    synth.cancel();
+    utteranceRef.current = null;
+    setSpeakingId(null);
+    return;
+  }
+
+  synth.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.voice = voiceRef.current;
+  utterance.lang = "en-US";
+
+  utteranceRef.current = utterance;
+
+  utterance.onend = () => {
+    if (utteranceRef.current !== utterance) return;
+    utteranceRef.current = null;
+    setSpeakingId(null);
+  };
+
+  utterance.onerror = () => {
+    if (utteranceRef.current !== utterance) return;
+    utteranceRef.current = null;
+    setSpeakingId(null);
+  };
+
+  setSpeakingId(id);
+
+  setTimeout(() => {
+    synth.speak(utterance);
+  }, 0);
+};
+
+  
   useEffect(() => {
     if (!idToken) return;
     loadConversations();
@@ -210,7 +245,7 @@ useEffect(() => {
     setConversations(data || []);
 
     if ((data || []).length > 0 && !currentConversationId) {
-      openConversation(data[0].id); // title is optional if you don’t need it
+      openConversation(data[0].id); 
     }
   } catch (err) {
     console.error("Failed to load conversations:", err);
@@ -253,7 +288,7 @@ useEffect(() => {
       const mapped = (data || []).map((m) => ({
         role: m.role,
         text: m.content,
-        hits: m.hits,
+        // hits: m.hits,
       }));
 
       if (mapped.length === 0) {
@@ -281,40 +316,6 @@ useEffect(() => {
   }
 
 
-  const handleSpeak = (text, id) => {
-    if (!ttsSupported || !window.speechSynthesis) {
-      alert("Text-to-speech is not supported in this browser.");
-      return;
-    }
-
-    const voices = window.speechSynthesis.getVoices();
-    const cuteVoice =
-      voices.find((v) => v.name.includes("Female")) ||
-      voices.find((v) => v.lang === "en-US") ||
-      voices[0];
-
-    if (speakingId === id) {
-      window.speechSynthesis.cancel();
-      setSpeakingId(null);
-      return;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = cuteVoice || null;
-    // utterance.rate = 1;
-    // utterance.pitch = 1.2;
-    utterance.lang = "en-US";
-
-    utterance.onend = () => setSpeakingId(null);
-    utterance.onerror = (err) => {
-      console.error("TTS error:", err);
-      setSpeakingId(null);
-    };
-
-    setSpeakingId(id);
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
-  };
 
   async function sendMessage(textArg) {
     const userText = textArg?.trim() ?? input.trim();
@@ -333,14 +334,15 @@ useEffect(() => {
       
       const data = await ChatBotApiService.sendMessage(idToken, currentConversationId, userText)
 
-      const { reply, hits, intent_recommend } = data || {};
+      // const { reply, hits, intent_recommend } = data || {};
+      const { reply } = data || {};
 
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
           text: reply || "",
-          hits: intent_recommend ? hits : [],
+          // hits: intent_recommend ? hits : [],
         },
       ]);
 

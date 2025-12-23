@@ -46,7 +46,7 @@ export default function TrialChatbot({scrollerRef, messages, loading, ttsSupport
                       <ChatMessage
                         role={m.role}
                         text={m.text}
-                        hits={m.hits}
+                        // hits={m.hits}
                         canSpeak={ttsSupported}
                         isSpeaking={speakingId === idx}
                         onSpeak={() => handleSpeak(m.text, idx)}
@@ -55,7 +55,7 @@ export default function TrialChatbot({scrollerRef, messages, loading, ttsSupport
                         
                       />
 
-                      {m.role === "assistant" && m.hits?.length > 0 && (
+                      {/* {m.role === "assistant" && m.hits?.length > 0 && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ml-12">
                           {m.hits.map((h, i) => (
                             <div
@@ -66,7 +66,7 @@ export default function TrialChatbot({scrollerRef, messages, loading, ttsSupport
                             </div>
                           ))}
                         </div>
-                      )}
+                      )} */}
                     </div>
                   );
                 })}

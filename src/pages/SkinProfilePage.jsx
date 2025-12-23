@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FiEdit, FiSave, FiX } from 'react-icons/fi';
-import axios from 'axios';
+// import axios from 'axios';
 import AIDescription from '../skin_profile_components/AIDescription';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 // import HeaderMain from '../team-pages/HeaderMain';
@@ -109,7 +109,7 @@ useEffect(() => {
     } catch (err) {
       console.error("Summary generation error:", err);
     }
-  };
+  };7
 
   const fetchSkinProfile = async () => {
     try {

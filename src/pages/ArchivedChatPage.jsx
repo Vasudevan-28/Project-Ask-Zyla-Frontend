@@ -9,7 +9,7 @@ import Chatbot from "../chatbot_components/Chatbotx";
 
 
 import { onAuthStateChanged, getAuth } from "firebase/auth";
-import HeaderMain from "../home_components/HeaderMain";
+// import HeaderMain from "../home_components/HeaderMain";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 import { ArchiveChatBotApiService } from "../services/archive_chatbot_api"
@@ -246,7 +246,7 @@ export default function ArchivedChatPage() {
       const mapped = (data || []).map((m) => ({
         role: m.role,
         text: m.content,
-        hits: m.hits,
+        // hits: m.hits,
       }));
 
       if (mapped.length === 0) {
@@ -324,14 +324,15 @@ export default function ArchivedChatPage() {
     try {
     
       const data = await ArchiveChatBotApiService.sendArchMessage(idToken, currentConversationId, userText)
-      const { reply, hits, intent_recommend } = data || {};
+      // const { reply, hits, intent_recommend } = data || {};
+      const { reply} = data || {};
 
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
           text: reply || "",
-          hits: intent_recommend ? hits : [],
+          // hits: intent_recommend ? hits : [],
         },
       ]);
 
@@ -366,7 +367,7 @@ export default function ArchivedChatPage() {
   return (
      <div className={`min-h-screen w-full overflow-auto  text-white flex flex-col ${isLight ? "bg-[#E9D9E3]": "bg-[#1D0E2D]"}`}>
      
-   <HeaderMain />
+   {/* <HeaderMain /> */}
 
 
       <div className="flex-1 flex p-3 mt-15">
@@ -424,9 +425,6 @@ export default function ArchivedChatPage() {
 
       </div>
 
-      <footer className="sticky bottom-0 h-50 mt-10 bg-white border-t border-white/20 shadow-lg ">
-        
-      </footer>
     </div>
   );
 }

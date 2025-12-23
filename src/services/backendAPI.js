@@ -142,12 +142,9 @@ export const resetEmailPassword = async (email, new_password) => {
     );
     return res.data;
   } catch (error) {
-    // Optionally handle/log error
     if (error.response) {
-      // Server responded with status code out of 2xx
       return error.response.data;
     } else {
-      // No response received (network/server down)
       return { error: error.message };
     }
   }

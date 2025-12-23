@@ -165,7 +165,7 @@ export default function ToDoCard({ selectedDate, userToken }) {
         <button
           type="submit"
           disabled={isPast}
-          className="rounded-md px-4 py-3 font-semibold bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] text-white disabled:bg-purple-200 disabled:text-white"
+          className="rounded-md cursor-pointer px-4 py-3 font-semibold bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] text-white disabled:bg-purple-200 disabled:text-white"
         >
           Add
         </button>
