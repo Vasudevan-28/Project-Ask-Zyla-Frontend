@@ -84,16 +84,6 @@ export const sendEmailOtp = async (email) => {
 };
 
 
-// export const verifyEmailOtp = async (email, otp) => {
-//   const res = await fetch(`${API_URL}/verify-email-otp`, {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ email, otp }),
-//   });
-
-//   return await res.json();
-// };
-
 export const verifyEmailOtp = async (email, otp) => {
   const res = await fetch(`${API_URL}/verify-email-otp`, {
     method: "POST",
