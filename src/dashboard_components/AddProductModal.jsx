@@ -19,17 +19,48 @@ export default function AddProductModal({ onClose, onAdd, routines = {} }) {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+//   function localTimeToUTC(timeStr) {
+//   if (!timeStr) return "";
+
+//   const [h, m] = timeStr.split(":").map(Number);
+//   const now = new Date();
+
+//   now.setHours(h, m, 0, 0);
+
+//   return new Date(
+//     now.getTime() + now.getTimezoneOffset() * 60000
+//   ).toISOString().substring(11, 16);
+// }
+
+
+
+// const utcReminder = localTimeToUTC(reminderTime);
+
+function localTimeToUTC(timeStr) {
+  if (!timeStr) return "";
+
+  const [h, m] = timeStr.split(":").map(Number);
+  const d = new Date();
+
+  d.setHours(h, m, 0, 0);
+
+  return d.toISOString().substring(11, 16);
+}
+
+
   async function handleSubmit() {
     setError("");
     if (!name.trim()) {
       setError("Enter product name");
       return;
     }
+      const utcReminder = localTimeToUTC(reminderTime);
+
     const routineProducts = routines[routine] || [];
     const slotNum = Number(slot);
     const existing = routineProducts.find((p) => p.slot === slotNum);
     if (existing) {
-      setConflict({ existing, proposed: { routine, slot: slotNum, name, type, desc, reminder_time: reminderTime } });
+      setConflict({ existing, proposed: { routine, slot: slotNum, name, type, desc, reminder_time: utcReminder } });
       return;
     }
     if (routineProducts.length > 0) {
@@ -48,7 +79,9 @@ export default function AddProductModal({ onClose, onAdd, routines = {} }) {
 
     setIsSubmitting(true);
     try {
-      await onAdd({ routine, slot: slotNum, name, type, desc, reminder_time: reminderTime });
+      await onAdd({ routine, slot: slotNum, name, type, desc, reminder_time: utcReminder });
+      
+console.log("UTC Reminder Time:", utcReminder);
       setShowSuccess(true);
     } catch (e) {
       setError("Failed to add routine. Please try again.");
@@ -61,7 +94,7 @@ export default function AddProductModal({ onClose, onAdd, routines = {} }) {
     setConflict(null);
     setIsSubmitting(true);
     try {
-      await onAdd({ routine, slot: Number(slot), name, type, desc, reminder_time: reminderTime });
+      await onAdd({ routine, slot: Number(slot), name, type, desc, reminder_time: utcReminder });
       setShowSuccess(true);
     } catch (e) {
       setError("Failed to add routine.");
