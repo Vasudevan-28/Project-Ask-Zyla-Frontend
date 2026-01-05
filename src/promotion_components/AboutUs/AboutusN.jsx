@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import Zylaimg from "../../assets/Zyla.png";
 // import PersonalRoutine from "./assets/personalroutine.png";
 import DailyPlanner from "./daily_planner.png";
@@ -58,6 +59,30 @@ const features = [
 ];
 
 export default function AboutUsNew() {
+
+   const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      const id = location.state.scrollTo;
+
+      // delay ensures DOM is rendered
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          const headerHeight = window.innerWidth < 640 ? 50 : 60;
+          const y =
+            el.getBoundingClientRect().top +
+            window.pageYOffset -
+            headerHeight;
+
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
+      }, 100);
+    }
+  }, [location]);
+
+
   const [activeFeature, setActiveFeature] = useState(null);
   const Separator = () => (
   <div className="relative w-full my-16 flex justify-center">
@@ -78,7 +103,7 @@ export default function AboutUsNew() {
     {/* <Header /> */}
     <HeaderMain />
     <div className="w-full min-h-screen bg-linear-to-b from-[#0B0014] via-[#1A0D28] to-[#0B0014] text-white overflow-x-hidden relative">
-
+    <section id="storyy">
       {/* ⭐ Floating Stars */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute w-0.5 h-0.5 bg-white/40 rounded-full animate-pulse top-[10%] left-[20%]"></div>
@@ -94,7 +119,7 @@ export default function AboutUsNew() {
       </h2>
 
       {/* STORY SECTION */}
-      <section  id="main-story" className="flex flex-col lg:flex-row items-center justify-center mt-[-60px] px-6 lg:px-20 gap-10 relative z-10">
+      <section   className="flex flex-col lg:flex-row items-center justify-center mt-[-60px] px-6 lg:px-20 gap-10 relative z-10">
         
         {/* GLOW BEHIND IMAGE */}
         <div className="relative">
@@ -122,14 +147,18 @@ export default function AboutUsNew() {
           <p className="mt-6 w-full text-right">— XoXo Zyla ❤️</p>
         </div>
       </section>
+      </section>
       <Separator/>
     
 
       {/* 🌠 FEATURES TITLE */}
+<section id="features-title">
+
 <h2 className="text-[90px] sm:text-[120px] font-extrabold text-transparent bg-clip-text bg-linear-to-r
  from-purple-400/40 via-white/70 to-pink-500/40 tracking-tight text-center">
   FEATURES
 </h2>
+   </section>
 
 {/* ✨ SUBTLE FEATURES GRID */}
 <section id="features" className="mt-[-60px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14 px-6 sm:px-10 pb-0 max-w-6xl mx-auto relative z-10">

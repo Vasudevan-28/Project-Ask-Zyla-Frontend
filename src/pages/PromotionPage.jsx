@@ -13,6 +13,8 @@ import HeaderPromo from "../home_components/HeaderPromo";
 import { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import CookieBanner from "../cookie_components/CookieBanner";
+
 
 export default function PromotionPage() {
   const auth = getAuth()
@@ -44,6 +46,7 @@ useEffect(() => {
 
   return (
     <>
+     <CookieBanner />
       <HeaderPromo />
       <HeroSection />
       <div className="w-full h-px bg-[#FFD700]"></div>

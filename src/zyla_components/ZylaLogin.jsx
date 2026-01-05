@@ -9,7 +9,7 @@ export default function ZylaLogin(){
 
 useEffect(() => {
   if(loadGif){
-    setTimeout(() => setShowTextDelayed(true), 400); // Show text after cloud
+    setTimeout(() => setShowTextDelayed(true), 400); 
   } else {
     setShowTextDelayed(false);
   }
@@ -21,15 +21,14 @@ useEffect(() => {
 
     const [index, setIndex] = useState(0);
 
-// change text along with GIF timing
 useEffect(() => {
   const interval = setInterval(() => {
     setLoadGif(true);
 
-    setTimeout(() => setLoadGif(false), 4000); // cloud visible time
+    setTimeout(() => setLoadGif(false), 2000); 
 
-    setIndex(prev => (prev + 1) % statements.length); // rotate 3 messages
-  }, 5000); // GIF cycle time (adjust to GIF duration)
+    setIndex(prev => (prev + 1) % statements.length); 
+  }, 3000); 
 
   return () => clearInterval(interval);
 }, []);
@@ -83,8 +82,8 @@ useEffect(() => {
 <div>
     <p
     className={`absolute top-8 right-19 font-bold
-         md:text-xl leading-tight
-        max-w-[180px] md:max-w-[220px]    text-center  font-['Caveat']
+         text-xl leading-tight
+        max-w-[220px]    text-center  font-['Caveat']
         whitespace-normal wrap-break-word 
         transition-opacity duration-400 ease-in-out
         ${showTextDelayed ? "opacity-100" : "opacity-0"}

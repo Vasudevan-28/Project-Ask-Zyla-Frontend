@@ -74,7 +74,7 @@ export default function ZylaForgotPassword() {
        <img src={TalkGood} className="h-55 w-60 absolute bottom-0" />
        <img
          src={CloudThink}
-         className={`h-44 w-90 absolute top-0 right-0
+         className={`h-48 w-90 absolute top-0 right-0
            transition-all duration-800 ease-in-out
            ${loadGif ? "opacity-100 scale-100" : "opacity-0 scale-0"}
          `}

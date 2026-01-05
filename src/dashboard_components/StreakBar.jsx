@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useContext, useCallback } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { ApiService } from "../services/dashboardApi";
@@ -66,33 +65,33 @@ export default function StreakBar({ userToken, selectedIso }) {
   const completed = todos.filter((t) => t.checked).length;
 
   const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
-  const stroke = "1.5px solid rgba(255,255,255,0.95)";
 
   return (
     <div
-      className={`${
-        isLight ? "bg-white text-slate-900" : "bg-white/5 text-slate-50"
-      } p-4 rounded-lg`}
+      className={`p-3 md:p-4 rounded-lg w-full
+        ${isLight ? "bg-white text-slate-900" : "bg-white/5 text-slate-50"}`}
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 16,
+        gap: 12,
         boxSizing: "border-box",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <div style={{ fontSize: 22 }}>🔥</div>
-        <div>
-          <div style={{ fontSize: 12, opacity: 0.65 }}>Streak</div>
-          <div style={{ fontWeight: 800, fontSize: 18 }}>
+      {/* Icon + text */}
+      <div className="flex items-center gap-3 md:gap-4">
+        <div className="text-xl md:text-2xl">🔥</div>
+        <div className="leading-tight">
+          <div className="text-xs md:text-[12px] opacity-70">Streak</div>
+          <div className="font-extrabold text-base md:text-lg">
             {streak} {streak === 1 ? "Day" : "Days"}
           </div>
-          <div style={{ fontSize: 11, opacity: 0.7, marginTop: 2 }}>
+          <div className="text-[11px] md:text-[11px] opacity-70 mt-1">
             {completed}/{total} tasks completed today
           </div>
         </div>
       </div>
 
+      {/* Progress bar */}
       <div style={{ flex: 1 }}>
         <div
           style={{
@@ -100,8 +99,9 @@ export default function StreakBar({ userToken, selectedIso }) {
             borderRadius: 999,
             overflow: "hidden",
             background: "rgba(0,0,0,0.06)",
-            border: stroke,
+            border: "1.5px solid rgba(255,255,255,0.95)",
           }}
+          className="h-2 md:h-[10px]"
         >
           <div
             style={{

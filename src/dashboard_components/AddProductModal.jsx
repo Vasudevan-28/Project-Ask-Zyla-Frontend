@@ -19,34 +19,16 @@ export default function AddProductModal({ onClose, onAdd, routines = {} }) {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-//   function localTimeToUTC(timeStr) {
-//   if (!timeStr) return "";
+  function localTimeToUTC(timeStr) {
+    if (!timeStr) return "";
 
-//   const [h, m] = timeStr.split(":").map(Number);
-//   const now = new Date();
+    const [h, m] = timeStr.split(":").map(Number);
+    const d = new Date();
 
-//   now.setHours(h, m, 0, 0);
+    d.setHours(h, m, 0, 0);
 
-//   return new Date(
-//     now.getTime() + now.getTimezoneOffset() * 60000
-//   ).toISOString().substring(11, 16);
-// }
-
-
-
-// const utcReminder = localTimeToUTC(reminderTime);
-
-function localTimeToUTC(timeStr) {
-  if (!timeStr) return "";
-
-  const [h, m] = timeStr.split(":").map(Number);
-  const d = new Date();
-
-  d.setHours(h, m, 0, 0);
-
-  return d.toISOString().substring(11, 16);
-}
-
+    return d.toISOString().substring(11, 16);
+  }
 
   async function handleSubmit() {
     setError("");
@@ -54,7 +36,7 @@ function localTimeToUTC(timeStr) {
       setError("Enter product name");
       return;
     }
-      const utcReminder = localTimeToUTC(reminderTime);
+    const utcReminder = localTimeToUTC(reminderTime);
 
     const routineProducts = routines[routine] || [];
     const slotNum = Number(slot);
@@ -80,8 +62,6 @@ function localTimeToUTC(timeStr) {
     setIsSubmitting(true);
     try {
       await onAdd({ routine, slot: slotNum, name, type, desc, reminder_time: utcReminder });
-      
-console.log("UTC Reminder Time:", utcReminder);
       setShowSuccess(true);
     } catch (e) {
       setError("Failed to add routine. Please try again.");
@@ -94,7 +74,7 @@ console.log("UTC Reminder Time:", utcReminder);
     setConflict(null);
     setIsSubmitting(true);
     try {
-      await onAdd({ routine, slot: Number(slot), name, type, desc, reminder_time: utcReminder });
+      await onAdd({ routine, slot: Number(slot), name, type, desc, reminder_time: localTimeToUTC(reminderTime) });
       setShowSuccess(true);
     } catch (e) {
       setError("Failed to add routine.");
@@ -111,9 +91,16 @@ console.log("UTC Reminder Time:", utcReminder);
   return (
     <>
       <div className="fixed inset-0 z-250000 flex items-center justify-center bg-black/40">
-        <div className="bg-white  rounded-lg p-6 w-96 max-w-lg shadow-xl flex flex-col gap-3">
-          <div className="font-semibold text-xl mb-1">Add Routine</div>
-          <div className="grid grid-cols-2 gap-2">
+        <div
+          className={`bg-white rounded-lg shadow-xl flex flex-col gap-3
+            w-11/12 max-w-lg p-4 md:p-6 md:w-96 md:max-w-lg
+            h-[90vh] md:h-auto overflow-auto`}
+          style={{ boxSizing: "border-box" }}
+        >
+          <div className="font-semibold text-lg md:text-xl mb-1">Add Routine</div>
+
+          {/* Stack on mobile, two-column on md+ */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div>
               <label className="text-sm font-medium">Routine</label>
               <select
@@ -142,7 +129,7 @@ console.log("UTC Reminder Time:", utcReminder);
                 className="w-full p-2 rounded border border-gray-300 bg-white text-gray-900"
               />
             </div>
-            <div className="col-span-2">
+            <div className="col-span-1 md:col-span-2">
               <label className="text-sm font-medium">Type</label>
               <input
                 value={type}
@@ -151,7 +138,7 @@ console.log("UTC Reminder Time:", utcReminder);
                 placeholder="e.g., Moisturizer"
               />
             </div>
-            <div className="col-span-2">
+            <div className="col-span-1 md:col-span-2">
               <label className="text-sm font-medium">Name</label>
               <input
                 value={name}
@@ -160,25 +147,25 @@ console.log("UTC Reminder Time:", utcReminder);
                 placeholder="Product name"
               />
             </div>
-            <div className="col-span-2">
+            <div className="col-span-1 md:col-span-2">
               <label className="text-sm font-medium">Description</label>
               <textarea
                 value={desc}
                 onChange={(e) => {
                   const val = e.target.value;
-                  const words = val.trim().split(/\s+/).filter(w => w.length > 0);
+                  const words = val.trim().split(/\s+/).filter((w) => w.length > 0);
                   if (words.length <= 50 || val.length < desc.length) {
-                     setDesc(val);
+                    setDesc(val);
                   }
                 }}
                 className="w-full p-2 rounded border border-gray-300 bg-white text-gray-900"
-                rows="2"
+                rows="3"
               />
               <div className="text-xs text-gray-500 text-right">
-                {desc.trim() ? desc.trim().split(/\s+/).filter(w => w.length > 0).length : 0}/50 words
+                {desc.trim() ? desc.trim().split(/\s+/).filter((w) => w.length > 0).length : 0}/50 words
               </div>
             </div>
-            <div className="col-span-2">
+            <div className="col-span-1 md:col-span-2">
               <label className="text-sm font-medium">Reminder Time (Optional)</label>
               <input
                 type="time"
@@ -188,32 +175,39 @@ console.log("UTC Reminder Time:", utcReminder);
               />
             </div>
           </div>
+
           {error && (
             <div className="mt-2 text-sm rounded p-2 bg-red-100 text-red-700 border border-red-200">
               {error}
             </div>
           )}
-          <div className="mt-3 flex justify-end gap-2">
+
+          <div className="mt-3 flex flex-col md:flex-row-reverse justify-start gap-2">
             <button
-              className="px-3 py-2 rounded bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300"
-              onClick={onClose}
-              type="button"
-            >
-              Cancel
-            </button>
-            <button
-              className="px-3 py-2 rounded bg-[#1d0e2d] text-white font-semibold hover:bg-[#1d0e2daf]"
+              className="w-full md:w-auto px-3 py-2 rounded bg-[#1d0e2d] text-white font-semibold hover:bg-[#1d0e2daf]"
               onClick={handleSubmit}
               type="button"
               disabled={isSubmitting}
             >
               Add Routine
             </button>
+            <button
+              className="w-full md:w-auto px-3 py-2 rounded bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300"
+              onClick={onClose}
+              type="button"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>
-      {conflict && <ConflictModal existing={conflict.existing} onCancel={() => setConflict(null)} onShift={handleShiftConfirm} />}
-      {showSuccess && <SuccessModal message="Successfully added product!" buttonText="Back to Home" onClose={handleSuccessClose} />}
+
+      {conflict && (
+        <ConflictModal existing={conflict.existing} onCancel={() => setConflict(null)} onShift={handleShiftConfirm} />
+      )}
+      {showSuccess && (
+        <SuccessModal message="Successfully added product!" buttonText="Back to Home" onClose={handleSuccessClose} />
+      )}
     </>
   );
 }

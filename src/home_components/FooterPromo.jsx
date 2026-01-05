@@ -13,8 +13,8 @@ export default function FooterPromo() {
   };
 
   const navPromo = () => {
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   const goToSection = (id) => {
     const el = document.getElementById(id);
@@ -22,9 +22,7 @@ export default function FooterPromo() {
     if (el) {
       const headerHeight = window.innerWidth < 640 ? 50 : 60;
       const y =
-        el.getBoundingClientRect().top +
-        window.pageYOffset -
-        headerHeight;
+        el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
 
       window.scrollTo({ top: y, behavior: "smooth" });
     } else {
@@ -43,9 +41,7 @@ export default function FooterPromo() {
     setTimeout(() => {
       const headerHeight = window.innerWidth < 640 ? 50 : 60;
       const y =
-        el.getBoundingClientRect().top +
-        window.pageYOffset -
-        headerHeight;
+        el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
 
       window.scrollTo({ top: y, behavior: "smooth" });
     }, 100);
@@ -57,10 +53,10 @@ export default function FooterPromo() {
       className="w-full bg-white text-[#221322] m-0 p-0 box-border"
     >
       {/* MAIN ROW */}
-      <div className="py-[18px] px-6 flex justify-center items-stretch border-t border-t-[rgba(0,0,0,0.06)]">
-        <div className="w-full max-w-[1300px] grid grid-cols-[200px_1fr_1fr_1fr] gap-[30px] items-start">
+      <div className="py-6 px-4 sm:px-6 md:px-8 flex justify-center items-stretch border-t border-t-[rgba(0,0,0,0.06)]">
+        <div className="w-full max-w-[1300px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-[30px] items-start">
           {/* BRAND */}
-          <div className="flex items-center gap-2.5 cursor-pointer self-center -translate-x-[30px]"
+           <div className="flex items-center gap-2.5 cursor-pointer self-center -translate-x-[30px]"
           onClick={navPromo}
           >
             <img
@@ -75,12 +71,12 @@ export default function FooterPromo() {
           </div>
 
           {/* Company Overview */}
-          <div>
+          <div className="pt-2">
             <div className="font-bold mb-2">Company Overview</div>
             <ul className="list-none m-0 p-0">
               <li className="mb-2">
                 <button
-                  className="font-medium hover:underline cursor-pointer"
+                  className="font-medium hover:underline cursor-pointer text-left"
                   onClick={() => goToSection("my-story")}
                 >
                   My Story
@@ -88,7 +84,7 @@ export default function FooterPromo() {
               </li>
               <li className="mb-2">
                 <button
-                  className="font-medium hover:underline cursor-pointer"
+                  className="font-medium hover:underline cursor-pointer text-left"
                   onClick={() => goToSection("features")}
                 >
                   What Zyla Does?
@@ -98,12 +94,12 @@ export default function FooterPromo() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="pt-2">
             <div className="font-bold mb-2">Quick Links</div>
             <ul className="list-none m-0 p-0">
               <li className="mb-2">
                 <button
-                  className="font-medium hover:underline cursor-pointer"
+                  className="font-medium hover:underline cursor-pointer text-left"
                   onClick={navSupport}
                 >
                   Support
@@ -111,7 +107,7 @@ export default function FooterPromo() {
               </li>
               <li className="mb-1">
                 <button
-                  className="font-medium hover:underline cursor-pointer"
+                  className="font-medium hover:underline cursor-pointer text-left"
                   onClick={() => navigate("/privacy-policy")}
                 >
                   Privacy Policy
@@ -119,7 +115,7 @@ export default function FooterPromo() {
               </li>
               <li className="mb-1">
                 <button
-                  className="font-medium hover:underline cursor-pointer"
+                  className="font-medium hover:underline cursor-pointer text-left"
                   onClick={() => navigate("/cookie-policy")}
                 >
                   Cookie Policy
@@ -127,27 +123,27 @@ export default function FooterPromo() {
               </li>
               <li className="mb-2">
                 <button
-                  className="font-medium hover:underline cursor-pointer"
+                  className="font-medium hover:underline cursor-pointer text-left"
                   onClick={() => navigate("/login")}
                 >
-                  LogIn
+                  Log In
                 </button>
               </li>
               <li className="mb-2">
                 <button
-                  className="font-medium hover:underline cursor-pointer"
+                  className="font-medium hover:underline cursor-pointer text-left"
                   onClick={() => navigate("/signup")}
                 >
-                  SignUp
+                  Sign Up
                 </button>
               </li>
             </ul>
           </div>
 
           {/* Contact Us */}
-          <div>
+          <div className="pt-2">
             <div className="font-bold mb-2">Contact Us</div>
-            <p className="mb-2">
+            <p className="mb-2 text-sm">
               Need help? Fill out our{" "}
               <button
                 className="font-medium hover:underline cursor-pointer"
@@ -166,13 +162,15 @@ export default function FooterPromo() {
               </a>
             </p>
 
-            <p>Stay connected for more skin care love!</p>
+            <p className="text-sm mb-2">Stay connected for more skin care love!</p>
 
             <div className="flex gap-3 mt-2">
               <a
                 href="https://mail.google.com/mail/?view=cm&fs=1&to=askzyla.zeaisoft@gmail.com"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Email Ask Zyla"
+                className="text-[#221322] hover:text-[#1A0D28]"
               >
                 <IoMailOutline size={18} />
               </a>
@@ -180,6 +178,8 @@ export default function FooterPromo() {
                 href="https://www.facebook.com/profile.php?id=61584828928342"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="text-[#221322] hover:text-[#1A0D28]"
               >
                 <IoLogoFacebook size={18} />
               </a>
@@ -187,18 +187,11 @@ export default function FooterPromo() {
                 href="https://www.instagram.com/askzyla"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="text-[#221322] hover:text-[#1A0D28]"
               >
                 <FaInstagram size={18} />
               </a>
-               {/* <a
-//                 className="text-inherit cursor-pointer no-underline font-medium hover:underline focus:underline"
-//                 href="https://www.youtube.com"
-//                 target="_blank"
-//                 rel="noopener noreferrer"
-//                 aria-label="YouTube"
-//               >
-//                 <LuYoutube size={18} />
-//               </a> */}
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@ export default function Toast({ message, onClose }) {
   }, [onClose]);
 
   return (
-    <div className="fixed bottom-4 right-4 bg-purple-900 text-white px-6 py-4 rounded-lg shadow-xl z-[100000] flex items-center gap-3 animate-slide-up border border-purple-700">
+    <div className="fixed bottom-16 md:bottom-6 right-2 md:right-6 bg-purple-900 text-white px-6 py-4 rounded-lg shadow-xl z-[100000] flex items-center gap-3 animate-slide-up border border-purple-700">
       <div className="bg-white rounded-full p-1">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-900">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>

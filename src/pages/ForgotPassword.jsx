@@ -2,10 +2,6 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { sendEmailOtp } from "../services/backendAPI";
-import HeaderMain from "../home_components/HeaderMain";
-import Header from "../home_components/Header1";
-import HeaderQP from "../home_components/HeaderQP";
-import ZaLogo from "../assets/ZaLogo.png"
 import ZylaForgotPassword from "../zyla_components/ZylaForgotPassword";
 import HeaderAuth from "../authentication_components/HeaderAuth";
  
@@ -30,46 +26,9 @@ export default function ForgotPassword() {
     visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
   };
  
-  // const handleSendOtp = async () => {
-  //   setError("");
-
-  //   // Email validation
-  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  //   if (!email.trim()) {
-  //     setError("Enter valid email ID");
-  //     return;
-  //   }
-
-  //   if (!emailRegex.test(email.trim())) {
-  //     setError("Enter a valid email address");
-  //     return;
-  //   }
- 
-  //   try {
-  //     const res = await sendEmailOtp(email);
- 
-  //     if (res.message === "OTP sent to email") {
-  //       navigate("/verification", {
-  //         state: { email, otp_expiry: res.otp_expiry },
-  //       });
-  //     } else {
-  //       setError("Something went wrong.");
-  //     }
-  //   } catch (err) {
-  //     if (
-  //       err.message.includes("Too many OTP") ||
-  //       err.message.includes("429")
-  //     ) {
-  //       setError("❌ Too many OTP requests. Try again after 30 minutes.");
-  //     } else {
-  //       setError("❌ " + (err.message || "Something went wrong."));
-  //     }
-  //   }
-  // };
 
   const handleSendOtp = async () => {
-  if (loading) return; // prevent double clicks
+  if (loading) return; 
 
   setError("");
 
@@ -113,10 +72,11 @@ export default function ForgotPassword() {
 
  
   return (
-<div className="min-h-screen flex items-center justify-between  bg-[#1A0D28] p-10">
+    <div className="min-h-screen   bg-[#1A0D28] " >
+  <HeaderAuth />
+<div className="flex items-center justify-between p-10 mt-10">
   {/* <HeaderMain /> */}
   {/* <HeaderQP /> */}
-  <HeaderAuth />
  <div className="flex items-center justify-center ml-10">
 
   <ZylaForgotPassword />
@@ -125,9 +85,6 @@ export default function ForgotPassword() {
                       p-6 sm:p-8 md:p-10 border border-white/30
                       bg-white/20
                       ">
- 
-        
-
         <h2
           className="text-center text-2xl sm:text-3xl  font-semibold mb-3 text-white"
         >
@@ -203,7 +160,7 @@ export default function ForgotPassword() {
   )}
 </button>
 
-
+</div>
       </div>
 </div>
   );

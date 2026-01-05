@@ -4,9 +4,7 @@ import { VscArrowCircleLeft } from "react-icons/vsc";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ThemeContext } from "../contexts/ThemeContext";
 
-import toast from "react-hot-toast"
-
-// const SET_URL = "http://127.0.0.1:8484/settings"
+import toast from "react-hot-toast";
 
 function Support({ onBack }) {
   const [issue, setIssue] = useState("");
@@ -18,20 +16,17 @@ function Support({ onBack }) {
 
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
-  
 
-      const [idToken, setIdToken] = useState("")
-    
-     const auth = getAuth();
-        useEffect(() => {
-          const unsub = onAuthStateChanged(auth, async (u) => {
-            // setUser(u);
-            // setAuthToken(await u.getIdToken(false))
-            setIdToken(await u.getIdToken(false))
-          });
-      
-          return () => unsub();
-        }, [auth]);
+  const [idToken, setIdToken] = useState("");
+
+  const auth = getAuth();
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (u) => {
+      setIdToken(await u.getIdToken(false));
+    });
+
+    return () => unsub();
+  }, [auth]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,35 +40,25 @@ function Support({ onBack }) {
 
     const combined = `${issue.trim()}\n\n${help.trim()}`;
 
-    if(!idToken) return
+    if (!idToken) return;
 
     try {
       setSaving(true);
-      // await updateSupport(combined); // PUT /support { message }
-      
-  //      await fetch(`${SET_URL}/support`, {
-  //       // headers: { Authorization: AUTH_TOKEN },
-  //       method : 'PUT',
-  //       headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
-  //        body: JSON.stringify({
-  //   message: combined
-  // })
-      // })
 
-const res = await submitSupportRequest(idToken, combined);
-  const data = await res.json().catch(() => ({}));
+      const res = await submitSupportRequest(idToken, combined);
+      const data = await res.json().catch(() => ({}));
 
-  if (!res.ok) {
-    throw new Error(data?.detail || "Failed to submit support request");
-  }
+      if (!res.ok) {
+        throw new Error(data?.detail || "Failed to submit support request");
+      }
 
-      toast.success("Support request submitted")
-      setIssue("")
-      setHelp("")
+      toast.success("Support request submitted");
+      setIssue("");
+      setHelp("");
       setSuccess("");
     } catch (err) {
       console.error("Failed to save support request:", err);
-      toast.error("Failed to submit support request")
+      toast.error("Failed to submit support request");
       setError("");
     } finally {
       setSaving(false);
@@ -82,79 +67,33 @@ const res = await submitSupportRequest(idToken, combined);
 
   if (loading) {
     return (
-      <section className="w-[65%] flex-1 min-w-[400px] h-full px-6 pt-4 pb-6 flex items-center justify-center bg-white rounded-2xl overflow-y-auto">
+      <section className="w-full md:w-[65%] flex-1 min-w-0 h-full px-6 pt-4 pb-6 flex items-center justify-center bg-white rounded-2xl overflow-y-auto">
         Loading support...
       </section>
     );
   }
 
   return (
-    <section className={`w-[65%] flex-1 min-w-[400px] h-full px-6 pt-4 pb-6 flex flex-col rounded-2xl overflow-y-auto  ${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"} `}>
+    <section className={`w-full md:w-[90%] max-w-[900px] flex-1 min-w-0 h-full px-4 md:px-6 pt-4 pb-6 flex flex-col rounded-2xl overflow-y-auto ${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"}`}>
       {/* Top row: back + title */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          marginBottom: "32px",
-        }}
-      >
-        {/* Back button */}
-        <button
-          type="button"
-          onClick={() => onBack && onBack()}
-         
-          
-        >
-         <VscArrowCircleLeft size={40} />
+      <div style={{ display: "flex", alignItems: "center", marginBottom: "24px" }}>
+        <button type="button" onClick={() => onBack && onBack()}>
+          <VscArrowCircleLeft size={40} />
         </button>
 
-        {/* Title */}
-       <h1
-  className="
-    m-0 
-    flex-1 
-    text-center 
-    tracking-[3px] 
-    font-bold 
-    text-[28px] 
-    uppercase 
-  "
->
-  CONTACT SUPPORT
-</h1>
-
+        <h1 className="m-0 flex-1 text-center tracking-[3px] font-bold text-[20px] md:text-[28px] uppercase">CONTACT SUPPORT</h1>
       </div>
 
       {/* Error / Success messages */}
-      {error && (
-        <p style={{ color: "red", marginBottom: "12px" }}>
-          {error}
-        </p>
-      )}
-      {success && (
-        <p style={{ color: "green", marginBottom: "12px" }}>
-          {success}
-        </p>
-      )}
+      {error && <p style={{ color: "red", marginBottom: "12px" }}>{error}</p>}
+      {success && <p style={{ color: "green", marginBottom: "12px" }}>{success}</p>}
 
       {/* Form */}
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          width: "100%",
-          maxWidth: "520px",
-        }}
-      >
+      <form onSubmit={handleSubmit} className="w-full max-w-[520px]">
         {/* Issue field */}
-        <div style={{ marginBottom: "28px" }}>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "8px",
-              fontSize: "16px",
-            }}
-          >
-            What is your issue?<span style={{ color: "red" }}> *</span>
+        <div className="mb-6">
+          <label className="block mb-2 text-base">
+            What is your issue?<span className="text-red-600"> *</span>
           </label>
           <textarea
             name="issue"
@@ -165,31 +104,18 @@ const res = await submitSupportRequest(idToken, combined);
               setIssue(e.target.value);
               setSuccess("");
             }}
-              className={` ${!isLight ? "placeholder-slate-50/30" : "placeholder-slate-900/30" }`}
+            className={`w-full min-h-[120px] rounded-[12px] border px-4 py-3 text-sm resize-vertical outline-none shadow-sm ${!isLight ? "placeholder-slate-50/30" : "placeholder-slate-900/30"}`}
             style={{
-              width: "100%",
-              minHeight: "120px",
-              borderRadius: "12px",
-              border: "1px solid #e0c4ea",
-              padding: "14px 16px",
-              fontSize: "14px",
-              resize: "vertical",
-              outline: "none",
+              borderColor: "#e0c4ea",
               boxShadow: "0 4px 8px rgba(125,25,92,0.08)",
             }}
           />
         </div>
 
         {/* Help field */}
-        <div style={{ marginBottom: "32px" }}>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "8px",
-              fontSize: "16px",
-            }}
-          >
-            How can we help?<span style={{ color: "red" }}> *</span>
+        <div className="mb-6">
+          <label className="block mb-2 text-base">
+            How can we help?<span className="text-red-600"> *</span>
           </label>
           <textarea
             name="help"
@@ -200,43 +126,23 @@ const res = await submitSupportRequest(idToken, combined);
               setHelp(e.target.value);
               setSuccess("");
             }}
-            className={` ${!isLight ? "placeholder-slate-50/30" : "placeholder-slate-900/30" }`}
+            className={`w-full min-h-[120px] rounded-[12px] border px-4 py-3 text-sm resize-vertical outline-none shadow-sm ${!isLight ? "placeholder-slate-50/30" : "placeholder-slate-900/30"}`}
             style={{
-              width: "100%",
-              minHeight: "120px",
-              borderRadius: "12px",
-              border: "1px solid #e0c4ea",
-              padding: "14px 16px",
-              fontSize: "14px",
-              resize: "vertical",
-              outline: "none",
+              borderColor: "#e0c4ea",
               boxShadow: "0 4px 8px rgba(125,25,92,0.08)",
             }}
           />
         </div>
 
-        {/* Submit button */}
-      
-
-
         <div className="mt-2.5">
-  <button
-    type="submit"
-    disabled={saving}
-    className={`
-      px-10 py-2.5 
-      rounded-md 
-      text-sm font-semibold tracking-wider uppercase 
-      text-white 
-      cursor-pointer
-      ${isLight ? "bg-linear-to-r from-[#994A97] to-[#CA88B1]" :  "bg-white/10 hover:bg-white/20"}
-      ${saving ? "opacity-70 cursor-not-allowed" : "hover:opacity-90"}
-    `}
-  >
-    {saving ? "SUBMITTING..." : "SUBMIT"}
-  </button>
-</div>
-
+          <button
+            type="submit"
+            disabled={saving}
+            className={`px-6 py-2.5 rounded-md text-sm font-semibold tracking-wider uppercase text-white cursor-pointer ${isLight ? "bg-linear-to-r from-[#994A97] to-[#CA88B1]" : "bg-white/10 hover:bg-white/20"} ${saving ? "opacity-70 cursor-not-allowed" : "hover:opacity-90"}`}
+          >
+            {saving ? "SUBMITTING..." : "SUBMIT"}
+          </button>
+        </div>
       </form>
     </section>
   );

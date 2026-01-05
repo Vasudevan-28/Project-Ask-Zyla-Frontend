@@ -2,9 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
-// import cookieImg from "./assets/cookie.png";
-// import Footer from "./Footer";
-
 export default function CookiePolicy() {
   const navigate = useNavigate();
 
@@ -28,8 +25,8 @@ export default function CookiePolicy() {
         </button>
 
         {/* HEADER */}
-        <section className="flex flex-col items-center mt-2 z-4 relative text-center">
-          <h1 className="text-[115px] font-extrabold tracking-wide text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-white to-purple-400 drop-shadow-[0_0_40px_rgba(255,255,255,0.25)]">
+        <section className="flex flex-col items-center mt-20 z-4 relative text-center">
+          <h1 className=" text-8xl md:text-[115px] font-extrabold tracking-wide text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-white to-purple-400 drop-shadow-[0_0_40px_rgba(255,255,255,0.25)]">
             COOKIE POLICY
           </h1>
           <p className="text-gray-400 text-lg font-medium">Last Updated: [December 09, 2025]</p>
@@ -153,7 +150,12 @@ export default function CookiePolicy() {
             {/* Contact */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }}>
               <h2 className="text-4xl font-bold text-purple-300 mb-2">Contact Us</h2>
-              <p className="text-blue-400 text-lg">📩 EMAILID: help@askzyla.com</p>
+              <p className="text-blue-400 text-lg">📩 
+                <a   
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=askzyla.zeaisoft@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"> askzyla.zeaisoft@gmail.com</a>
+              </p>
             </motion.div>
 
           </div>

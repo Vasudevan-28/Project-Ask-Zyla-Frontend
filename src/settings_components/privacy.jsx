@@ -1,7 +1,7 @@
 import React from "react";
 
 function Privacy({ isOpen, onClose }) {
-  if (!isOpen) return null; 
+  if (!isOpen) return null;
 
   return (
     <div
@@ -54,8 +54,7 @@ function Privacy({ isOpen, onClose }) {
               cursor: "pointer",
               color: "#7d195c",
             }}
-          >
-          </button>
+          ></button>
         </div>
 
         {/* Body */}
@@ -70,35 +69,13 @@ function Privacy({ isOpen, onClose }) {
           We collect only necessary user data
           <p>Which is securely stored in our database</p>
           <p> We dont share or sell your data</p>
-          </p>
-
-       
+        </p>
 
         {/* Footer button */}
         <div style={{ textAlign: "right" }}>
-          {/* <button
-            onClick={onClose}
-            style={{
-              padding: "8px 22px",
-              borderRadius: "6px",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "13px",
-              fontWeight: 600,
-              letterSpacing: "0.5px",
-              textTransform: "uppercase",
-              background:
-                "linear-gradient(90deg, #7d195c 0%, #b54aa2 50%, #7d195c 100%)",
-              color: "#ffffff",
-              boxShadow: "0 4px 10px rgba(125,25,92,0.4)",
-            }}
-          >
-            Got it
-          </button> */}
-
           <button
-  onClick={onClose}
-  className="
+            onClick={onClose}
+            className="
     px-5 py-2
     rounded-md
     text-sm font-semibold tracking-wide uppercase
@@ -109,10 +86,9 @@ function Privacy({ isOpen, onClose }) {
     transition-all duration-150
     cursor-pointer
   "
->
-  Got it
-</button>
-
+          >
+            Got it
+          </button>
         </div>
       </div>
     </div>

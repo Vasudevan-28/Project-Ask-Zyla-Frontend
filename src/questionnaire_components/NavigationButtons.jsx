@@ -4,19 +4,12 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { SkinProfileApiService } from "../services/skin_profile_api";
 
-const NextButton = ({
-  current,
-  setCurrent,
-  questions,
-  selected,
-  setSelected,
-  q,
-}) => {
+const NextButton = ({ current, setCurrent, questions, selected, setSelected, q }) => {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
   const auth = getAuth();
   const navigate = useNavigate();
-  const cycleSkipped = useRef(false); // Track skip state for menstrual cycle Q
+  const cycleSkipped = useRef(false);
 
   const [user, setUser] = useState(null);
 
@@ -28,7 +21,12 @@ const NextButton = ({
     return () => unsub();
   }, [auth]);
 
+  const hasText = (val) => {
+    return typeof val === "string" && val.trim().length > 0;
+  };
+
   const isDisabled = (() => {
+    
     if (q.type === "cycle") {
       if (cycleSkipped.current) return false;
       return !(
@@ -37,16 +35,33 @@ const NextButton = ({
         selected["cycle-1"].length > 0 &&
         selected["cycle-2"]
       );
-    } else if (Array.isArray(selected[q.id])) {
-      // Multi-select normal question
-      return selected[q.id].length === 0;
-    } else if (q.type === "textarea" || q.type === "symptoms") {
-      // TextArea or symptoms type
-      return selected[q.id] === undefined;
-    } else {
-      // Single-select normal question
-      return selected[q.id] === undefined;
     }
+
+    if (q.id === 5) {
+      if (selected[5] === 1) {
+        return !hasText(selected.extraQ5);
+      }
+      return selected[5] === undefined;
+    }
+
+    if (q.id === 7) {
+      if (selected[7] === 1) {
+        return !hasText(selected.extraQ7);
+      }
+      return selected[7] === undefined;
+    }
+
+    if (q.type === "textarea" || q.type === "symptoms") {
+      return !hasText(selected[q.id]);
+    }
+
+    // Multi-select normal question
+    if (Array.isArray(selected[q.id])) {
+      return selected[q.id].length === 0;
+    }
+
+    // Single-select normal question
+    return selected[q.id] === undefined;
   })();
 
   const formatSelectedAnswers = () => {
@@ -95,7 +110,6 @@ const NextButton = ({
         details: selected.extraQ5 || "",
       };
     } else {
-      // No or not answered
       formatted.allergies = {
         hasAllergies: false,
         details: "",
@@ -119,9 +133,7 @@ const NextButton = ({
       formatted.menstrualCycle = {
         hasMenstrualCycle: true,
         nextCycle: selected["cycle-0"],
-        skinBehavior: Array.isArray(selected["cycle-1"])
-          ? selected["cycle-1"]
-          : [],
+        skinBehavior: Array.isArray(selected["cycle-1"]) ? selected["cycle-1"] : [],
         reminders: selected["cycle-2"] === "Yes, send me reminders",
       };
     }
@@ -160,10 +172,7 @@ const NextButton = ({
       const payload = buildSkinProfilePayload(formatted, userIdFromAuth);
 
       try {
-        const data = await SkinProfileApiService.saveSkinAnswers(
-          userIdFromAuth,
-          payload
-        );
+        const data = await SkinProfileApiService.saveSkinAnswers(userIdFromAuth, payload);
         console.log("Saved to DB:", data);
         navigate("/skinProfile");
       } catch (err) {
@@ -175,7 +184,6 @@ const NextButton = ({
   const handleSkip = () => {
     if (q.type === "cycle") {
       cycleSkipped.current = true;
-      // Clear any cycle- keys when skipping for a truly clean submit
       setSelected((prev) => {
         const clean = { ...prev };
         delete clean["cycle-0"];
@@ -193,18 +201,18 @@ const NextButton = ({
   };
 
   return (
-    <div className="fixed bottom-5 right-5  flex gap-3 z-50">
+    <div
+      className="fixed z-50 flex gap-3 md:bottom-5 md:right-5 md:left-auto bottom-4 left-0 right-0 justify-center md:justify-end px-4"
+      role="toolbar"
+      aria-label="Question navigation"
+    >
       {/* Skip button only for cycle questions */}
       {q.type === "cycle" && (
         <button
           onClick={handleSkip}
-          className={`px-8 py-1.5 rounded font-semibold text-white  transition duration-300 transform hover:scale-105
-            ${
-              isLight
-                ? "bg-linear-to-r from-[#9c4f9a] to-[#4b1839]"
-                : "bg-white/10"
-            }    
-            `}
+          className={`px-6 md:px-8 py-2 rounded font-semibold text-white transition duration-300 transform hover:scale-105 ${
+            isLight ? "bg-linear-to-r from-[#9c4f9a] to-[#4b1839]" : "bg-white/10"
+          }`}
         >
           SKIP
         </button>
@@ -213,19 +221,16 @@ const NextButton = ({
       <button
         onClick={handleNext}
         disabled={isDisabled}
-        className={`px-8 py-1.5 rounded font-semibold cursor-pointer text-white transition duration-300 transform hover:scale-105 ${
+        className={`px-6 md:px-8 py-2 rounded font-semibold cursor-pointer text-white transition duration-300 transform hover:scale-105 ${
           !isDisabled
-            ? ` ${
-                isLight
-                  ? "bg-linear-to-r from-[#9c4f9a] to-[#4b1839]"
-                  : "bg-white/10"
-              } `
-            : `${
-                isLight
-                  ? "bg-linear-to-r from-[#9c4f9a] to-[#4b1839] cursor-not-allowed opacity-50"
-                  : "bg-white/10 cursor-not-allowed opacity-50"
-              } `
+            ? isLight
+              ? "bg-linear-to-r from-[#9c4f9a] to-[#4b1839]"
+              : "bg-white/10"
+            : isLight
+            ? "bg-linear-to-r from-[#9c4f9a] to-[#4b1839] cursor-not-allowed opacity-50"
+            : "bg-white/10 cursor-not-allowed opacity-50"
         }`}
+        aria-disabled={isDisabled}
       >
         {current < questions.length - 1 ? "NEXT" : "FINISH"}
       </button>

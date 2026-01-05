@@ -32,20 +32,26 @@ export default function NotificationCenter({
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   const formatOriginalTime = (timestamp) => {
-    const d = new Date(timestamp);
-    return (
-      d.toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }) +
-      " • " +
-      d.toLocaleTimeString(undefined, {
-        hour: "numeric",
-        minute: "numeric",
-      })
-    );
-  };
+  const d = new Date(timestamp);
+
+  const localDate = new Date(
+    d.getTime() - d.getTimezoneOffset() * 60000
+  );
+
+  return (
+    localDate.toLocaleDateString("en-IN", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }) +
+    " • " +
+    localDate.toLocaleTimeString("en-IN", {
+      hour: "numeric",
+      minute: "numeric",
+    })
+  );
+};
+
 
   return (
     <div

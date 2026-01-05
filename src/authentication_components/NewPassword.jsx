@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 // import { resetEmailPassword } from "../team-pages/services/backendAPI";
 import { resetEmailPassword } from "../services/backendAPI";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
-import ZaLogo from "../assets/ZaLogo.png"
 import HeaderAuth from "./HeaderAuth";
 
 export default function NewPassword() {
@@ -88,26 +86,17 @@ export default function NewPassword() {
   };
  
   return (
-<div className="min-h-screen flex items-center justify-center bg-[#1A0D28] p-4">
+    <div className="min-h-screen bg-[#1A0D28]" >
   <HeaderAuth />
-<div className="w-full max-w-xl bg-white/20 backdrop-blur-xl shadow-xl rounded-3xl p-8 sm:p-10 border border-white/30 relative">
- 
-   {/* <div className="flex justify-center  mb-4" >
-                    <div className="flex items-center gap-0.5">
-                           <img src={ZaLogo} alt="ZA logo" className="h-[56px] w-auto block" />
-                           <div className="font-['Playfair_Display'] -mb-1 font-bold leading-[0.9] mt-3 select-none">
-                             <div className="text-[20px]  text-[#1c0d25] ">Ask</div>
-                             <div className="text-[30px]  text-[#1c0d25]">Zyla</div>
-                           </div>
-                         </div>
-           </div> */}
+<div className="flex items-center min-h-[80vh] justify-center p-4">
+<div className="w-full max-w-xl bg-white/20 backdrop-blur-xl shadow-xl rounded-3xl py-8 px-6  border border-white/30 relative">
  
         {/* TITLE */}
-<h2 className="text-center text-2xl sm:text-3xl font-semibold mt-7 mb-2 text-white">
+<h2 className="text-center text-2xl sm:text-3xl font-semibold  mb-2 text-white">
           Set New Password
 </h2>
  
-        <p className="text-center text-white/90 mb-6 px-4 sm:px-8 text-sm">
+        <p className="text-center text-white/90 mb-6 px-4  text-sm">
           Set the new password for your account so you can log in and access all features.
 </p>
  
@@ -120,7 +109,8 @@ export default function NewPassword() {
             onChange={(e) => setPassword(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
-            className="w-full px-4 py-3 rounded-lg bg-white border-2 border-purple-500 shadow-md outline-none focus:ring-2 focus:ring-purple-300 pr-12"
+            maxLength={16}
+            className="w-full px-4 py-2 rounded-lg bg-white border-2 border-purple-500 shadow-md outline-none focus:ring-2 focus:ring-purple-300 pr-12"
           />
  
           {/* Eye icon */}
@@ -176,7 +166,9 @@ export default function NewPassword() {
             placeholder="Confirm Password"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
-            className={`w-full px-4 py-3 rounded-lg bg-white border-2 shadow-md outline-none pr-12 
+            
+            maxLength={16}
+            className={`w-full px-4 py-2 rounded-lg bg-white border-2 shadow-md outline-none pr-12 
               ${confirm && password !== confirm ? "border-red-500" : "border-purple-500"}`}
           />
  
@@ -230,6 +222,7 @@ export default function NewPassword() {
 >
           Reset Password
 </button>
+</div>
 </div>
 </div>
   );

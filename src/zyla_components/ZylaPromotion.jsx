@@ -8,7 +8,7 @@ export default function ZylaPromotion() {
 
   useEffect(() => {
     if (loadGif) {
-      setTimeout(() => setShowTextDelayed(true), 400); // Show text after cloud
+      setTimeout(() => setShowTextDelayed(true), 400); 
     } else {
       setShowTextDelayed(false);
     }
@@ -27,10 +27,10 @@ export default function ZylaPromotion() {
     const interval = setInterval(() => {
       setLoadGif(true);
 
-      setTimeout(() => setLoadGif(false), 3000); // cloud visible time
+      setTimeout(() => setLoadGif(false), 2000); // cloud visible time
 
       setIndex((prev) => (prev + 1) % statements.length); // rotate 3 messages
-    }, 4000); // GIF cycle time (adjust to GIF duration)
+    }, 3000); 
 
     return () => clearInterval(interval);
   }, []);
@@ -42,8 +42,8 @@ export default function ZylaPromotion() {
   useEffect(() => {
     const interval1 = setInterval(() => {
       setLoadGif(true);
-      setTimeout(() => setLoadGif(false), 7000);
-    }, 8000);
+      setTimeout(() => setLoadGif(false), 4000);
+    }, 5000);
 
     return () => clearInterval(interval1);
   });
@@ -83,8 +83,8 @@ export default function ZylaPromotion() {
           <div>
             <p
               className={`absolute top-6 right-19 
-        font-semibold  md:text-xl leading-tight
-        max-w-[180px] md:max-w-[220px]  font-['Caveat']
+        font-semibold  text-xl leading-tight
+        max-w-[220px]  font-['Caveat']
         whitespace-normal wrap-break-word text-center
         transition-opacity duration-800 ease-in-out
         ${showTextDelayed ? "opacity-100" : "opacity-0"}

@@ -70,10 +70,7 @@ export default function PrivacyPolicy() {
         'Changes will be posted in the app with the “Last Updated” date.',
       ],
     },
-    {
-      title: "Contact Us",
-      content: ["📧 EMAIL ID: askzyla.zeaisoft@gmail.com"],
-    },
+  
   ];
 
   return (
@@ -113,11 +110,11 @@ export default function PrivacyPolicy() {
             <p className="text-lg md:text-xl text-gray-200 text-justify">
               Ask Zyla (“we”, “our”, “us”) is committed to protecting your personal information and ensuring transparency in how we collect, use, and safeguard your data. This Privacy Policy explains how the Ask Zyla Skin Care Application (“App”) manages user information.
             </p>
-            <hr className="border-t border-gray-400 my-6" />
+            <hr className="border-t border-gray-400 my-3" />
           </section>
 
           {/* INFORMATION WE COLLECT */}
-          <section className="space-y-6">
+          <section className="space-y-3">
             <h2 className="text-3xl md:text-4xl font-semibold mb-3 text-red-500 text-center">
               Information We Collect
             </h2>
@@ -156,11 +153,11 @@ export default function PrivacyPolicy() {
             </div>
           </section>
 
-          <hr className="border-t border-gray-400 my-6" />
+          <hr className="border-t border-gray-400 my-3" />
 
           {/* OTHER SECTIONS */}
           {sections.map((section, idx) => (
-            <section key={idx}>
+            <section className="my-6"  key={idx}>
               <h2 className="text-3xl md:text-4xl font-semibold mb-3 text-red-500 text-center">
                 {section.title}
               </h2>
@@ -169,9 +166,33 @@ export default function PrivacyPolicy() {
                   <li key={i}>{item}</li>
                 ))}
               </ul>
-              <hr className="border-t border-gray-400 my-6" />
+              <hr className="border-t border-gray-400 my-3" />
+
+             
+
             </section>
           ))}
+             <h2 className="text-3xl md:text-4xl font-semibold mb-3 text-red-500 text-center">
+                
+          Contact Us
+              </h2>
+              <ul className="list-disc list-inside text-lg md:text-xl text-gray-200 text-left space-y-1">
+                
+                  <li>
+                    <a 
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=askzyla.zeaisoft@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                    >
+                      📧 : <span 
+                className="text-blue-300 underline">
+                         askzyla.zeaisoft@gmail.com
+                        </span>
+                    </a>
+                  </li>
+              
+              </ul>
+              <hr className="border-t border-gray-400 my-6" />
 
         </div>
       </div>

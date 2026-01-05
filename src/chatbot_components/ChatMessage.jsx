@@ -1,41 +1,27 @@
-
-import NormPurf from "../gifs/norm-purf.gif"
-
-
-import { useState, useContext } from "react"
+import NormPurf from "../gifs/norm-purf.gif";
+import { useContext } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 
-export default function ChatMessage({ role, text, onSpeak, canSpeak, isSpeaking, showImage }) {
-      const { theme } = useContext(ThemeContext);
-  const isLight = theme === "light";
-  
 
+export default function ChatMessage({ role, text, onSpeak, canSpeak, isSpeaking, showImage }) {
+  const { theme } = useContext(ThemeContext);
+  const isLight = theme === "light";
 
   const isUser = role === "user";
 
-
   return (
     <div className={`w-full flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <div className={`flex items-center gap-2 max-w-[80%] ${isUser ? "flex-row-reverse" : "flex-row"}`}>
-
+      <div className={`flex items-center gap-2 max-w-[90%]  md:max-w-[80%] ${isUser ? "flex-row-reverse" : "flex-row"}`}>
         {!isUser && showImage && (
-  <div className="relative w-30 h-30 shrink-0">
-    <div className="absolute bottom-5 left-8 w-14 h-14 bg-black"></div>
-    <img
-      src={NormPurf}
-      className="absolute bottom-0 w-full h-full object-contain"
-      alt="Assistant"
-    />
-  </div>
-)}
+          <div className="hidden md:block relative w-28 h-28 shrink-[0.2]">
+            <img src={NormPurf} className="absolute bottom-0 w-full h-full object-contain" alt="Assistant" />
+          </div>
+        )}
 
         <div
-          className={`rounded-2xl px-4 py-2 text-sm ${
-            isUser
-              ? ` ${isLight ? "text-black bg-[#E9D9E3]" : "bg-white/10 text-white/90"}  shadow-lg rounded-br-sm`
-              : `${isLight ? "text-gray-700 bg-[#E9D9E3]" : "bg-white/10 text-gray-200"} shadow-lg rounded-bl-sm`
-          }`}
+          className={`rounded-2xl px-3 py-2 text-[12px] md:text-sm ${isUser ? `${isLight ? "text-black bg-[#E9D9E3]" : "bg-white/10 text-white/90"}` : `${isLight ? "text-gray-700 bg-[#E9D9E3]" : "bg-white/10 text-gray-200"}`} shadow-lg ${isUser ? "rounded-br-sm" : "rounded-bl-sm"}`}
+          style={{ wordBreak: "break-word" }}
         >
           {text}
         </div>

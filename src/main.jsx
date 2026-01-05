@@ -74,8 +74,11 @@ import ChatPage from "./pages/ChatPage.jsx";
 import Loading from "./home_components/Loading.jsx";
 import AboutUsNew from "./promotion_components/AboutUs/AboutusN.jsx";
 
+import { CookieProvider } from "./contexts/CookieContext.jsx";
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    <CookieProvider>
     <ThemeProvider>
       <Toaster
         position="top-right"
@@ -146,5 +149,6 @@ createRoot(document.getElementById("root")).render(
         {/* <App /> */}
       </BrowserRouter>
     </ThemeProvider>
+    </CookieProvider>
   </StrictMode>
 );

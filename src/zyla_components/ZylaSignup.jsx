@@ -76,7 +76,7 @@ export default function ZylaSignup() {
       <img src={TalkShake} className="h-55 w-60 absolute bottom-0" />
       <img
         src={CloudThink}
-        className={`h-44 w-90 absolute top-0 right-0
+        className={`h-50 w-90 absolute top-0 right-0
           transition-all duration-800 ease-in-out
           ${loadGif ? "opacity-100 scale-100" : "opacity-0 scale-0"}
         `}
@@ -84,8 +84,8 @@ export default function ZylaSignup() {
   <div>
       <p
       className={`absolute top-8 right-19 font-bold
-           md:text-xl leading-tight
-          max-w-[180px] md:max-w-[220px]    text-center  font-['Caveat']
+          text-xl leading-tight
+          max-w-[220px] text-center  font-['Caveat']
           whitespace-normal wrap-break-word 
           transition-opacity duration-400 ease-in-out
           ${showTextDelayed ? "opacity-100" : "opacity-0"}

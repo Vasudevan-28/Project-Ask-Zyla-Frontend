@@ -79,7 +79,7 @@ const HeroSection = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
-        className="absolute right-0 top-0 h-full w-12 sm:w-20"
+        className="absolute right-0 top-0 h-full w-12 sm:w-20  "
         style={{
           background: "linear-gradient(to left, #7D45B8 0%, transparent 100%)",
           filter: "blur(90px)",
@@ -105,8 +105,9 @@ const HeroSection = () => {
       </motion.div>
 
       {/* Headline */}
-      <div className="flex relative">
+      <div className="flex-col relative">
 
+<div>
       
       <motion.div
         initial="hidden"
@@ -142,11 +143,8 @@ const HeroSection = () => {
           )
         )}
       </motion.div>
-<div className="absolute top-18 right-10">
 
-      <ZylaPromotion />
-</div>
-</div>
+
       {/* Subtext */}
       <motion.p
         initial={{ opacity: 0, y: 20 }}
@@ -178,6 +176,13 @@ const HeroSection = () => {
           TRY ZYLA'S MAGIC 🤍
         </Lightbutton>
       </motion.div>
+      
+
+      </div>
+      <div className="md:absolute mt-10 md:mt-0 md:top-18 md:right-10">
+      <ZylaPromotion />
+</div>
+      </div>
     </section>
   );
 };

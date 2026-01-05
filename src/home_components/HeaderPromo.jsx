@@ -18,28 +18,29 @@ export default function HeaderPromo() {
   const newTab = () => window.open("/login", "_blank");
   const newTabSignUp = () => window.open("/signup", "_blank");
 
+  const HEADER_HEIGHT = 60; // used for scrolling/top offsets (keeps desktop UI intact)
+
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
 
     if (el) {
-      const headerHeight = 60;
-      const y =
-        el.getBoundingClientRect().top +
-        window.pageYOffset -
-        headerHeight;
+      const headerHeight = HEADER_HEIGHT;
+      const y = el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
 
       window.scrollTo({ top: y, behavior: "smooth" });
       setActiveSection(id);
       setMenuOpen(false);
     } else {
+      // if section not present on current page, navigate to home with hash
       navigate(`/#${id}`);
       setMenuOpen(false);
     }
   };
 
+  // Update active section on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPos = window.scrollY + 70;
+      const scrollPos = window.scrollY + HEADER_HEIGHT + 10; // little tolerance
       let current = null;
       let foundAny = false;
 
@@ -63,24 +64,34 @@ export default function HeaderPromo() {
     handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, []); // run once
 
-
+  // Recalculate underline position when activeSection changes or on resize
   useEffect(() => {
-    if (!activeSection || !navRef.current) return;
+    const updateUnderline = () => {
+      if (!activeSection || !navRef.current) {
+        setUnderlineStyle({ left: 0, width: 0 });
+        return;
+      }
 
-    const btn = navRef.current.querySelector(
-      `#nav-${activeSection}`
-    );
+      const btn = navRef.current.querySelector(`#nav-${activeSection}`);
+      if (btn) {
+        // btn.offsetLeft is relative to the nav container, which is what we want
+        setUnderlineStyle({
+          left: btn.offsetLeft,
+          width: btn.offsetWidth,
+        });
+      } else {
+        setUnderlineStyle({ left: 0, width: 0 });
+      }
+    };
 
-    if (btn) {
-      setUnderlineStyle({
-        left: btn.offsetLeft,
-        width: btn.offsetWidth,
-      });
-    }
-  }, [activeSection]);
+    updateUnderline();
+    window.addEventListener("resize", updateUnderline);
+    return () => window.removeEventListener("resize", updateUnderline);
+  }, [activeSection, navRef.current]);
 
+  // If user navigates with a hash, scroll to that section
   useEffect(() => {
     if (!location.hash) return;
 
@@ -90,32 +101,34 @@ export default function HeaderPromo() {
     if (!el) return;
 
     setTimeout(() => {
-      const headerHeight = 60;
-      const y =
-        el.getBoundingClientRect().top +
-        window.pageYOffset -
-        headerHeight;
-
+      const headerHeight = HEADER_HEIGHT;
+      const y = el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
       window.scrollTo({ top: y, behavior: "smooth" });
     }, 100);
   }, [location]);
 
   return (
     <div className="w-full">
-      {/* Top strip */}
       <div
         className="fixed top-0 left-0 w-full z-50"
         style={{ height: "10px", backgroundColor: "#1A0D28" }}
+        aria-hidden="true"
       />
 
       {/* Header */}
-      <header className="bg-white fixed top-1 left-0 w-full z-50 shadow-md border-b border-[#1A0D28]">
+      <header
+        className="bg-white fixed top-1 left-0 w-full z-50 shadow-md border-b border-[#1A0D28]"
+        role="banner"
+      >
         <div
           className="max-w-[1400px] mx-auto flex items-center justify-between px-4 md:px-6"
-          style={{ height: "60px" }}
+          style={{ height: `${HEADER_HEIGHT}px` }}
         >
-          {/* Logo */}
-          <div className="flex items-center gap-0.5">
+          
+         {/* Logo */}
+          <div className="flex items-center gap-0.5"
+          onClick={() => navigate('/')}
+          >
             <img src={logo} alt="ZA logo" className="h-[38px]" />
             <div className="font-['Playfair_Display'] -mb-1 mt-1 font-bold leading-[0.9] select-none">
               <div className="text-[12px] text-[#1c0d25]">Ask</div>
@@ -123,32 +136,31 @@ export default function HeaderPromo() {
             </div>
           </div>
 
-          {/* Desktop Nav */}
+          {/* Desktop Nav (visible md and up) */}
           <nav
             ref={navRef}
             className="relative hidden md:flex items-center gap-12"
+            aria-label="Primary navigation"
           >
             {sections.map((section) => (
               <button
                 key={section}
                 id={`nav-${section}`}
                 onClick={() => scrollToSection(section)}
-                className="text-sm font-semibold text-[#1A0D28] transition-transform hover:scale-110"
+                className={`text-sm font-semibold text-[#1A0D28] transition-transform hover:scale-110
+                  ${activeSection === section ? "opacity-100" : "opacity-90"}`}
               >
-                {section
-                  .replace("-", " ")
-                  .replace(/\b\w/g, (l) => l.toUpperCase())}
+                {section.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
               </button>
             ))}
 
-            {/* Underline ONLY if activeSection exists */}
+            {/* Underline — only shown on desktop when there is an active section */}
             {activeSection && (
               <motion.span
                 className="absolute h-1 rounded-full shadow-md"
                 style={{
                   bottom: "-6px",
-                  background:
-                    "linear-gradient(90deg, #1A0D28, #3B2B5C)",
+                  background: "linear-gradient(90deg, #1A0D28, #3B2B5C)",
                 }}
                 animate={{
                   left: underlineStyle.left,
@@ -160,12 +172,14 @@ export default function HeaderPromo() {
                   damping: 20,
                   mass: 0.5,
                 }}
+                aria-hidden="true"
               />
             )}
           </nav>
 
-          {/* Right Side */}
+          {/* Right Side — on mobile show only login + menu button; on desktop show login + register + (no menu) */}
           <div className="flex items-center gap-2 md:gap-4">
+            {/* Login button — visible on all screen sizes (per request) */}
             <button
               onClick={newTab}
               className="px-3 py-1 text-sm font-semibold rounded border border-[#1A0D28] text-[#1A0D28] hover:bg-[#1A0D28] hover:text-white transition"
@@ -173,48 +187,60 @@ export default function HeaderPromo() {
               Login
             </button>
 
+            {/* Register button — visible only on md+; on mobile it should be in the hamburger menu */}
             <button
               onClick={newTabSignUp}
-              className="px-3 py-1 text-sm font-semibold rounded text-white bg-linear-to-r from-[#1A0D28] to-[#3B2B5C] hover:scale-105 transition"
+              className="hidden md:inline-flex px-3 py-1 text-sm font-semibold rounded text-white bg-linear-to-r from-[#1A0D28] to-[#3B2B5C] hover:scale-105 transition"
             >
               Register
             </button>
 
-            {/* Mobile Menu Toggle */}
+            {/* Mobile Menu Toggle — visible only on mobile */}
             <button
-              className="md:hidden ml-2 text-2xl text-[#1A0D28]"
+              className="md:hidden ml-2 text-2xl text-[#1A0D28] p-1"
               onClick={() => setMenuOpen(!menuOpen)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
             >
               {menuOpen ? <FiX /> : <FiMenu />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu (full width dropdown) */}
         {menuOpen && (
-          <div className="md:hidden fixed top-[60px] left-0 w-full bg-white shadow-md border-t border-[#1A0D28] flex flex-col z-40">
+          <div
+            className="md:hidden fixed top-[60px] left-0 w-full bg-white shadow-md border-t border-[#1A0D28] flex flex-col z-40"
+            role="menu"
+          >
             {sections.map((section) => (
               <button
                 key={section}
                 onClick={() => scrollToSection(section)}
                 className="px-6 py-4 text-left font-semibold text-[#1A0D28] hover:bg-gray-100"
+                role="menuitem"
               >
-                {section
-                  .replace("-", " ")
-                  .replace(/\b\w/g, (l) => l.toUpperCase())}
+                {section.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
               </button>
             ))}
 
             <button
-              onClick={() => navigate("/login")}
+              onClick={() => {
+                setMenuOpen(false);
+                navigate("/login");
+              }}
               className="px-6 py-4 text-left font-semibold text-[#1A0D28] hover:bg-gray-100"
+              role="menuitem"
             >
               Login
             </button>
 
             <button
-              onClick={() => navigate("/signup")}
+              onClick={() => {
+                setMenuOpen(false);
+                navigate("/signup");
+              }}
               className="px-6 py-4 text-left font-semibold text-[#1A0D28] hover:bg-gray-100"
+              role="menuitem"
             >
               Register
             </button>

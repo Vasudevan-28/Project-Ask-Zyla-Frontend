@@ -1,7 +1,5 @@
-import React, { useContext} from "react";
-import { ThemeContext } from "../contexts/ThemeContext";
+
 import ZaLogo from "../assets/ZaLogo-white.png";
-import ZylaToggleImg from "../assets/ZylaToggle.png";
 import { useNavigate } from "react-router-dom";
 
 export default function HeaderAuth() {
@@ -12,7 +10,7 @@ return (
   <>
     <div
       className={
-        "fixed top-0 left-0 right-0 h-2 z-99999 bg-transparent"
+        " top-0 left-0 right-0  z-99999 bg-[#1A0D28]"
        
       }
     />
@@ -21,7 +19,7 @@ return (
     <header
       role="banner"
       className={
-        "fixed left-0 right-0 top-1 h-18 flex items-center px-6 box-border z-99998 bg-transparent"
+        "left-0 right-0 top-1 h-18 flex items-center px-2 md:px-6 box-border z-99998 bg-transparent"
       }
     >
       <div className="flex items-center gap-0.5 cursor-pointer" 

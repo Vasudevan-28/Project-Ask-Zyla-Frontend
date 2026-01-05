@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@theme {
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 900px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none; 

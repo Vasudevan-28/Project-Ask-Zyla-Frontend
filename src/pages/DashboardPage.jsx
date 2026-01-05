@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useContext } from "react";
 import SearchBar from "../dashboard_components/SearchBar";
 import Calendar from "../dashboard_components/Calendar";
@@ -17,11 +16,15 @@ export default function DashboardPage() {
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showAddProduct, setShowAddProduct] = useState(false);
-  const [routines, setRoutines] = useState({ morning: [], afternoon: [], evening: [] });
+  const [routines, setRoutines] = useState({
+    morning: [],
+    afternoon: [],
+    evening: [],
+  });
   const [userToken, setUserToken] = useState(null);
   const [completedDates, setCompletedDates] = useState([]);
 
-  // 👇 derive ISO date from selectedDate (this is what we pass down)
+  // derive ISO date from selectedDate (this is what we pass down)
   const selectedIso = toISODate(selectedDate);
 
   // Fetch the Firebase ID token on mount or when the user changes
@@ -117,34 +120,86 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className={`min-w-screen mx-auto pt-20 py-8                flex justify-center w-full 
+    <div
+      className={`min-w-screen mx-auto pt-20 py-8 flex justify-center w-full
     ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}
-    `}>
-      <div
-        className=" grid gap-6 items-stretch"
-        style={{
-          gridTemplateColumns: "minmax(360px, 1fr) minmax(360px, 1fr) 320px",
-          gridTemplateRows: "auto minmax(0, 1fr) auto",
-        }}
-      >
-        {/* Search */}
-        <div className="col-span-2 row-start-1 row-end-2 flex items-center">
-          <div className="w-full">
-            <SearchBar onSearch={handleSearch} />
+    `}
+    >
+      <div className="hidden md:block">
+        <div
+          className=" grid gap-6 items-stretch"
+          style={{
+            gridTemplateColumns: "minmax(360px, 1fr) minmax(360px, 1fr) 320px",
+            gridTemplateRows: "auto minmax(0, 1fr) auto",
+          }}
+        >
+          {/* Search */}
+          <div className="col-span-2 row-start-1 row-end-2 flex items-center">
+            <div className="w-full">
+              <SearchBar onSearch={handleSearch} />
+            </div>
+          </div>
+
+          {/* Routines */}
+          <div className="col-start-3 col-end-4 row-start-1 row-end-3 flex flex-col min-h-0">
+            <RoutinesPanel
+              routines={routines}
+              onRemove={handleRemoveProduct}
+              onOpenAddProduct={() => setShowAddProduct(true)}
+            />
+          </div>
+
+          {/* Calendar */}
+          <div className="col-start-1 col-end-2 row-start-2 row-end-3 min-h-0">
+            <Calendar
+              selectedDate={selectedDate}
+              onDateChange={setSelectedDate}
+              completedDates={completedDates}
+            />
+          </div>
+
+          {/* Todo */}
+          <div className="col-start-2 col-end-3 row-start-2 row-end-3 min-h-0">
+            <ToDoCard selectedDate={selectedDate} userToken={userToken} />
+          </div>
+
+          {/* Streak / Daily Progress */}
+          <div className="col-start-1 col-end-3 row-start-3 row-end-4">
+            <StreakBar userToken={userToken} selectedIso={selectedIso} />
+          </div>
+
+          {/* Buttons */}
+          <div className="col-start-3 col-end-4 row-start-3 row-end-4 flex items-center justify-center">
+            <div className="flex gap-3" style={{ transform: "translateX(5px)" }}>
+              <button
+                onClick={() => setShowAddProduct(true)}
+                className={`py-2 px-4  font-semibold ${
+                  isLight
+                    ? "bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] text-white"
+                    : "bg-white/5 text-slate-50"
+                } rounded-lg`}
+                type="button"
+              >
+                Add Routine
+              </button>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Routines */}
-        <div className="col-start-3 col-end-4 row-start-1 row-end-3 flex flex-col min-h-0">
-          <RoutinesPanel
-            routines={routines}
-            onRemove={handleRemoveProduct}
-            onOpenAddProduct={() => setShowAddProduct(true)}
-          />
+      <div className="w-full px-4 block md:hidden max-w-xl">
+        {/* Search at top */}
+        <div className="mb-4">
+          <SearchBar onSearch={handleSearch} />
+        </div>
+
+        {/* Streak / Daily Progress */}
+        <div className="mb-4">
+          <StreakBar userToken={userToken} selectedIso={selectedIso} />
         </div>
 
         {/* Calendar */}
-        <div className="col-start-1 col-end-2 row-start-2 row-end-3 min-h-0">
+        <div className="mb-4">
           <Calendar
             selectedDate={selectedDate}
             onDateChange={setSelectedDate}
@@ -153,32 +208,30 @@ export default function DashboardPage() {
         </div>
 
         {/* Todo */}
-        <div className="col-start-2 col-end-3 row-start-2 row-end-3 min-h-0">
+        <div className="mb-4">
           <ToDoCard selectedDate={selectedDate} userToken={userToken} />
         </div>
 
-        {/* Streak / Daily Progress */}
-        <div className="col-start-1 col-end-3 row-start-3 row-end-4">
-          {/* 👇 pass selectedIso here */}
-          <StreakBar userToken={userToken} selectedIso={selectedIso} />
+        <div className="mb-6">
+          <RoutinesPanel
+            routines={routines}
+            onRemove={handleRemoveProduct}
+            onOpenAddProduct={() => setShowAddProduct(true)}
+          />
         </div>
 
-        {/* Buttons */}
-        <div className="col-start-3 col-end-4 row-start-3 row-end-4 flex items-center justify-center">
-          <div
-            className="flex gap-3"
-            style={{ transform: "translateX(5px)" }}
+        <div className="mb-24 flex justify-center">
+          <button
+            onClick={() => setShowAddProduct(true)}
+            className={`w-full max-w-xs py-3 px-4 font-semibold ${
+              isLight
+                ? "bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] text-white"
+                : "bg-white/5 text-slate-50"
+            } rounded-lg`}
+            type="button"
           >
-            <button
-              onClick={() => setShowAddProduct(true)}
-              className={`py-2 px-4  font-semibold ${
-                isLight ? "bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] text-white" : "bg-white/5 text-slate-50"
-              } rounded-lg`}
-              type="button"
-            >
-              Add Routine
-            </button>
-          </div>
+            Add Routine
+          </button>
         </div>
       </div>
 

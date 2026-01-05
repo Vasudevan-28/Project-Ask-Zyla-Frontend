@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import { toISODate, todayISO } from "../utils/DateUtils";
-import StorageService from "../utils/StorageService";
+// import StorageService from "../utils/StorageService";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { IoMdArrowDropright, IoMdArrowDropleft } from "react-icons/io";
 import { IoMdHeart } from "react-icons/io";
-
 
 export default function Calendar({ selectedDate, onDateChange, completedDates = [] }) {
   const { theme } = useContext(ThemeContext);
@@ -111,7 +110,7 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
   return (
     <div className="w-full box-border">
       <div
-        className={` rounded-[15px] p-6 h-full flex flex-col ${isLight ? "bg-white text-slate-900" : "bg-white/5 text-slate-50"} `}
+        className={`rounded-[15px] p-4 md:p-6 h-full flex flex-col ${isLight ? "bg-white text-slate-900" : "bg-white/5 text-slate-50"}`}
         style={{
           minHeight: 0,
           borderRadius: 15,
@@ -119,7 +118,7 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
       >
         {/* Header row */}
         <div className="mb-2 flex items-center justify-between">
-          <div className="text-lg font-extrabold">Calendar</div>
+          <div className="text-base md:text-lg font-extrabold">Calendar</div>
           <button
             className="rounded-xl border border-black/5 text-white bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] px-3 py-2 text-sm font-bold shadow-sm
                        hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-300
@@ -136,11 +135,7 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
         </div>
 
         {/* Month controls */}
-        <div
-          className="mb-2 flex items-center justify-center gap-4"
-          role="toolbar"
-          aria-label="Month navigation"
-        >
+        <div className="mb-2 flex items-center justify-center gap-3 md:gap-4" role="toolbar" aria-label="Month navigation">
           <button
             className="min-w-9 rounded-lg border border-transparent px-2 py-1 text-center text-sm font-semibold hover:bg-slate-100
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-300
@@ -159,7 +154,7 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
             {/* Month Selector */}
             <div className="relative" ref={monthDropdownRef}>
               <button
-                className="text-[15px] font-extrabold  hover:opacity-80 transition-opacity cursor-pointer px-1 rounded"
+                className="text-[15px] font-extrabold hover:opacity-80 transition-opacity cursor-pointer px-1 rounded text-sm md:text-[15px]"
                 onClick={() => {
                   setShowMonthDropdown(!showMonthDropdown);
                   setShowYearDropdown(false);
@@ -175,21 +170,15 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
                 <div
                   ref={monthListRef}
                   className={`absolute top-full left-0 mt-2 z-50 rounded-lg shadow-lg border backdrop-blur-sm ${
-                    isLight
-                      ? "bg-white border-slate-200 text-slate-900"
-                      : "bg-white border-white/30 text-slate-900"
+                    isLight ? "bg-white border-slate-200 text-slate-900" : "bg-white border-white/30 text-slate-900"
                   }`}
                   style={{
                     minWidth: "140px",
                     maxHeight: "200px",
                     overflowY: "auto",
-                    boxShadow: isLight
-                      ? "0 10px 25px rgba(0,0,0,0.15)"
-                      : "0 10px 25px rgba(0,0,0,0.5)",
+                    boxShadow: isLight ? "0 10px 25px rgba(0,0,0,0.15)" : "0 10px 25px rgba(0,0,0,0.5)",
                     scrollbarWidth: "thin",
-                    scrollbarColor: isLight
-                      ? "rgba(139, 92, 246, 0.3) rgba(0,0,0,0.1)"
-                      : "rgba(139, 92, 246, 0.5) rgba(255,255,255,0.1)",
+                    scrollbarColor: isLight ? "rgba(139, 92, 246, 0.3) rgba(0,0,0,0.1)" : "rgba(139, 92, 246, 0.5) rgba(255,255,255,0.1)",
                   }}
                 >
                   {months.map((month, index) => {
@@ -197,7 +186,7 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
                     return (
                       <button
                         key={index}
-                        className={`w-full text-left  px-4 py-2 text-sm font-semibold transition-colors ${
+                        className={`w-full text-left px-4 py-2 text-sm font-semibold transition-colors ${
                           isCurrentMonth
                             ? isLight
                               ? "bg-purple-100 text-purple-700"
@@ -228,7 +217,7 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
             {/* Year Selector */}
             <div className="relative" ref={yearDropdownRef}>
               <button
-                className="text-[15px] font-extrabold hover:opacity-80 transition-opacity cursor-pointer px-1 rounded"
+                className="text-[15px] font-extrabold hover:opacity-80 transition-opacity cursor-pointer px-1 rounded text-sm md:text-[15px]"
                 onClick={() => {
                   setShowYearDropdown(!showYearDropdown);
                   setShowMonthDropdown(false);
@@ -244,21 +233,15 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
                 <div
                   ref={yearListRef}
                   className={`absolute top-full right-0 mt-2 z-50 rounded-lg shadow-lg border backdrop-blur-sm ${
-                    isLight
-                      ? "bg-white border-slate-200 text-slate-900"
-                      : "bg-white border-white/30 text-slate-900"
+                    isLight ? "bg-white border-slate-200 text-slate-900" : "bg-white border-white/30 text-slate-900"
                   }`}
                   style={{
                     minWidth: "100px",
                     maxHeight: "200px",
                     overflowY: "auto",
-                    boxShadow: isLight
-                      ? "0 10px 25px rgba(0,0,0,0.15)"
-                      : "0 10px 25px rgba(0,0,0,0.5)",
+                    boxShadow: isLight ? "0 10px 25px rgba(0,0,0,0.15)" : "0 10px 25px rgba(0,0,0,0.5)",
                     scrollbarWidth: "thin",
-                    scrollbarColor: isLight
-                      ? "rgba(139, 92, 246, 0.3) rgba(0,0,0,0.1)"
-                      : "rgba(139, 92, 246, 0.5) rgba(255,255,255,0.1)",
+                    scrollbarColor: isLight ? "rgba(139, 92, 246, 0.3) rgba(0,0,0,0.1)" : "rgba(139, 92, 246, 0.5) rgba(255,255,255,0.1)",
                   }}
                 >
                   {years.map((year) => {
@@ -293,8 +276,8 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
             </div>
           </div>
 
-           <button
-            className="min-w-9 rounded-lg border border-transparent px-2 py-1 text-center text-sm font-semibold  hover:bg-slate-100
+          <button
+            className="min-w-9 rounded-lg border border-transparent px-2 py-1 text-center text-sm font-semibold hover:bg-slate-100
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-300
                         dark:hover:bg-white/10"
             onClick={nextMonth}
@@ -309,19 +292,16 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
         </div>
 
         {/* Weekday labels */}
-        <div className="mb-2 grid grid-cols-7 gap-2">
+        <div className="mb-2 grid grid-cols-7 gap-1">
           {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
-            <div
-              key={d}
-              className="text-center text-[11px] text-slate-500 font-bold "
-            >
+            <div key={d} className="text-center text-xs md:text-[11px] text-slate-500 font-bold">
               {d}
             </div>
           ))}
         </div>
 
         {/* Date grid */}
-        <div className="grid flex-1 grid-cols-7 gap-2 overflow-auto pt-3 pb-2 px-2">
+        <div className="grid flex-1 grid-cols-7 gap-1 overflow-auto pt-2 pb-2 px-1 md:px-2">
           {cells.map((cell, idx) => {
             const iso = toISODate(cell.date);
             const isToday = iso === todayIso;
@@ -329,21 +309,15 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
             const hasHeart = cell.isValidDay && dayHasFullComplete(cell.date);
 
             const baseClasses =
-              "relative flex h-11 items-center justify-center rounded-[10px] border text-[13px] font-bold " +
-              "box-border cursor-pointer select-none overflow-visible";
+              "relative flex items-center justify-center rounded-[10px] border text-[12px] md:text-[13px] font-bold box-border cursor-pointer select-none overflow-visible";
 
-            const emptyClasses =
-              "cursor-default border-transparent bg-transparent text-transparent opacity-0 pointer-events-none";
+            const emptyClasses = "cursor-default border-transparent bg-transparent text-transparent opacity-0 pointer-events-none";
 
-            const normalClasses =
-              "border-slate-800/10 bg-white/5 border-white/10 shadow-sm " 
+            const normalClasses = "border-slate-800/10 bg-white/5 border-white/10 shadow-sm";
 
-            const todayClasses =
-              "bg-zyla-light-bg  font-black border-none shadow-none " +
-              "bg-white/5  border-white/20 ring-[3px] ring-purple-500/30";
+            const todayClasses = "bg-zyla-light-bg font-black border-none shadow-none bg-white/5 border-white/20 ring-[3px] ring-purple-500/30";
 
-            const selectedClasses =
-              "border-none bg-gradient-to-b from-[#a78bfa] to-[#8b5cf6] text-white shadow-md";
+            const selectedClasses = "border-none bg-gradient-to-b from-[#a78bfa] to-[#8b5cf6] text-white shadow-md";
 
             let dayClassName = baseClasses;
 
@@ -360,10 +334,8 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
             return (
               <div
                 key={idx}
-                onClick={() =>
-                  cell.isValidDay && onDateChange && onDateChange(new Date(cell.date))
-                }
-                className={dayClassName}
+                onClick={() => cell.isValidDay && onDateChange && onDateChange(new Date(cell.date))}
+                className={`${dayClassName} ${cell.isValidDay ? "h-9 md:h-11" : "h-9 md:h-11"} w-full`}
                 role={cell.isValidDay ? "button" : "presentation"}
                 aria-label={cell.isValidDay ? `Day ${cell.dayNum}` : ""}
                 tabIndex={cell.isValidDay ? 0 : -1}
@@ -376,7 +348,6 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
                 {cell.isValidDay ? cell.dayNum : ""}
                 {hasHeart && (
                   <span className="pointer-events-none absolute right-1 top-1 z-10 text-[11px] leading-none text-pink-400 drop-shadow-[0_1px_1px_rgba(0,0,0,0.45)]">
-                    {/* ❤ */}
                     <IoMdHeart />
                   </span>
                 )}

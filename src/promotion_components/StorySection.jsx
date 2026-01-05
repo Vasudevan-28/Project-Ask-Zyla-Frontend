@@ -77,47 +77,6 @@ const StorySection = () => {
           MY STORY
         </motion.h2>
 
-        {/* Text section */}
-        {/* <div className="space-y-3 text-sm sm:text-base leading-relaxed px-1 sm:px-0">
-          <p className="font-medium text-[#E8E0F0]">
-            Hi love! I’m{" "}
-            <span className="font-semibold text-white">Zyla 🤍</span> — your skincare
-            bestie who actually gets you.
-          </p>
-
-          <p className="font-medium text-[#E8E0F0]">
-            I’m handcrafted with one simple goal:
-            <span className="block font-medium text-white mt-1">
-              to give you the right routine without letting you experiment on your
-              precious skin.
-            </span>
-          </p>
-
-          <p className="font-medium text-[#E8E0F0]">
-            Dry today, oily tomorrow, stress breakout next week?
-            <span className="block font-medium text-white mt-1">
-              I evolve with you… no drama, no confusion.
-            </span>
-          </p>
-
-          <p className="font-medium text-[#E8E0F0]">
-            I hype you, guide you, and glow you up — because good skin isn’t magic…
-            <span className="block font-medium text-white mt-1">it’s me + you.</span>
-          </p>
-
-          <p className="font-medium text-[#E8E0F0]">
-            Think of me as your personal skincare problem solver. All your skincare
-            problems… one smart solution —
-            <span className="font-semibold text-white"> Zyla 🤍</span>
-          </p>
-
-          <p className="text-right text-white font-medium mt-4 text-sm sm:text-base">
-            – XoXo Zyla 🤍
-          </p>
-        </div> */}
-
-
-
           <div className="space-y-3 text-sm sm:text-base leading-relaxed px-1 sm:px-0">
   <p className="font-medium text-[#E8E0F0]">
     One fine day ✨, a beauty lover started facing some skin problems. Feeling worried, 

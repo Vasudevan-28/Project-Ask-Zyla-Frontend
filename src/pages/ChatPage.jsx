@@ -61,6 +61,8 @@ export default function ChatPage() {
 
 const [randomQs, setRandomQs] = useState([]);
 
+  const [isConversationsOpen, setIsConversationsOpen] = useState(false);
+
 
   const [user, setUser] = useState(null);
 
@@ -212,9 +214,11 @@ const handleSpeak = (text, id) => {
   }, 0);
 };
 
+const [pageLoading, setPageLoading] = useState(true);
   
   useEffect(() => {
     if (!idToken) return;
+    setPageLoading(false);
     loadConversations();
   }, [idToken]);
 
@@ -345,7 +349,7 @@ const handleSpeak = (text, id) => {
           // hits: intent_recommend ? hits : [],
         },
       ]);
-
+      setLoading(false);
       await loadConversations();
     } catch (err) {
       console.error(err);
@@ -365,34 +369,73 @@ const handleSpeak = (text, id) => {
     e.preventDefault();
     sendMessage();
   }
-  // if (!user) return <Navigate to="/" replace />;
+  // if (!user) {
+  //   return <div>Loading...</div>;
+  // }
 
-
-  if (!user) {
-    return <div>Loading...</div>;
+  if (!user){
+    return(
+      <div className={`min-h-screen min-w-screen flex justify-center items-center
+       ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}
+      `}>
+        <div  className={`animate-spin h-8 w-8 rounded-full border-3  border-t-transparent
+          ${!isLight ? "border-[#e9d9e3]" : "border-[#1d0e2d]"}
+          `} ></div>
+      </div>
+    )
+  }
+  if (pageLoading){
+    return(
+      <div className={`min-h-screen min-w-screen flex justify-center items-center
+       ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}
+      `}>
+        <div  className={`animate-spin h-8 w-8 rounded-full border-3  border-t-transparent
+          ${!isLight ? "border-[#e9d9e3]" : "border-[#1d0e2d]"}
+          `} ></div>
+      </div>
+    )
+  }
+  if (!user){
+    return(
+      <div className={`min-h-screen min-w-screen flex justify-center items-center
+       ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}
+      `}>
+        <div  className={`animate-spin h-8 w-8 rounded-full border-3  border-t-transparent
+          ${!isLight ? "border-[#e9d9e3]" : "border-[#1d0e2d]"}
+          `} ></div>
+      </div>
+    )
   }
 
-
   return (
-    <div className={`min-h-screen w-full overflow-auto  text-white flex flex-col ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}`}>
-      <div className="h-10 mb-3" >
-        
-        {/* <HeaderMain /> */}
-        </div> 
-    
+    <div
+      className={`min-h-screen w-full overflow-auto text-white flex flex-col ${
+        isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"
+      }`}
+    >
+      <div className="h-10 mb-3" />
 
-      <div className="flex-1 flex p-3 mt-2">
+      <div className="flex-1 flex p-3 mt-2 min-h-0">
+        {/* Conversations - visible as side panel on md+; as overlay drawer on mobile */}
         <Conversations
           conversations={conversations}
           createNewConversation={createNewConversation}
           currentConversationId={currentConversationId}
           loadingConversations={loadingConversations}
-          openConversation={openConversation}
+          openConversation={(id, title) => {
+            // close mobile drawer after opening on mobile
+            openConversation(id, title);
+            setIsConversationsOpen(false);
+          }}
           refreshConversations={loadConversations}
           idToken={idToken}
-          isArchived = {false}
+          isArchived={false}
+          // mobile overlay control:
+          isMobileOpen={isConversationsOpen}
+          onClose={() => setIsConversationsOpen(false)}
         />
 
+        {/* Chat area */}
         <Chatbot
           scrollerRef={scrollerRef}
           messages={messages}
@@ -407,47 +450,54 @@ const handleSpeak = (text, id) => {
           isListening={isListening}
           toggleListening={toggleListening}
           idToken={idToken}
+          // handler for mobile hamburger to open the conversations overlay
+          onOpenConversations={() => setIsConversationsOpen(true)}
         />
 
+        {/* Quick Chats / Right column - HIDDEN on small screens */}
+        <div className="hidden md:flex w-50 flex-col justify-center rounded-2xl m-1 p-4 relative overflow-hidden">
+          <div className="mb-6 mt-20 relative z-10">
+            <h2
+              className={`text-base mb-4 tracking-wide font-semibold ${
+                isLight ? "text-black" : "text-white"
+              }`}
+            >
+              Quick Chats
+            </h2>
 
-        <div className="sm:hidden lg:block w-50 flex flex-col justify-center rounded-2xl m-1 p-4 relative overflow-hidden">
-      <div className="mb-6 mt-20 relative z-10">
-        <h2
-          className={`text-base mb-4 tracking-wide font-semibold ${
-            isLight ? "text-black" : "text-white"
-          }`}
-        >
-          Quick Chats
-        </h2>
-
-        {randomQs.map((q, index) => (
-          <button
-            key={index}
-            className={`w-full text-left p-2 mb-3  border-white/30 shadow-inner backdrop-blur-md rounded-xl border  
+            {randomQs.map((q, index) => (
+              <button
+                key={index}
+                className={`w-full text-left p-2 mb-3  border-white/30 shadow-inner backdrop-blur-md rounded-xl border  
                        hover:bg-white/20 hover:border-white/30 transition-all duration-200 
                         hover:shadow-md text-sm text-white hover:text-black/80 font-medium cursor-pointer
                         ${isLight ? "bg-[#B9A3C7]" : "bg-white/10"}
                         `}
-            onClick={() => setInput(q)}
-          >
-            {q}
-          </button>
-        ))}
-      </div>
-      <div className="flex justify-center" >
-        <button 
-        onClick={() => 
-          // navigate('/archivedchats')
-           navigate("/loading", { state: { nextPage: "/archivedchats" } })
-        }
-        className={`  py-1 px-3 text-sm rounded-md text-white font-semibold
-        ${isLight ? "bg-linear-to-r from-[#4f4d4f]  to-[#bdbcbd]" : "bg-white/10"}
-        `} >Archived Chats</button>
-      </div>
-    </div>
+                onClick={() => setInput(q)}
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+          <div className="flex justify-center">
+            <button
+              onClick={() =>
+                navigate("/loading", { state: { nextPage: "/archivedchats" } })
+              }
+              className={`py-1 px-3 text-sm rounded-md text-white font-semibold ${
+                isLight
+                  ? "bg-linear-to-r from-[#4f4d4f]  to-[#bdbcbd]"
+                  : "bg-white/10"
+              }`}
+            >
+              Archived Chats
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* <FooterMain />     */}
+      {/* spacing for mobile bottom nav (if you have one) */}
+      <div className="h-4 md:h-0" />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
+import { getThemeCookie, setThemeCookie } from "../utils/themeCookie";
 
 export const ThemeContext = createContext({
   theme: "dark",
@@ -8,7 +9,8 @@ export const ThemeContext = createContext({
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     try {
-      const stored = localStorage.getItem("askzyla_theme");
+      // const stored = localStorage.getItem("askzyla_theme");
+      const stored = getThemeCookie()
       return stored === "light" ? "light" : "dark";
     } catch (e) {
       return "dark";
@@ -21,9 +23,10 @@ export function ThemeProvider({ children }) {
     document.body.classList.add(theme === "light" ? "theme-light" : "theme-dark");
 
     try {
-      localStorage.setItem("askzyla_theme", theme);
+      // localStorage.setItem("askzyla_theme", theme);
+      setThemeCookie(theme)
     } catch (e) {
-      // ignore storage errors
+      // ignore cookie errors
     }
   }, [theme]);
 

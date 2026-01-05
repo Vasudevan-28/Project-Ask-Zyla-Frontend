@@ -246,34 +246,38 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col relative bg-linear-to-r from-[#e9d9e3] via-[#25123a] to-[#1d0e2d]  " >
+    <div className="flex flex-col relative bg-[#1d0e2d]" >
 
+    <div className=" md:fixed  z-999" > 
 
         <HeaderAuth />
+    </div>
   
     <div className="min-h-screen flex flex-col md:flex-row bg-[#1d0e2d] relative overflow-hidden">
 
-
+    
       {/* LEFT GIF */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8 }}
-        className="w-full md:w-1/2 flex items-center justify-center p-4 md:p-0"
+        className="w-full md:w-1/2  p-2 md:p-0"
       >
-        
-          {/* <img src={logo} alt="ZA logo" className="h-40 w-60 block" /> */}
+        <div className="items-center md:mt-30 justify-center flex  
+                        origin-center scale-85 md:scale-100
+                        " >
         <ZylaLogin />
+        </div>
       </motion.div>
 
       {/* RIGHT SIDE LOGIN CARD */}
-      <div className="w-full md:w-1/2 flex justify-center items-center px-4 py-4">
+      <div className="w-full md:w-1/2 flex justify-center  items-center p-2">
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7 }}
           whileHover={{ scale: 1.01 }}
-          className="w-full max-w-md bg-white/20 backdrop-blur-xl shadow-xl rounded-2xl p-6 sm:p-8 border border-white/30"
+          className="w-full max-w-md bg-white/20 backdrop-blur-xl shadow-xl rounded-2xl p-6  border border-white/30"
         >
           <h2 className="text-center text-2xl sm:text-3xl font-semibold mb-6 text-white">
             Sign in to your beauty sanctuary!
@@ -293,12 +297,12 @@ export default function Login() {
           <div className="flex flex-col gap-4">
             {/* Identifier (Email or Phone) */}
             <motion.div animate={emailPhoneError ? "shake" : "none"} variants={shakeVariant}>
-              <label className="block text-white font-medium mb-1">Email</label>
+              <label className="block text-white font-medium mb-1">Email or Phone</label>
 
               <motion.input
                 whileFocus={{ scale: 1.02 }}
                 type="text"
-                placeholder="example@gmail.com"
+                placeholder="example@gmail.com or +xxxxxxxxxxx"
                 className="w-full px-4 py-2.5 rounded-lg bg-white shadow-md border border-gray-200"
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
@@ -321,7 +325,7 @@ export default function Login() {
                   whileFocus={{ scale: 1.02 }}
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
-                  className="w-full px-4 py-2.5 rounded-lg bg-white shadow-md border"
+                  className="w-full px-4 py-2.5 rounded-lg bg-white shadow-md border border-gray-200"
                   value={password}
                   minLength={8}
                   maxLength={16}

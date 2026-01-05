@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import videoBg from "../assets/zyla.gif";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { loginWithGoogle } from "../services/authservice";
 import ZylaSignup from "../zyla_components/ZylaSignup";
 import HeaderAuth from "../authentication_components/HeaderAuth";
 import { checkGoogleUser } from "../services/backendAPI";
-
 import toast from "react-hot-toast";
 
 export default function Signup() {
@@ -35,8 +34,6 @@ export default function Signup() {
   const handleGoogleSignup = async () => {
     try {
       const result = await loginWithGoogle();
-      // result.firebaseUser.email will be the Google email
-
         if (result.status === "existing") {
         if (result.skin_profile === false) {
       navigate("/questionnaire");
@@ -49,10 +46,9 @@ export default function Signup() {
      state: { 
        email: result.firebaseUser.email, 
        isGoogle: true 
-     } })};
+     } })
+    };
 
-
-      // navigate("/register", { state: { email: result.firebaseUser.email, isGoogle: true } });
     } catch (err) {
       setError("Google sign up failed");
     }
@@ -64,17 +60,24 @@ export default function Signup() {
 
       {/* LEFT GIF */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6 md:p-0">
-        {/* <img
-          src={videoBg}
-          alt="GIF"
-          className="w-[85%] sm:w-[70%] md:w-[70%] lg:w-[65%]"
-        /> */}
-<ZylaSignup />
+ <motion.div
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8 }}
+        className="w-full md:w-1/2  p-2 md:p-0"
+      >
+         <div className="items-center md:mt-30 justify-center flex  
+                        origin-center scale-85 md:scale-100
+                        " >
+          <ZylaSignup />
+        </div>
+      </motion.div>
+
       </div>
       {/* RIGHT */}
-      <div className="w-full md:w-1/2 flex justify-center items-center px-4 py-10">
+      <div className="w-full md:w-1/2 flex justify-center items-center px-4 md:py-10">
         <form
-          className="w-full max-w-lg bg-white/20 backdrop-blur-xl shadow-xl rounded-3xl p-8 sm:p-10 border border-white/30"
+          className="w-full max-w-lg bg-white/20 backdrop-blur-xl shadow-xl rounded-3xl p-6 md:p-8 border border-white/30"
           onSubmit={handleEmailSignup}
         >
           <h2 className="text-center text-2xl sm:text-3xl font-semibold mb-8" style={{ color: "rgba(247, 251, 255, 1)" }}>
@@ -122,7 +125,6 @@ export default function Signup() {
               <span className="font-semibold text-white drop-shadow-md">
                 Sign Up with Google
               </span>
-
             </div>
                 {/* Sign Up */}
             <div className="text-center text-white mt-2">
