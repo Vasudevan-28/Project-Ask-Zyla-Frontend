@@ -113,10 +113,10 @@ export default function RoutinesPanel({
     const isMany = list.length >= 2;
 
     return (
-      <div className="flex flex-col  gap-2 scrollbar-hide  flex-1 min-h-0">
+      <div className="flex flex-col gap-2   flex-1 min-h-0">
         <div className="px-1 font-extrabold text-sm md:text-base">{title}</div>
 
-        <div className="flex-1 overflow-y-auto  p-1 min-h-0" style={{ maxHeight: "30vh" }}>
+        <div className="flex-1 overflow-y-auto custom-scrollbar  p-1 min-h-0" style={{ maxHeight: "30vh" }}>
           {list.length === 0 ? (
             <div className="opacity-45 text-sm md:text-base">No routines. Add one using Add Routine.</div>
           ) : (

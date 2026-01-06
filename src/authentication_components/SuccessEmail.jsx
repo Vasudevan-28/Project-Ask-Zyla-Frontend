@@ -6,8 +6,9 @@ import HeaderAuth from "./HeaderAuth";
 export default function SuccessEmail() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#1A0D28] p-4">
+    <div className="min-h-screen bg-[#1A0D28]" >
       <HeaderAuth />
+    <div className=" flex items-center justify-center h-[80vh]  p-4">
       {/* Popup Card */}
       <motion.div
         initial={{ opacity: 0, scale: 0.6, y: 60 }}
@@ -21,7 +22,7 @@ export default function SuccessEmail() {
           animate={{ scale: [0, 1.4, 0.9, 1] }}
           transition={{
             duration: 0.8,
-            type: "tween", // ✅ corrected
+            type: "tween", 
             ease: "easeOut",
             delay: 0.2,
           }}
@@ -90,6 +91,7 @@ export default function SuccessEmail() {
           Back to Login
         </motion.button>
       </motion.div>
+    </div>
     </div>
   );
 }

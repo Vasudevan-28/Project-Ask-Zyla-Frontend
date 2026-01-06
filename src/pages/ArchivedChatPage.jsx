@@ -38,6 +38,8 @@ export default function ArchivedChatPage() {
     const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
   
+ const [isConversationsOpen, setIsConversationsOpen] = useState(false);
+
 
 
   const [idToken, setIdToken] = useState("");
@@ -62,7 +64,8 @@ export default function ArchivedChatPage() {
   const [ttsSupported, setTtsSupported] = useState(true);
   const [speakingId, setSpeakingId] = useState(null);
 
-  const recognitionRef = useRef(null);
+const recognitionRef = useRef(null);
+  const voiceRef = useRef(null)
   
   const [randomQs, setRandomQs] = useState([]);
 
@@ -77,65 +80,6 @@ export default function ArchivedChatPage() {
          return () => unsub();
     }, [auth]);
   
-
-  useEffect(() => {
-    if (
-      !("webkitSpeechRecognition" in window) &&
-      !("SpeechRecognition" in window)
-    ) {
-      setSpeechSupported(false);
-      return;
-    }
-
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognitionRef.current = new SpeechRecognition();
-    recognitionRef.current.continuous = false;
-    recognitionRef.current.interimResults = true;
-    recognitionRef.current.lang = "en-US";
-
-    recognitionRef.current.onstart = () => {
-      setIsListening(true);
-    };
-
-    recognitionRef.current.onresult = (event) => {
-      const transcript = Array.from(event.results)
-        .map((result) => result[0])
-        .map((result) => result.transcript)
-        .join("");
-
-      setInput(transcript);
-    };
-
-    recognitionRef.current.onerror = (event) => {
-      console.error("Speech recognition error:", event);
-      setIsListening(false);
-
-      if (event.error === "not-allowed") {
-        alert(
-          "Microphone access denied. Allow microphone permissions to use voice input."
-        );
-      } else if (event.error === "network") {
-        alert("Speech recognition service is not reachable.");
-      }
-    };
-
-    recognitionRef.current.onend = () => {
-      setIsListening(false);
-    };
-
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
-      setTtsSupported(false);
-    }
-  }, []);
 
 
   useEffect(() => {
@@ -168,23 +112,6 @@ export default function ArchivedChatPage() {
   }, []);
     
 
-  const toggleListening = () => {
-    if (!speechSupported || !recognitionRef.current) {
-      alert("Speech recognition is not supported in your browser.");
-      return;
-    }
-
-    try {
-      if (isListening) {
-        recognitionRef.current.stop();
-      } else {
-        recognitionRef.current.start();
-      }
-    } catch (err) {
-      console.error("Error starting/stopping recognition:", err);
-    }
-  };
-
  
 
   useEffect(() => {
@@ -203,6 +130,129 @@ export default function ArchivedChatPage() {
         behavior: "smooth",
       });
     }
+  };
+
+
+  
+    useEffect(() => {
+      if (
+        typeof window === "undefined" ||
+        (!("webkitSpeechRecognition" in window) &&
+          !("SpeechRecognition" in window))
+      ) {
+        setSpeechSupported(false);
+        return;
+      }
+  
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+  
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = "en-US";
+  
+      recognition.onstart = () => setIsListening(true);
+  
+      recognition.onresult = (event) => {
+        let finalTranscript = "";
+  
+        for (let i = 0; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          }
+        }
+  
+        if (finalTranscript) {
+          setInput(finalTranscript);
+        }
+      };
+  
+      recognition.onerror = () => setIsListening(false);
+      recognition.onend = () => setIsListening(false);
+  
+      recognitionRef.current = recognition;
+  
+      return () => recognition.stop();
+    }, []);
+  
+    useEffect(() => {
+      if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+        setTtsSupported(false);
+        return;
+      }
+  
+      const loadVoices = () => {
+        const voices = window.speechSynthesis.getVoices();
+        if (!voices.length) return;
+  
+        voiceRef.current =
+          voices.find(
+            (v) =>
+              v.lang === "en-US" &&
+              v.name.toLowerCase().includes("female")
+          ) ||
+          voices.find((v) => v.lang === "en-US") ||
+          voices[0];
+      };
+  
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }, []);
+  
+  
+    const toggleListening = () => {
+      if (!speechSupported || !recognitionRef.current) return;
+  
+      try {
+        isListening
+          ? recognitionRef.current.stop()
+          : recognitionRef.current.start();
+      } catch (e) {
+        console.log(e)
+      }
+    };
+  
+  
+    const utteranceRef = useRef(null)
+  
+  const handleSpeak = (text, id) => {
+    if (!ttsSupported || !voiceRef.current) return;
+  
+    const synth = window.speechSynthesis;
+  
+    if (speakingId === id) {
+      synth.cancel();
+      utteranceRef.current = null;
+      setSpeakingId(null);
+      return;
+    }
+  
+    synth.cancel();
+  
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = voiceRef.current;
+    utterance.lang = "en-US";
+  
+    utteranceRef.current = utterance;
+  
+    utterance.onend = () => {
+      if (utteranceRef.current !== utterance) return;
+      utteranceRef.current = null;
+      setSpeakingId(null);
+    };
+  
+    utterance.onerror = () => {
+      if (utteranceRef.current !== utterance) return;
+      utteranceRef.current = null;
+      setSpeakingId(null);
+    };
+  
+    setSpeakingId(id);
+  
+    setTimeout(() => {
+      synth.speak(utterance);
+    }, 0);
   };
 
   async function loadConversations() {
@@ -273,41 +323,6 @@ export default function ArchivedChatPage() {
     }
   }
 
-  const handleSpeak = (text, id) => {
-    if (!ttsSupported || !window.speechSynthesis) {
-      alert("Text-to-speech is not supported in this browser.");
-      return;
-    }
-
-    const voices = window.speechSynthesis.getVoices();
-    const cuteVoice =
-      voices.find((v) => v.name.includes("Female")) ||
-      voices.find((v) => v.lang === "en-US") ||
-      voices[0];
-
-    if (speakingId === id) {
-      window.speechSynthesis.cancel();
-      setSpeakingId(null);
-      return;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = cuteVoice || null;
-    // utterance.rate = 1;
-    // utterance.pitch = 1.2;
-    utterance.lang = "en-US";
-
-    utterance.onend = () => setSpeakingId(null);
-    utterance.onerror = (err) => {
-      console.error("TTS error:", err);
-      setSpeakingId(null);
-    };
-
-    setSpeakingId(id);
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
-  };
-
   async function sendMessage(textArg) {
     const userText = textArg?.trim() ?? input.trim();
     if (!userText) return;
@@ -375,27 +390,36 @@ export default function ArchivedChatPage() {
 
         <ArchiveConversations conversations={conversations} createNewConversation={createNewConversation} 
                   currentConversationId={currentConversationId} loadingConversations={loadingConversations}
-                  openConversation={openConversation} refreshConversations={loadConversations} idToken={idToken}
-                     isArchived = {true}
+                  openConversation={(id, title) => {
+            // close mobile drawer after opening on mobile
+            openConversation(id, title);
+            setIsConversationsOpen(false);
+          }}
+          refreshConversations={loadConversations}
+          idToken={idToken}
+          isArchived={true}
+          // mobile overlay control:
+          isMobileOpen={isConversationsOpen}
+          onClose={() => setIsConversationsOpen(false)}
 
                   />
 
         {/* Center  */}
           <Chatbot scrollerRef={scrollerRef} messages={messages} loading={loading} ttsSupported={ttsSupported} speakingId={speakingId} handleSpeak={handleSpeak}
                         input={input} setInput={setInput} handleSubmit={handleSubmit} speechSupported={speechSupported}
-                        isListening={isListening} toggleListening={toggleListening} idToken={idToken}
+                        isListening={isListening} toggleListening={toggleListening} idToken={idToken}   onOpenConversations={() => setIsConversationsOpen(true)}
                />
 
 
-       <div className="sm:hidden lg:block w-50 flex flex-col justify-center rounded-2xl m-1 p-4 relative overflow-hidden">
-      <div className="mb-6 mt-20 relative z-10">
-        <h2
-          className={`text-base mb-4 tracking-wide font-semibold 
-            ${ isLight ? "text-black" : "text-white"
-          }`}
-          >
-          Quick Chats
-        </h2>
+        <div className="hidden md:flex w-50 flex-col justify-center rounded-2xl m-1 p-4 relative overflow-hidden">
+          <div className="mb-6 mt-20 relative z-10">
+            <h2
+              className={`text-base mb-4 tracking-wide font-semibold ${
+                isLight ? "text-black" : "text-white"
+              }`}
+            >
+              Quick Chats
+            </h2>
 
         {randomQs.map((q, index) => (
           <button
@@ -414,7 +438,6 @@ export default function ArchivedChatPage() {
       <div className="flex justify-center" >
         <button 
         onClick={() => 
-          // navigate('/chatbot')
           navigate("/loading", { state: { nextPage: "/chatbot" } })
         }
          className={`  py-1 px-3 text-sm rounded-md text-white font-semibold

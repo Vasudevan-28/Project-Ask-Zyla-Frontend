@@ -409,28 +409,23 @@ const [pageLoading, setPageLoading] = useState(true);
 
   return (
     <div
-      className={`min-h-screen w-full overflow-auto text-white flex flex-col ${
-        isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"
-      }`}
+      className={`min-h-screen w-full overflow-auto text-white flex flex-col 
+        ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}`}
     >
-      <div className="h-10 mb-3" />
 
-      <div className="flex-1 flex p-3 mt-2 min-h-0">
-        {/* Conversations - visible as side panel on md+; as overlay drawer on mobile */}
+      <div className="flex-1 flex p-3 mt-15">
         <Conversations
           conversations={conversations}
           createNewConversation={createNewConversation}
           currentConversationId={currentConversationId}
           loadingConversations={loadingConversations}
           openConversation={(id, title) => {
-            // close mobile drawer after opening on mobile
             openConversation(id, title);
             setIsConversationsOpen(false);
           }}
           refreshConversations={loadConversations}
           idToken={idToken}
           isArchived={false}
-          // mobile overlay control:
           isMobileOpen={isConversationsOpen}
           onClose={() => setIsConversationsOpen(false)}
         />
@@ -450,11 +445,9 @@ const [pageLoading, setPageLoading] = useState(true);
           isListening={isListening}
           toggleListening={toggleListening}
           idToken={idToken}
-          // handler for mobile hamburger to open the conversations overlay
           onOpenConversations={() => setIsConversationsOpen(true)}
         />
 
-        {/* Quick Chats / Right column - HIDDEN on small screens */}
         <div className="hidden md:flex w-50 flex-col justify-center rounded-2xl m-1 p-4 relative overflow-hidden">
           <div className="mb-6 mt-20 relative z-10">
             <h2
@@ -496,7 +489,6 @@ const [pageLoading, setPageLoading] = useState(true);
         </div>
       </div>
 
-      {/* spacing for mobile bottom nav (if you have one) */}
       <div className="h-4 md:h-0" />
     </div>
   );

@@ -24,10 +24,8 @@ export default function DashboardPage() {
   const [userToken, setUserToken] = useState(null);
   const [completedDates, setCompletedDates] = useState([]);
 
-  // derive ISO date from selectedDate (this is what we pass down)
   const selectedIso = toISODate(selectedDate);
 
-  // Fetch the Firebase ID token on mount or when the user changes
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = auth.onIdTokenChanged(async (user) => {
@@ -121,7 +119,7 @@ export default function DashboardPage() {
 
   return (
     <div
-      className={`min-w-screen mx-auto pt-20 py-8 flex justify-center w-full
+      className={`min-w-fit mx-auto overflow-x-hidden pt-20 py-8 flex justify-center w-full
     ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}
     `}
     >

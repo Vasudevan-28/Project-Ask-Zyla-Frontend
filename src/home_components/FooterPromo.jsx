@@ -53,10 +53,10 @@ export default function FooterPromo() {
       className="w-full bg-white text-[#221322] m-0 p-0 box-border"
     >
       {/* MAIN ROW */}
-      <div className="py-6 px-4 sm:px-6 md:px-8 flex justify-center items-stretch border-t border-t-[rgba(0,0,0,0.06)]">
+      <div className="py-6 px-8 flex justify-center items-stretch border-t border-t-[rgba(0,0,0,0.06)]">
         <div className="w-full max-w-[1300px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-[30px] items-start">
           {/* BRAND */}
-           <div className="flex items-center gap-2.5 cursor-pointer self-center -translate-x-[30px]"
+           <div className="flex items-center justify-center md:justify-start gap-2.5 cursor-pointer self-center -translate-x-[30px]"
           onClick={navPromo}
           >
             <img
@@ -71,12 +71,12 @@ export default function FooterPromo() {
           </div>
 
           {/* Company Overview */}
-          <div className="pt-2">
+          <div className="pt-2 text-center md:text-left">
             <div className="font-bold mb-2">Company Overview</div>
             <ul className="list-none m-0 p-0">
               <li className="mb-2">
                 <button
-                  className="font-medium hover:underline cursor-pointer text-left"
+                  className="font-medium hover:underline cursor-pointer "
                   onClick={() => goToSection("my-story")}
                 >
                   My Story
@@ -84,7 +84,7 @@ export default function FooterPromo() {
               </li>
               <li className="mb-2">
                 <button
-                  className="font-medium hover:underline cursor-pointer text-left"
+                  className="font-medium hover:underline cursor-pointer "
                   onClick={() => goToSection("features")}
                 >
                   What Zyla Does?
@@ -94,12 +94,12 @@ export default function FooterPromo() {
           </div>
 
           {/* Quick Links */}
-          <div className="pt-2">
-            <div className="font-bold mb-2">Quick Links</div>
-            <ul className="list-none m-0 p-0">
+          <div className="pt-2 md:text-left text-center">
+            <div className="font-bold mb-2 ">Quick Links</div>
+            <ul className="list-none  m-0 p-0">
               <li className="mb-2">
                 <button
-                  className="font-medium hover:underline cursor-pointer text-left"
+                  className="font-medium hover:underline cursor-pointer "
                   onClick={navSupport}
                 >
                   Support
@@ -107,7 +107,7 @@ export default function FooterPromo() {
               </li>
               <li className="mb-1">
                 <button
-                  className="font-medium hover:underline cursor-pointer text-left"
+                  className="font-medium hover:underline cursor-pointer "
                   onClick={() => navigate("/privacy-policy")}
                 >
                   Privacy Policy
@@ -115,7 +115,7 @@ export default function FooterPromo() {
               </li>
               <li className="mb-1">
                 <button
-                  className="font-medium hover:underline cursor-pointer text-left"
+                  className="font-medium hover:underline cursor-pointer "
                   onClick={() => navigate("/cookie-policy")}
                 >
                   Cookie Policy
@@ -123,7 +123,7 @@ export default function FooterPromo() {
               </li>
               <li className="mb-2">
                 <button
-                  className="font-medium hover:underline cursor-pointer text-left"
+                  className="font-medium hover:underline cursor-pointer "
                   onClick={() => navigate("/login")}
                 >
                   Log In
@@ -131,7 +131,7 @@ export default function FooterPromo() {
               </li>
               <li className="mb-2">
                 <button
-                  className="font-medium hover:underline cursor-pointer text-left"
+                  className="font-medium hover:underline cursor-pointer "
                   onClick={() => navigate("/signup")}
                 >
                   Sign Up
@@ -141,7 +141,7 @@ export default function FooterPromo() {
           </div>
 
           {/* Contact Us */}
-          <div className="pt-2">
+          <div className="pt-2 text-center md:text-left">
             <div className="font-bold mb-2">Contact Us</div>
             <p className="mb-2 text-sm">
               Need help? Fill out our{" "}
@@ -164,7 +164,7 @@ export default function FooterPromo() {
 
             <p className="text-sm mb-2">Stay connected for more skin care love!</p>
 
-            <div className="flex gap-3 mt-2">
+            <div className="flex gap-3 mt-2 justify-center md:justify-start">
               <a
                 href="https://mail.google.com/mail/?view=cm&fs=1&to=askzyla.zeaisoft@gmail.com"
                 target="_blank"

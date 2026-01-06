@@ -18,8 +18,7 @@ export default function HeaderPromo() {
   const newTab = () => window.open("/login", "_blank");
   const newTabSignUp = () => window.open("/signup", "_blank");
 
-  const HEADER_HEIGHT = 60; // used for scrolling/top offsets (keeps desktop UI intact)
-
+  const HEADER_HEIGHT = 60;
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
 
@@ -40,7 +39,7 @@ export default function HeaderPromo() {
   // Update active section on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPos = window.scrollY + HEADER_HEIGHT + 10; // little tolerance
+      const scrollPos = window.scrollY + HEADER_HEIGHT + 80; // little tolerance
       let current = null;
       let foundAny = false;
 
@@ -64,7 +63,7 @@ export default function HeaderPromo() {
     handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []); // run once
+  }, []); 
 
   // Recalculate underline position when activeSection changes or on resize
   useEffect(() => {
@@ -177,9 +176,7 @@ export default function HeaderPromo() {
             )}
           </nav>
 
-          {/* Right Side — on mobile show only login + menu button; on desktop show login + register + (no menu) */}
           <div className="flex items-center gap-2 md:gap-4">
-            {/* Login button — visible on all screen sizes (per request) */}
             <button
               onClick={newTab}
               className="px-3 py-1 text-sm font-semibold rounded border border-[#1A0D28] text-[#1A0D28] hover:bg-[#1A0D28] hover:text-white transition"
@@ -187,7 +184,6 @@ export default function HeaderPromo() {
               Login
             </button>
 
-            {/* Register button — visible only on md+; on mobile it should be in the hamburger menu */}
             <button
               onClick={newTabSignUp}
               className="hidden md:inline-flex px-3 py-1 text-sm font-semibold rounded text-white bg-linear-to-r from-[#1A0D28] to-[#3B2B5C] hover:scale-105 transition"
@@ -195,7 +191,6 @@ export default function HeaderPromo() {
               Register
             </button>
 
-            {/* Mobile Menu Toggle — visible only on mobile */}
             <button
               className="md:hidden ml-2 text-2xl text-[#1A0D28] p-1"
               onClick={() => setMenuOpen(!menuOpen)}
@@ -206,40 +201,31 @@ export default function HeaderPromo() {
           </div>
         </div>
 
-        {/* Mobile Menu (full width dropdown) */}
         {menuOpen && (
           <div
-            className="md:hidden fixed top-[60px] left-0 w-full bg-white shadow-md border-t border-[#1A0D28] flex flex-col z-40"
+            className="md:hidden fixed top-[60px] left-0 w-full bg-white shadow-md border-t
+                   border-[#1A0D28] flex flex-col z-40"
             role="menu"
           >
             {sections.map((section) => (
               <button
                 key={section}
                 onClick={() => scrollToSection(section)}
-                className="px-6 py-4 text-left font-semibold text-[#1A0D28] hover:bg-gray-100"
+                className="px-6 py-4 text-center font-semibold text-[#1A0D28] hover:bg-gray-100"
                 role="menuitem"
               >
                 {section.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
               </button>
             ))}
 
-            <button
-              onClick={() => {
-                setMenuOpen(false);
-                navigate("/login");
-              }}
-              className="px-6 py-4 text-left font-semibold text-[#1A0D28] hover:bg-gray-100"
-              role="menuitem"
-            >
-              Login
-            </button>
 
             <button
               onClick={() => {
                 setMenuOpen(false);
                 navigate("/signup");
               }}
-              className="px-6 py-4 text-left font-semibold text-[#1A0D28] hover:bg-gray-100"
+              className="px-6 py-4 text-center  font-semibold 
+              bg-linear-to-r from-[#1A0D28] to-[#553379] text-white hover:bg-gray-100"
               role="menuitem"
             >
               Register

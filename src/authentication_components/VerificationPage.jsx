@@ -8,8 +8,6 @@ import {
   sendOtpToPhone,
 } from "../services/backendAPI";
 
-
-import ZaLogo from "../assets/ZaLogo.png"
 import HeaderAuth from "./HeaderAuth";
  
 export default function VerifyOtp() {
@@ -82,9 +80,6 @@ export default function VerifyOtp() {
 };
 
  
-  // ----------------------------
-  // 🔄 RESEND OTP (EMAIL OR PHONE)
-  // ----------------------------
   const handleResend = async () => {
     try {
       if (email) await sendEmailOtp(email);
@@ -111,8 +106,9 @@ export default function VerifyOtp() {
   };
  
   return (
-<div className="min-h-screen flex items-center justify-center bg-[#1A0D28] p-4">
+    <div className="min-h-screen bg-[#1A0D28]">
   <HeaderAuth />
+<div className=" flex items-center  h-[80vh] justify-center p-4">
 <div className="w-full max-w-xl bg-white/20 backdrop-blur-xl shadow-xl rounded-3xl 
                       p-6 sm:p-8 md:p-10 border border-white/30">
 
@@ -181,6 +177,7 @@ export default function VerifyOtp() {
 >
           Continue
 </button>
+</div>
 </div>
 </div>
   );

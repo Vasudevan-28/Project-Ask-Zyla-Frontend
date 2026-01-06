@@ -38,11 +38,7 @@ return (
           <div className="text-[24px] text-[#1c0d25]">Zyla</div>
         </div>
       </div>
-{/* text-[#1c0d25] */}
-    
-    
 
-      {/* right controls */}
       <div className="ml-auto flex items-center gap-3 z-10">
         {/* Theme toggle */}
         <button
@@ -57,7 +53,7 @@ return (
               "absolute inset-0 rounded-full transition-colors duration-200 " +
               (theme === "light" ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]")
             }
-            aria-hidden
+            
           />
           <div className="absolute inset-0 pointer-events-none" />
           {/* knob */}

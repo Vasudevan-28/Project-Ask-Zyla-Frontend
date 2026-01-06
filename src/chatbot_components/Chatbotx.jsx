@@ -30,7 +30,7 @@ export default function Chatbot({
   const isLight = theme === "light";
 
   return (
-    <div className="flex-1 flex flex-col p-1 custom-scrollbar max-h-[480px]  md:min-h-[600px]">
+    <div className="flex-1 flex flex-col p-1 custom-scrollbar max-h-[85vh] md:max-h-[95vh]">
       <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full min-h-0">
         <div
           className={`flex-1 flex flex-col justify-between rounded-2xl backdrop-blur-md border border-white/20 shadow-2xl overflow-hidden relative

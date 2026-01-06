@@ -58,7 +58,7 @@ export default function NotificationCenter({
       className="
         w-72 rounded-2xl bg-white/95 backdrop-blur-xl
         shadow-xl border border-purple-100/80
-        overflow-hidden animate-fade-in
+        overflow-hidden animate-fade-in custom-scrollbar
       "
     >
       {/* Header */}
@@ -107,7 +107,7 @@ export default function NotificationCenter({
       </div>
 
       {/* Notification List */}
-      <div className="max-h-[260px] overflow-y-auto">
+      <div className="max-h-[260px] overflow-y-auto custom-scrollbar">
         {notifications.length === 0 ? (
           <div className="p-5 text-center text-gray-400 text-xs space-y-1.5">
             <div className="text-xl">🕊️</div>
