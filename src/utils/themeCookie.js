@@ -1,5 +1,4 @@
 import Cookies from 'js-cookie'
-import { Cookie } from 'lucide-react'
 
 export function getThemeCookie(){
     return Cookies.get("askzyla_theme")

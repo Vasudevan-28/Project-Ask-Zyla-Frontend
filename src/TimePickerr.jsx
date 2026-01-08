@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 export default function TimePickerr({
   value,
   onChange,
-  ampm = true, // true = 12h, false = 24h
+  ampm = true,
   className = "",
   placeholder = "--:--"
 }) {

@@ -25,6 +25,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { updateCityAndState } from "./api/settingsAPI";
 
+import { setTimeFormatCookie, getTimeFormatCookie } from "../utils/timeformatCookie";
+
 // Common row style (inner row)
 const rowClasses =
   "w-full flex items-center justify-between h-[56px] px-4 border-b border-[#f1c6e0] text-[14px] text-[color:var(--text-main)]";
@@ -145,6 +147,16 @@ function LanguageButton({ icon, label, selectedLanguage, onLanguageChange, isLig
 
 function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRating, onOpenPrivacy }) {
   const [is24h, setIs24h] = useState(true);
+
+  useEffect(() => {
+    try {
+      const stored = getTimeFormatCookie();
+      setIs24h(stored === "true");
+    } catch {
+      setIs24h(true);
+    }
+  }, []);
+
   const [locationOn, setLocationOn] = useState(false);
   const [locationStatus, setLocationStatus] = useState("");
   const { theme } = useContext(ThemeContext);
@@ -261,6 +273,18 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
     setTimeout(() => navigate("/dashboard"), 1000);
   };
 
+  // const [timeFormat, setTimeFormat] = useState(true)
+
+  function toggleTimeFormat() {
+  setIs24h(prev => {
+    const next = !prev;
+    setTimeFormatCookie(next);
+    return next;
+  });
+  console.log(is24h)
+}
+
+
   return (
     <section
       className={`w-full md:w-[90%] max-w-[900px]  px-4 md:px-6 pt-6 pb-8 flex flex-col ${
@@ -268,7 +292,7 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
       } rounded-2xl shadow-lg`}
     >
       {/* Time zone toggle */}
-      <ToggleRow icon={<FaRegClock className="w-6 h-6 " />} label="Time zone (12h / 24h)" checked={is24h} onChange={handleTimeToggle} helper={is24h ? "24h" : "12h"} isLight={isLight} />
+      <ToggleRow icon={<FaRegClock className="w-6 h-6 " />} label="Time zone (12h / 24h)" checked={is24h} onChange={toggleTimeFormat} helper={is24h ? "24h" : "12h"} isLight={isLight} />
 
       {/* Location toggle */}
       <ToggleRow icon={<IoLocationOutline className="w-9 h-6 " />} label="Location" checked={locationOn} onChange={handleLocationToggle} isLight={isLight} />

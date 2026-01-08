@@ -1,14 +1,29 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import ConflictModal from "./ConflictModal";
 import SuccessModal from "./SuccessModal";
 import { ThemeContext } from "../contexts/ThemeContext";
 import TimePickerr from "../TimePickerr";
+
+import { getTimeFormatCookie } from "../utils/timeformatCookie" 
 
 export default function AddProductModal({ onClose, onAdd, routines = {} }) {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
 
 const fromCookie = true; // or false
+
+  
+const [is12Hr, setIs12Hr] = useState(true);
+
+useEffect(() => {
+  try {
+    const stored = getTimeFormatCookie();
+    setIs12Hr(stored === "true");
+  } catch {
+    setIs12Hr(true);
+  }
+}, []);
+
 
   const [routine, setRoutine] = useState("morning");
   const [slot, setSlot] = useState(1);
@@ -66,8 +81,9 @@ const fromCookie = true; // or false
       setError("Enter product name");
       return;
     }
-    // const utcReminder = localTimeToUTC(reminderTime);
-    const utcReminder = local12HrToUTC(reminderTime);
+
+    const utcReminder = is12Hr ? local12HrToUTC(reminderTime) : localTimeToUTC(reminderTime);
+
 
     const routineProducts = routines[routine] || [];
     const slotNum = Number(slot);
@@ -204,15 +220,12 @@ const fromCookie = true; // or false
                 onChange={(e) => setReminderTime(e.target.value)}
                 className="w-full p-2 rounded border border-gray-300 bg-white text-gray-900"
               /> */}
-             
-                
 <TimePickerr
   value={reminderTime}
-  ampm={fromCookie}
+  ampm={!is12Hr}
   onChange={(e) => setReminderTime(e.target.value)}
   className="w-full p-2 rounded border border-gray-300 bg-white text-gray-900"
 />
-
             </div>
           </div>
 
