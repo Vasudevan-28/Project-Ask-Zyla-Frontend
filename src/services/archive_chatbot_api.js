@@ -26,7 +26,7 @@ export const ArchiveChatBotApiService = {
    }, 
 
    async createArchNewConvo(token) {
-       const res = await fetch(`${ARCH_CHAT_API_URL}/conversations`, {
+       const res = await fetch(`${ARCH_CHAT_API_URL}/archive/conversations`, {
         method: "POST",
           headers: authHeaders(token, true),
         body: JSON.stringify({ title: "New chat"}),

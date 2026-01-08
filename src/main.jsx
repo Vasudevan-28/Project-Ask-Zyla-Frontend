@@ -75,6 +75,7 @@ import Loading from "./home_components/Loading.jsx";
 import AboutUsNew from "./promotion_components/AboutUs/AboutusN.jsx";
 
 import { CookieProvider } from "./contexts/CookieContext.jsx";
+import TimePickerr from "./TimePickerr.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -127,6 +128,10 @@ createRoot(document.getElementById("root")).render(
           <Route path="/cookie-policy" element={<CookiePolicy />} />
           <Route path="/loading" element={<Loading />} />
           <Route path="/aboutUs" element={<AboutUs />} />
+
+
+          <Route path="/goodnight" element={<TimePickerr />} />
+
 
 
 

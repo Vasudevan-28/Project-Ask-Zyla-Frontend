@@ -2,10 +2,13 @@ import React, { useState, useContext } from "react";
 import ConflictModal from "./ConflictModal";
 import SuccessModal from "./SuccessModal";
 import { ThemeContext } from "../contexts/ThemeContext";
+import TimePickerr from "../TimePickerr";
 
 export default function AddProductModal({ onClose, onAdd, routines = {} }) {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
+
+const fromCookie = true; // or false
 
   const [routine, setRoutine] = useState("morning");
   const [slot, setSlot] = useState(1);
@@ -30,13 +33,41 @@ export default function AddProductModal({ onClose, onAdd, routines = {} }) {
     return d.toISOString().substring(11, 16);
   }
 
+  function local12HrToUTC(timeStr) {
+  if (!timeStr) return "";
+
+  const match = timeStr.trim().match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/i);
+  if (!match) return "";
+
+  let [, hour, minute, period] = match;
+
+  hour = Number(hour);
+  minute = Number(minute);
+  period = period.toUpperCase();
+
+  // Convert to 24-hour format
+  if (period === "AM") {
+    if (hour === 12) hour = 0;
+  } else {
+    if (hour !== 12) hour += 12;
+  }
+
+  const d = new Date();
+  d.setHours(hour, minute, 0, 0);
+
+  // Return UTC HH:MM
+  return d.toISOString().substring(11, 16);
+}
+
+
   async function handleSubmit() {
     setError("");
     if (!name.trim()) {
       setError("Enter product name");
       return;
     }
-    const utcReminder = localTimeToUTC(reminderTime);
+    // const utcReminder = localTimeToUTC(reminderTime);
+    const utcReminder = local12HrToUTC(reminderTime);
 
     const routineProducts = routines[routine] || [];
     const slotNum = Number(slot);
@@ -167,12 +198,21 @@ export default function AddProductModal({ onClose, onAdd, routines = {} }) {
             </div>
             <div className="col-span-1 md:col-span-2">
               <label className="text-sm font-medium">Reminder Time (Optional)</label>
-              <input
+              {/* <input
                 type="time"
                 value={reminderTime}
                 onChange={(e) => setReminderTime(e.target.value)}
                 className="w-full p-2 rounded border border-gray-300 bg-white text-gray-900"
-              />
+              /> */}
+             
+                
+<TimePickerr
+  value={reminderTime}
+  ampm={fromCookie}
+  onChange={(e) => setReminderTime(e.target.value)}
+  className="w-full p-2 rounded border border-gray-300 bg-white text-gray-900"
+/>
+
             </div>
           </div>
 

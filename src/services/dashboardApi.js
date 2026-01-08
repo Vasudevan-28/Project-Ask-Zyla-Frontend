@@ -1,4 +1,3 @@
-
 // const API_URL = "http://localhost:8484";
 // const API_URL = "https://project-ask-zyla-devteam.onrender.com"
 const API_URL = import.meta.env.VITE_API_URL
@@ -120,7 +119,7 @@ export const ApiService = {
   
   // Notifications
   async getNotifications(token) {
-    const res = await fetch(`${API_URL}/notifications`, {
+    const res = await fetch(`${API_URL}/notifications/getAll`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (!res.ok) throw new Error("Failed to fetch notifications");

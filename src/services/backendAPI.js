@@ -32,7 +32,7 @@ export const saveGoogleSignup = async (userData) => {
 
 // ---------------------- LOGIN ----------------------
 export const loginWithBackend = async (identifier, password) => {
-  const res = await fetch(`${API_URL}/login`, {
+  const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ identifier, password }),
