@@ -440,7 +440,7 @@ const recognitionRef = useRef(null);
         onClick={() => 
           navigate("/loading", { state: { nextPage: "/chatbot" } })
         }
-         className={`  py-1 px-3 text-sm rounded-md text-white font-semibold
+         className={`  py-1 px-3 text-sm rounded-md text-white font-semibold cursor-pointer
         ${isLight ? "bg-linear-to-r from-[#4f4d4f]  to-[#bdbcbd]" : "bg-white/10"}
         `} >Recent Chats</button>
       </div>

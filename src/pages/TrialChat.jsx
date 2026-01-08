@@ -322,10 +322,14 @@ const recognitionRef = useRef(null);
     >
       <header
         role="banner"
-        className="bg-white fixed top-1 left-0 w-full z-50 shadow-md  border-[#1A0D28]"
+        className={`bg-white fixed top-0  left-0 w-full z-50 shadow-md  border-[#1A0D28]
+          border-t-4 ${
+            bgTheme == "light" ? "border-[#e9d9e3] " : "border-[#1d0e2d]"
+          } 
+          `}
       >
         <div
-          className="max-w-[1400px] mx-auto flex items-center justify-between px-4 md:px-6"
+          className="max-w-screen mx-auto flex items-center justify-between px-4 md:px-6"
           style={{ height: "60px" }}
         >
           <div className="flex items-center gap-0.5">

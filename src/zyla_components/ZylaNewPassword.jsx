@@ -73,20 +73,20 @@ return (
     <div>          
    <div className="w-140 h-120 bg-transparent rounded-lg">
      <div className="relative h-full w-full">
-       <div className="h-29 w-30 absolute bottom-20 right-10 left-28 bg-black rounded-full"></div>
+       <div className="h-29 w-30 absolute bottom-20 right-12 left-28 bg-black rounded-full"></div>
        <img src={Gif6} className="h-80 w-86 absolute bottom-0" />
        <img
          src={CloudThink}
-         className={`h-44 w-90 absolute top-0 right-0
+         className={`h-44 w-90 absolute top-0 right-2
            transition-all duration-800 ease-in-out
            ${loadGif ? "opacity-100 scale-100" : "opacity-0 scale-0"}
          `}
        />
    <div>
        <p
-       className={`absolute top-8 right-19 font-bold
-            md:text-xl leading-tight
-           max-w-[180px] md:max-w-[220px]    text-center  font-['Caveat']
+       className={`absolute top-12 right-21 font-bold
+            text-xl leading-tight
+           max-w-[220px]    text-center  font-['Caveat']
            whitespace-normal wrap-break-word 
            transition-opacity duration-400 ease-in-out
            ${showTextDelayed ? "opacity-100" : "opacity-0"}

@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-
 import { loginUser, loginWithGoogle } from "../services/authservice";
 import { loginWithBackend } from "../services/backendAPI";
-// import GifCompo from "../zyla_components/ZylaPromotion";
-// import Header from "../home_components/HeaderPromo";
 import ZylaLogin from "../zyla_components/ZylaLogin";
-
-// import logo from "../assets/ZaLogo.png";
 import HeaderAuth from "../authentication_components/HeaderAuth";
 
 const MAX_ATTEMPTS = 3;              
@@ -32,7 +27,6 @@ export default function Login() {
   const isValidPhone = (phone) => /^\+?[0-9]{10,15}$/.test(phone);
 
   const [loading, setLoading] = useState(false);
-
 
   useEffect(() => {
     try {
@@ -481,6 +475,7 @@ export default function Login() {
         </motion.div>
       </div>
     </div>
+    <div className="block md:hidden h-20" />
       </div>
   );
 }

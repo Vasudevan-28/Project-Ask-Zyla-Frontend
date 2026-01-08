@@ -97,7 +97,7 @@ export default function HeaderMain() {
       }
     };
 
-    fetchNotifications();
+    // fetchNotifications();
     const interval = setInterval(fetchNotifications, 5000);
     return () => clearInterval(interval);
   }, [userToken]);

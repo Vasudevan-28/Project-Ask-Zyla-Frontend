@@ -1,4 +1,4 @@
-import ChatMessage from "./TrialChatMessage";
+import TrialChatMessage from "./TrialChatMessage";
 import Thinking from "../gifs/thinking-zyla.gif";
 
 import ZylaChatPic from "../assets/Zyla-no-bg.png";
@@ -21,7 +21,7 @@ export default function TrialChatbot({
   trialOver
 }) {
   return (
-    <div className="flex-1 flex flex-col p-1 mt-2 custom-scrollbar min-h-[600px] ">
+    <div className="flex-1 flex flex-col p-1 mt-2 custom-scrollbar  min-h-[88vh] md:max-h-[95vh]">
       <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full min-h-0   ">
         <div
           className={`flex-1 flex flex-col  justify-between rounded-2xl  backdrop-blur-md border border-white/20 shadow-2xl overflow-hidden relative
@@ -71,7 +71,7 @@ export default function TrialChatbot({
 
               return (
                 <div key={idx} className="flex flex-col gap-2">
-                  <ChatMessage
+                  <TrialChatMessage
                     role={m.role}
                     text={m.text}
                     // hits={m.hits}

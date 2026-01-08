@@ -477,7 +477,7 @@ const [pageLoading, setPageLoading] = useState(true);
               onClick={() =>
                 navigate("/loading", { state: { nextPage: "/archivedchats" } })
               }
-              className={`py-1 px-3 text-sm rounded-md text-white font-semibold ${
+              className={`py-1 px-3 text-sm rounded-md text-white font-semibold cursor-pointer ${
                 isLight
                   ? "bg-linear-to-r from-[#4f4d4f]  to-[#bdbcbd]"
                   : "bg-white/10"

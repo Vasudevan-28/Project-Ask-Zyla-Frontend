@@ -30,7 +30,7 @@ export default function ChatMessage({ role, text, onSpeak, canSpeak, isSpeaking,
           <button
             type="button"
             onClick={onSpeak}
-            className="shrink-0 p-1.5 tracking-tighter rounded-full backdrop-blur-sm hover:bg-white/40 transition border border-purple-200 text-purple-700 text-sm cursor-pointer"
+            className="shrink-0 p-1.5 tracking-tighter rounded-full backdrop-blur-sm hover:bg-white/40 transition border border-purple-200/30 text-purple-700 text-sm cursor-pointer"
             title={isSpeaking ? "Stop speaking" : "Read this message"}
           >
             {isSpeaking ? "■" : "၊၊||၊"}

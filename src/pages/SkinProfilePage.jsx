@@ -266,7 +266,7 @@ useEffect(() => {
                className={`flex items-center space-x-2 p-2 rounded-lg  transition-all cursor-pointer ${
                 currentValues.includes(option)
                   ? ` text-white/90  ${buttonStyle} ` 
-                  // : 'bg-gray-50 border-gray-200 text-black/90 hover:bg-purple-50 hover:border-[#CA88B1]'
+                  // : 'bg-gray-50 border-gray-200 text-black/90 hover:bg-purple-50 hover:border-[#994A97]'
                   : `${isLight ? "bg-white text-slate-900 border border-slate-300 " : "bg-white/10 text-slate-50"}`
               }`}
             >
@@ -314,10 +314,10 @@ useEffect(() => {
               // className="flex items-center space-x-2 p-1 hover:bg-purple-50 rounded"
               className={`flex items-center space-x-2 p-2 rounded-xl  transition-all cursor-pointer ${
                 currentValue === option
-                  // ? 'bg-[#B9A3C7] text-white border-[#CA88B1]'
-                  // ? 'bg-gray-50 border-gray-200 hover:bg-purple-50 text-black/90  hover:border-[#CA88B1]'
+                  // ? 'bg-[#B9A3C7] text-white border-[#994A97]'
+                  // ? 'bg-gray-50 border-gray-200 hover:bg-purple-50 text-black/90  hover:border-[#994A97]'
                    ? ` text-white/90  ${buttonStyle} `
-                  // : 'bg-gray-50 border-gray-200 text-black/90 hover:bg-purple-50 hover:border-[#CA88B1]'
+                  // : 'bg-gray-50 border-gray-200 text-black/90 hover:bg-purple-50 hover:border-[#994A97]'
                   : `${isLight ? "bg-white text-slate-900 border border-slate-300 " : "bg-white/10 text-slate-50"}`
 
               }`}
@@ -350,7 +350,7 @@ useEffect(() => {
   }
 
   const renderMenstrual = (label, field, hasValue, onChange, question) => (
-  <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-sm p-4 border-l-4 border-[#CA88B1]`}>
+  <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-sm p-4 border-l-4 border-[#994A97]`}>
     <div className="flex items-center gap-4">
       <label className="block text-base font-semibold ">
         { isEditing ? question : label}
@@ -359,7 +359,7 @@ useEffect(() => {
       {isEditing ? (
         <div className="flex gap-3">
          <label  className={`flex items-center space-x-1 px-3 py-1 rounded-full shadow-sm
-                ${hasValue ? `  border-[#CA88B1] text-white ${isLight ? "bg-[#B9A3C7]" : "bg-white/30"} `
+                ${hasValue ? `  border-[#994A97] text-white ${isLight ? "bg-[#B9A3C7]" : "bg-white/30"} `
                   : `  
                   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"} 
                   `}
@@ -374,7 +374,7 @@ useEffect(() => {
           </label>
            <label  className={`flex items-center space-x-1 cursor-pointer px-3 py-1.5 rounded-full shadow-sm
               ${hasValue ? `  hover:bg-gray-400   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"}  `
-               : `  border-[#CA88B1]
+               : `  border-[#994A97]
                ${isLight ? "bg-[#B9A3C7] text-white" : "bg-white/30"}
                 
                `}
@@ -393,7 +393,7 @@ useEffect(() => {
         <span
           className={`inline-block px-3 py-1.5 rounded-full text-xs shadow-sm font-medium 
              ${hasValue ? 
-              `  border-[#CA88B1] ${isLight ? "bg-[#B9A3C7] text-white" : "bg-white/30"}`
+              `  border-[#994A97] ${isLight ? "bg-[#B9A3C7] text-white" : "bg-white/30"}`
               :
               ` hover:bg-gray-400   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"}  `
               }
@@ -418,10 +418,10 @@ useEffect(() => {
                   key={option}
                  className={`flex items-center space-x-2 mb-2  p-2 rounded-xl  transition-all cursor-pointer ${
                 tempData.menstrualCycle?.nextCycle === option
-                  // ? ' bg-[#B9A3C7] text-white border-[#CA88B1]'
-                  // : 'bg-gray-50 border-gray-200 hover:bg-purple-50 text-black/90  hover:border-[#CA88B1]'
+                  // ? ' bg-[#B9A3C7] text-white border-[#994A97]'
+                  // : 'bg-gray-50 border-gray-200 hover:bg-purple-50 text-black/90  hover:border-[#994A97]'
                    ? 'bg-[#B9A3C7] text-white/90  '
-                  // : 'bg-gray-50 border-gray-200 text-black/90 hover:bg-purple-50 hover:border-[#CA88B1]'
+                  // : 'bg-gray-50 border-gray-200 text-black/90 hover:bg-purple-50 hover:border-[#994A97]'
                   : `${isLight ? "bg-white text-slate-900 border border-slate-300 " : "bg-white/10 text-slate-50"}`
 
               }`}
@@ -511,7 +511,7 @@ useEffect(() => {
           {isEditing ? (
             <div className="flex gap-3">
                <label className={`flex items-center space-x-1 px-3 py-1 rounded-full shadow-sm
-                ${tempData.menstrualCycle?.reminders ? `  border-[#CA88B1] text-white ${isLight ? "bg-[#B9A3C7]" : "bg-white/30"} `
+                ${tempData.menstrualCycle?.reminders ? `  border-[#994A97] text-white ${isLight ? "bg-[#B9A3C7]" : "bg-white/30"} `
                   : `  
                   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"} 
                   `}
@@ -528,7 +528,7 @@ useEffect(() => {
               </label>
               <label className={`flex items-center space-x-1 cursor-pointer px-3 py-1.5 rounded-full shadow-sm
               ${tempData.menstrualCycle?.reminders ? `  hover:bg-gray-400   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"}  `
-               : `  border-[#CA88B1]
+               : `  border-[#994A97]
                ${isLight ? "bg-[#B9A3C7] text-white" : "bg-white/30"}
                 
                `}
@@ -548,7 +548,7 @@ useEffect(() => {
           ) : (
             <span
               className={`inline-block px-3 py-1.5 rounded-full text-xs shadow-lg font-medium ${tempData.menstrualCycle?.reminders ? `  hover:bg-gray-400   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"}  `
-               : `  border-[#CA88B1]
+               : `  border-[#994A97]
                ${isLight ? "bg-[#B9A3C7] text-white" : "bg-white/30"}
                 
                `} `}
@@ -573,7 +573,7 @@ useEffect(() => {
         <div className="space-y-2">
           <div className="flex gap-3">
             <label className={`flex items-center space-x-1 px-3 py-1 rounded-full shadow-sm
-                ${hasValue ? `  border-[#CA88B1] text-white ${isLight ? "bg-[#B9A3C7]" : "bg-white/30"} `
+                ${hasValue ? `  border-[#994A97] text-white ${isLight ? "bg-[#B9A3C7]" : "bg-white/30"} `
                   : `  
                   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"} 
                   `}
@@ -589,7 +589,7 @@ useEffect(() => {
             </label>
             <label className={`flex items-center space-x-1 cursor-pointer px-3 py-1.5 rounded-full shadow-sm
               ${hasValue ? `  hover:bg-gray-400   ${isLight ? "bg-white text-black border border-gray-400" : "bg-white/10"}  `
-               : `  border-[#CA88B1]
+               : `  border-[#994A97]
                ${isLight ? "bg-[#B9A3C7] text-white" : "bg-white/30"}
                 
                `}
@@ -713,9 +713,9 @@ if (profileCleared) {
 
   return (
     <div>
-    <div className={`min-h-200 relative ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"} `}>
+    <div className={`min-h-screen pb-16 relative ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"} `}>
         <HeaderMain />
-      <div className="max-w-7xl mx-auto pb-16 ">
+      <div className="max-w-7xl mx-auto p-4 md:p-0 ">
         <div className=" flex justify-end pt-16  items-center mb-4">
          
 
@@ -764,7 +764,7 @@ if (profileCleared) {
                 {renderMultiSelect('Concerns', 'concerns', concernOptions, tempData.concerns, "Choose your most important concerns?")}
               </div>
 
-              <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} rounded-xl shadow-sm p-4 border-l-4 border-[#CA88B1]`}>
+              <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} rounded-xl shadow-sm p-4 border-l-4 border-[#994A97]`}>
                 {renderMultiSelect('Skin Type', 'skinType', skinTypeOptions, tempData.skinType, "What is your Skin Type?")}
               </div>
 
@@ -772,7 +772,7 @@ if (profileCleared) {
                 {renderMultiSelect('Goals', 'goals', goalOptions, tempData.goals, "What result do you want to Achieve with Skincare?")}
               </div>
 
-              <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-sm p-4 border-l-4 border-[#CA88B1]`}>
+              <div className={`${isLight ? "bg-white/60 text-slate-900 " : "bg-white/10 text-slate-50"} backdrop-blur-2xl rounded-xl shadow-sm p-4 border-l-4 border-[#994A97]`}>
                 {renderSingleSelect(
                   'Skincare Routine Follow-Up',
                   'skincareRoutine',

@@ -6,8 +6,9 @@ import HeaderAuth from "./HeaderAuth";
 export default function ResetSuccess() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#1A0D28] p-4">
-      <HeaderAuth />
+    <div className="min-h-screen bg-[#1A0D28]" >
+         <HeaderAuth />
+       <div className=" flex items-center justify-center h-[80vh]  p-4">
 
       {/* Popup Card */}
       <motion.div
@@ -82,6 +83,7 @@ export default function ResetSuccess() {
           Back to Login
         </motion.button>
       </motion.div>
+    </div>
     </div>
   );
 }

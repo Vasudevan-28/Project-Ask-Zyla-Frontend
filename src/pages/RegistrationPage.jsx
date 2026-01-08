@@ -228,11 +228,11 @@ function RegistrationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#1A0D28] text-white font-['Anek_Devanagari'] p-4 sm:p-6">
-      <div className="absolute top-0 left-2 md:left-0 w-full " >
+    <div className="min-h-screen min-w-fit bg-[#1A0D28] text-white font-['Anek_Devanagari'] p-4  ">
+      <div className="absolute top-0 left-2 md:left-0 w-fit " >
       <HeaderAuth />
       </div>
-      <div className="max-w-2xl w-full mx-auto mt-20 md:mt-6  py-6 sm:py-8 px-4 sm:px-8 bg-white/20 backdrop-blur-xl rounded-3xl shadow-xl  border border-white/30">
+      <div className="max-w-2xl w-full mx-auto mt-20 mb-10  md:mt-6  py-6  px-4  bg-white/20 backdrop-blur-xl rounded-3xl shadow-xl  border border-white/30">
         <h2 className="text-2xl font-bold text-center text-white">Registration</h2>
         <p className="text-white/90 mt-1 mb-4 text-center">
           Hello {email}! Please complete the registration to continue.
