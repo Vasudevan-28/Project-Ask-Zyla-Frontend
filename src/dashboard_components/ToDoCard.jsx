@@ -13,6 +13,8 @@ export default function ToDoCard({ selectedDate, userToken }) {
   const [tasks, setTasks] = useState([]);
   const [newText, setNewText] = useState("");
   const [msg, setMsg] = useState("");
+  const [isAdding, setIsAdding] = useState(false);
+
   const selected = selectedDate ? new Date(selectedDate) : new Date();
   const selectedIso = toISODate(selected);
   const todayIso = todayISO();
@@ -32,7 +34,6 @@ export default function ToDoCard({ selectedDate, userToken }) {
     async function fetchTodos() {
       try {
         const data = await ApiService.getTodos(selectedIso, userToken);
-
         setTasks(data && data.length > 0 ? data : []);
       } catch (e) {
         console.error("Failed to fetch todos", e);
@@ -46,8 +47,11 @@ export default function ToDoCard({ selectedDate, userToken }) {
 
   async function handleAdd(e) {
     e.preventDefault();
-    if (isPast || isBeforeCutoff) return;
+    // prevent adding for past/cutoff AND prevent duplicate clicks while adding
+    if (isPast || isBeforeCutoff || isAdding) return;
     if (!newText.trim() || !userToken) return;
+
+    setIsAdding(true);
     try {
       const nt = { text: newText.trim(), checked: false, date: selectedIso };
       const created = await ApiService.addTodo(nt, userToken);
@@ -57,10 +61,12 @@ export default function ToDoCard({ selectedDate, userToken }) {
       setTimeout(() => setMsg(""), 1600);
       window.dispatchEvent(new Event("zyla:todos-updated"));
       requestAnimationFrame(() => {
-        listRef.current.scrollTop = listRef.current.scrollHeight;
+        if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
       });
     } catch (e) {
       console.error("Failed to add todo", e);
+    } finally {
+      setIsAdding(false);
     }
   }
 
@@ -108,7 +114,6 @@ export default function ToDoCard({ selectedDate, userToken }) {
       className={`rounded-[15px] px-4 md:px-6 py-3 md:py-2 md:max-h-121  h-full flex flex-col min-h-0 shadow-lg ${
         isLight ? "bg-white text-slate-900" : "bg-white/5 text-slate-50"
       }`}
-      // style={{ maxHeight: "100%" }}
     >
       <div className="mb-2 mt-4">
         <h3 className="text-base md:text-lg font-extrabold">To-Do — {selected.toLocaleDateString()}</h3>
@@ -116,8 +121,7 @@ export default function ToDoCard({ selectedDate, userToken }) {
       {/* Scrollable Task Area */}
       <div
         ref={listRef}
-        className="flex-1 overflow-y-auto min-h-0 md:max-h-110 my-3 pr-1"
-        // style={{ maxHeight: "40vh" }} /* mobile-friendly height; desktop preserved by parent grid height */
+        className="flex-1 overflow-y-auto custom-scrollbar min-h-0 md:max-h-110 my-3 pr-1"
       >
         {tasks.map((task) => (
           <div key={task.id} className="flex items-center justify-between py-2 pl-2">
@@ -174,7 +178,7 @@ export default function ToDoCard({ selectedDate, userToken }) {
         <form onSubmit={handleAdd} className="flex items-center gap-3 mt-2">
           <input
             value={newText}
-            disabled={isPast}
+            disabled={isPast || isAdding}
             onChange={(e) => setNewText(e.target.value)}
             placeholder="Add task..."
             className={`flex-1 rounded-md border px-3 py-2 md:px-4 md:py-3 text-sm md:text-base font-medium focus:outline-none focus:ring-2 focus:ring-purple-400 ${
@@ -183,10 +187,14 @@ export default function ToDoCard({ selectedDate, userToken }) {
           />
           <button
             type="submit"
-            disabled={isPast}
-            className="rounded-md cursor-pointer px-4 py-2 md:px-4 md:py-3 font-semibold bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] text-white disabled:opacity-60"
+            disabled={isPast || isAdding}
+            className="rounded-md cursor-pointer px-4 py-2 md:px-4 md:py-3 font-semibold bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] text-white disabled:opacity-60 flex items-center justify-center gap-2"
           >
-            Add
+            {isAdding ? (  
+                <div className="w-6 h-6 animate-spin border-3 border-white border-b-transparent rounded-full" ></div>
+            ) : (
+              "Add"
+            )}
           </button>
         </form>
       </div>
