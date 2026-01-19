@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { getFeedback, updateFeedback, setAuthToken, submitSettFeedback } from "./api/settingsAPI";
+import { submitSettFeedback } from "./api/settingsAPI";
 import { VscArrowCircleLeft } from "react-icons/vsc";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ThemeContext } from "../contexts/ThemeContext";

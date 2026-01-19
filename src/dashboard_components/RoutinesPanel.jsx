@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { MdCancel } from "react-icons/md";
+
+import { getTimeFormatCookie } from "../utils/timeformatCookie";
+
 export default function RoutinesPanel({
   routines = { morning: [], afternoon: [], evening: [] },
   onRemove = () => {},
@@ -13,6 +16,17 @@ export default function RoutinesPanel({
     afternoon: [],
     evening: [],
   });
+
+  const [ is24Hr, setIs24Hr ] = useState(true)
+
+  useEffect(() => {
+    try {
+      const timeFormat = getTimeFormatCookie()
+      setIs24Hr(timeFormat === "true")
+    } catch{
+      setIs24Hr(false)
+    }
+  }, [])
 
   useEffect(() => {
     setLocal({
@@ -40,10 +54,27 @@ export default function RoutinesPanel({
   return `${String(localH).padStart(2, "0")}:${String(localM).padStart(2, "0")}`;
 }
 
+function utcToLocal12Hr(timeStr) {
+  if (!timeStr) return "";
+
+  const [h, m] = timeStr.split(":").map(Number);
+
+  // Create a fixed UTC date (avoids DST/date surprises)
+  const utcDate = new Date(Date.UTC(1970, 0, 1, h, m));
+
+  return utcDate.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+  });
+}
+
+
 
   function Row({ p, routineKey, isMany }) {
 
-    const utcToIso = utcToLocalTime(p.reminder_time)
+    // const utcToIso = utcToLocalTime(p.reminder_time)
+    const utcToIso = is24Hr ? utcToLocalTime(p.reminder_time) : utcToLocal12Hr(p.reminder_time)
     console.log(utcToIso)
 
     return (

@@ -10,17 +10,18 @@ export default function AddProductModal({ onClose, onAdd, routines = {} }) {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
 
-const fromCookie = true; // or false
+// const fromCookie = true; 
 
-  
-const [is12Hr, setIs12Hr] = useState(true);
+
+
+const [is24Hr, setIs24Hr] = useState(true);
 
 useEffect(() => {
   try {
     const stored = getTimeFormatCookie();
-    setIs12Hr(stored === "true");
+    setIs24Hr(stored === "true");
   } catch {
-    setIs12Hr(true);
+    setIs24Hr(true);
   }
 }, []);
 
@@ -36,6 +37,22 @@ useEffect(() => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+  const routineProducts = routines[routine] || [];
+
+  if (routineProducts.length === 0) {
+    setSlot(1);
+    return;
+  }
+
+  const maxSlot = Math.max(
+    ...routineProducts.map(p => Number(p.slot))
+  );
+
+  setSlot(maxSlot + 1);
+}, [routines, routine]);
+
 
   function localTimeToUTC(timeStr) {
     if (!timeStr) return "";
@@ -82,7 +99,7 @@ useEffect(() => {
       return;
     }
 
-    const utcReminder = is12Hr ? local12HrToUTC(reminderTime) : localTimeToUTC(reminderTime);
+    const utcReminder = is24Hr ? localTimeToUTC(reminderTime) : local12HrToUTC(reminderTime) 
 
 
     const routineProducts = routines[routine] || [];
@@ -95,6 +112,7 @@ useEffect(() => {
     if (routineProducts.length > 0) {
       const maxSlot = Math.max(...routineProducts.map((p) => Number(p.slot)));
       const expectedNextSlot = maxSlot + 1;
+      console.log(expectedNextSlot,"idkkkkk")
       if (slotNum !== expectedNextSlot) {
         setError(`Please set order number correctly. Next available order number is ${expectedNextSlot}.`);
         return;
@@ -182,6 +200,7 @@ useEffect(() => {
                 value={type}
                 onChange={(e) => setType(e.target.value)}
                 className="w-full p-2 rounded border border-gray-300 bg-white text-gray-900"
+                maxLength={40}
                 placeholder="e.g., Moisturizer"
               />
             </div>
@@ -190,28 +209,30 @@ useEffect(() => {
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                maxLength={40}
                 className="w-full p-2 rounded border border-gray-300 bg-white text-gray-900"
                 placeholder="Product name"
               />
             </div>
-            <div className="col-span-1 md:col-span-2">
-              <label className="text-sm font-medium">Description</label>
-              <textarea
-                value={desc}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  const words = val.trim().split(/\s+/).filter((w) => w.length > 0);
-                  if (words.length <= 50 || val.length < desc.length) {
-                    setDesc(val);
-                  }
-                }}
-                className="w-full p-2 rounded border border-gray-300 bg-white text-gray-900"
-                rows="3"
-              />
-              <div className="text-xs text-gray-500 text-right">
-                {desc.trim() ? desc.trim().split(/\s+/).filter((w) => w.length > 0).length : 0}/50 words
-              </div>
-            </div>
+          <div className="col-span-1 md:col-span-2">
+  <label className="text-sm font-medium">Description</label>
+  <textarea
+    value={desc}
+    onChange={(e) => {
+      const val = e.target.value;
+      if (val.length <= 150) {
+        setDesc(val);
+      }
+    }}
+    maxLength={150}
+    className="w-full p-2 rounded border border-gray-300 bg-white text-gray-900"
+    rows="3"
+  />
+  <div className="text-xs text-gray-500 text-right">
+    {desc.length}/150 characters
+  </div>
+</div>
+
             <div className="col-span-1 md:col-span-2">
               <label className="text-sm font-medium">Reminder Time (Optional)</label>
               {/* <input
@@ -222,7 +243,7 @@ useEffect(() => {
               /> */}
 <TimePickerr
   value={reminderTime}
-  ampm={!is12Hr}
+  ampm={!is24Hr}
   onChange={(e) => setReminderTime(e.target.value)}
   className="w-full p-2 rounded border border-gray-300 bg-white text-gray-900"
 />

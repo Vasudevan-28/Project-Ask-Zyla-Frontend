@@ -1,7 +1,7 @@
 
 // const SKIN_API_URL = "http://localhost:8484/chatApp";
 
-const SKIN_API_URL = import.meta.env.VITE_API_URL_CHAT
+const SKIN_API_URL = import.meta.env.VITE_API_URL_SKIN_PROFILE
 
 
 function authHeaders(token, hasBody = false) {

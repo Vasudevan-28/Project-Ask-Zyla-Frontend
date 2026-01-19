@@ -171,7 +171,7 @@ export default function DashboardPage() {
             <div className="flex gap-3" style={{ transform: "translateX(5px)" }}>
               <button
                 onClick={() => setShowAddProduct(true)}
-                className={`py-2 px-4  font-semibold ${
+                className={`py-2 px-4 cursor-pointer font-semibold ${
                   isLight
                     ? "bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] text-white"
                     : "bg-white/5 text-slate-50"
@@ -218,10 +218,10 @@ export default function DashboardPage() {
           />
         </div>
 
-        <div className="mb-24 flex justify-center">
+        <div className="mb-24 cursor-pointer flex justify-center">
           <button
             onClick={() => setShowAddProduct(true)}
-            className={`w-full max-w-xs py-3 px-4 font-semibold ${
+            className={`w-full max-w-xs py-3 cursor-pointer px-4 font-semibold ${
               isLight
                 ? "bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] text-white"
                 : "bg-white/5 text-slate-50"

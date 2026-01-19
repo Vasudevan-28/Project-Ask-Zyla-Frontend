@@ -23,22 +23,6 @@ export default function AIDescription({zylaSum}) {
           Skin Description By Zyla
         </h2>
 
-        {/* <div className="bg-black/30 border border-white/10 w-full rounded-xl p-4 h-fit flex flex-col justify-between">
-          <div className="space-y-2  pr-1">
-            {genDesArray.map((point, index) => (
-              <div
-                key={index}
-                className="flex items-start gap-3 text-sm lg:text-[15px]"
-              >
-                <span className="shrink-0 w-6 h-6 rounded-full bg-white/15 flex items-center justify-center text-xs font-semibold">
-                  {index + 1}
-                </span>
-                <p className="leading-snug text-white/90">{point}</p>
-              </div>
-            ))}
-          </div>
-        </div> */}
-
         <div className={` border  border-white/10 w-full rounded-xl p-4 h-fit flex flex-col justify-between
            ${isLight ? "text-slate-800 bg-white/80" : "text-slate-50 bg-white/10" }
           `}>

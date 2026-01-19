@@ -761,7 +761,7 @@ function RegistrationPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#3A2C49] py-3 rounded-md font-semibold hover:opacity-90"
+            className="w-full bg-[#3A2C49] cursor-pointer py-3 rounded-md font-semibold hover:opacity-90"
           >
             {loading ? "Processing..." : "CONTINUE"}
           </button>

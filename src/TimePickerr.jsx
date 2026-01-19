@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { FiClock } from "react-icons/fi";
 
 export default function TimePickerr({
   value,
@@ -25,7 +26,6 @@ export default function TimePickerr({
   );
   const periods = ["AM", "PM"];
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e) => {
       if (!ref.current?.contains(e.target)) setOpen(false);
@@ -34,7 +34,6 @@ export default function TimePickerr({
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // ---------- EMIT CHANGE (input compatible) ----------
   const emitChange = (val) => {
     onChange?.({
       target: {
@@ -43,7 +42,6 @@ export default function TimePickerr({
     });
   };
 
-  // ---------- TIME PARSER ----------
   const parseTime = (val) => {
     if (!val) return { h: "", m: "", p: "AM" };
 
@@ -74,7 +72,6 @@ export default function TimePickerr({
 
   const { h, m, p } = parseTime(value || "");
 
-  // ---------- AUTO SCROLL ----------
   useEffect(() => {
     if (!open) return;
 
@@ -89,7 +86,6 @@ export default function TimePickerr({
     scrollToValue(periodRef.current, p);
   }, [open, h, m, p, value, ampm]);
 
-  // ---------- FORMAT OUTPUT ----------
   const formatTime = (h, m, p) => {
     if (!h || !m) return "";
 
@@ -103,7 +99,6 @@ export default function TimePickerr({
     }
   };
 
-  // ---------- INPUT HANDLER ----------
   const handleInputChange = (e) => {
     let val = e.target.value.toUpperCase();
     emitChange(val);
@@ -116,7 +111,6 @@ export default function TimePickerr({
     }
   };
 
-  // ---------- SET FROM PICKER ----------
   const setTime = (hh, mm, pp) => {
     const val = formatTime(hh, mm, pp);
     emitChange(val);
@@ -125,37 +119,11 @@ export default function TimePickerr({
   // ---------- UI ----------
   return (
     <div className="relative" ref={ref}>
-      {/* Input */}
-      <div className="relative">
-        <input
-          value={value || ""}
-          onChange={handleInputChange}
-          onFocus={() => setOpen(true)}
-          placeholder={placeholder}
-          className={className}
-        />
 
-        {/* Clock Icon */}
-        <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-gray-400">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <circle cx="12" cy="12" r="9" />
-            <path d="M12 7v5l3 3" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Dropdown */}
       {open && (
-        <div className="absolute z-50 mt-1 flex gap-2 bg-white border rounded-lg shadow-lg p-2">
+        <div className="absolute z-50 bottom-full mb-1 flex gap-2 bg-white border border-gray-300 rounded-lg shadow-lg p-2">
           {/* Hours */}
-          <div ref={hourRef} className="h-48 w-14 overflow-y-auto">
+          <div ref={hourRef} className="h-38 w-14 overflow-y-auto">
             {(ampm ? hours12 : hours24).map((hh) => {
               const selected = ampm
                 ? hh === h
@@ -183,7 +151,7 @@ export default function TimePickerr({
           </div>
 
           {/* Minutes */}
-          <div ref={minuteRef} className="h-48 w-14 overflow-y-auto">
+          <div ref={minuteRef} className="h-38 w-14 overflow-y-auto">
             {minutes.map((mm) => {
               const selected = mm === m;
               return (
@@ -227,6 +195,25 @@ export default function TimePickerr({
           )}
         </div>
       )}
+
+      {/* Input */}
+      <div className="relative">
+        <input
+          value={value || ""}
+          onChange={handleInputChange}
+          onFocus={() => setOpen(true)}
+          placeholder={placeholder}
+          className={className}
+        />
+
+        <div className="cursor-pointer absolute right-2 top-1/2 -translate-y-1/2 text-gray-400"
+          onClick={() => setOpen(!open)}
+        >
+          <FiClock   />
+        </div>
+      </div>
+
+     
     </div>
   );
 }

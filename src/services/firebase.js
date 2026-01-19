@@ -2,10 +2,9 @@ import { initializeApp } from "firebase/app";
 import {
   getAuth,
   GoogleAuthProvider,
-  FacebookAuthProvider,
   RecaptchaVerifier,
 } from "firebase/auth";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
+// import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const firebaseConfig = {
   
@@ -24,13 +23,13 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
 export const googleProvider = new GoogleAuthProvider();
-export const facebookProvider = new FacebookAuthProvider();
+// export const facebookProvider = new FacebookAuthProvider();
 
 export const setupRecaptcha = (containerId = "recaptcha-container") => {
   const verifier = new RecaptchaVerifier(
     containerId,
     {
-      size: "invisible", // or 'normal' if you want to display the captcha box
+      size: "invisible", 
       callback: (response) => {
         console.log("ReCAPTCHA verified successfully!");
       },
@@ -41,35 +40,45 @@ export const setupRecaptcha = (containerId = "recaptcha-container") => {
   return verifier;
 };
 
-// 🔔 Firebase Cloud Messaging (Push Notifications)
-export const messaging = getMessaging(app);
 
-// 📡 Function to get FCM Token
-export const requestForToken = async () => {
-  try {
-    const token = await getToken(messaging, {
-      vapidKey:
-        import.meta.env.VITE_FIREBASE_VAPID, // from Firebase Console
-    });
 
-    if (token) {
-      console.log("✅ FCM Token:", token);
-      return token;
-    } else {
-      console.log("⚠️ No registration token available. Request permission to generate one.");
-    }
-  } catch (error) {
-    console.error("❌ Error getting FCM token:", error);
-  }
-};
 
-// 💬 Handle foreground notifications
-onMessage(messaging, (payload) => {
-  console.log("📩 Message received: ", payload);
-  if (payload?.notification) {
-    const { title, body } = payload.notification;
-    alert(`${title}: ${body}`);
-  }
-});
 
-export default app;
+
+
+// NOT IMPLEMENTED IT YET
+
+
+
+// // 🔔 Firebase Cloud Messaging (Push Notifications)
+// export const messaging = getMessaging(app);
+
+// // 📡 Function to get FCM Token
+// export const requestForToken = async () => {
+//   try {
+//     const token = await getToken(messaging, {
+//       vapidKey:
+//         import.meta.env.VITE_FIREBASE_VAPID, // from Firebase Console
+//     });
+
+//     if (token) {
+//       console.log("✅ FCM Token:", token);
+//       return token;
+//     } else {
+//       console.log("⚠️ No registration token available. Request permission to generate one.");
+//     }
+//   } catch (error) {
+//     console.error("❌ Error getting FCM token:", error);
+//   }
+// };
+
+// // 💬 Handle foreground notifications
+// onMessage(messaging, (payload) => {
+//   console.log("📩 Message received: ", payload);
+//   if (payload?.notification) {
+//     const { title, body } = payload.notification;
+//     alert(`${title}: ${body}`);
+//   }
+// });
+
+// export default app;

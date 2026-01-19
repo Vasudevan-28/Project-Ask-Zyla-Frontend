@@ -423,7 +423,7 @@ function Profile() {
               <>
                 <button
                   type="button"
-                  className={`px-4 py-1.5 text-sm rounded-full border border-gray-300 hover:bg-gray-50 disabled:opacity-60 ${
+                  className={`px-4 py-1.5 text-sm rounded-full font-medium border border-gray-300 hover:bg-gray-50 disabled:opacity-60 ${
                     isLight ? "text-gray-700" : "text-gray-100 hover:text-gray-700"
                   }`}
                   onClick={handleCancel}
@@ -433,7 +433,9 @@ function Profile() {
                 </button>
                 <button
                   type="button"
-                  className={`px-4 py-1.5 text-sm rounded-full disabled:opacity-60 bg-linear-to-r from-[#994A97] to-[#CA88B1] text-gray-100`}
+                  className={`px-4 py-1.5 text-sm rounded-full disabled:opacity-60 text-white font-medium
+                     ${ isLight ? "bg-linear-to-r from-[#994A97] to-[#CA88B1] hover:brightness-110" : "bg-white/10 hover:bg-white/20"
+          }`}
                   onClick={handleSave}
                   disabled={saving}
                 >
@@ -450,20 +452,20 @@ function Profile() {
 
       {/* Password row */}
       <div
-        className={`flex items-center py-2 px-0.5 text-[13px] ${
-          isLight ? "text-slate-900" : "text-slate-50"
+        className={`flex items-center  py-1 rounded-xl px-1 text-[13px] ${
+          isLight ? "text-slate-900 bg-[#e2d2dc]" : "text-slate-50 bg-white/10"
         }`}
       >
-        <div className="flex items-center gap-2 flex-1">
+        <div className="flex cursor-pointer  p-2 items-center gap-2 flex-1">
           <FaLock />
           <button
-            className="cursor-pointer"
+            
             onClick={() => navigate("/newPassword")}
           >
             Password Reset
           </button>
         </div>
-        <span className="text-[18px]">›</span>
+        <span className="text-[18px] mr-4">›</span>
       </div>
     </section>
   );

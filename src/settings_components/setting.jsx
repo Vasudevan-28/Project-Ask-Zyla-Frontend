@@ -329,8 +329,8 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
       <div className="mt-6 flex justify-center">
         <button
           type="button"
-          className={`py-2.5 px-6 rounded-lg border-none text-white text-md shadow-lg font-semibold focus:outline-none focus:ring-0 cursor-pointer ${
-            isLight ? "bg-linear-to-r from-[#994A97] to-[#CA88B1] hover:brightness-110" : "bg-white/10 hover:bg-white/20"
+          className={`py-2.5 px-6 rounded-lg border-none text-white text-md shadow-lg font-semibold focus:outline-none focus:ring-0 cursor-pointer 
+            ${ isLight ? "bg-linear-to-r from-[#994A97] to-[#CA88B1] hover:brightness-110" : "bg-white/10 hover:bg-white/20"
           }`}
           style={{ outline: "none", boxShadow: "none" }}
           onClick={() => setDeletePopup(true)}

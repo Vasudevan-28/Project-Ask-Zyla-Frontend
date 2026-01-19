@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-// import { resetEmailPassword } from "../team-pages/services/backendAPI";
 import { resetEmailPassword } from "../services/backendAPI";
 import ZylaNewPassword from "../zyla_components/ZylaNewPassword";
 import HeaderAuth from "./HeaderAuth";
@@ -20,7 +19,8 @@ export default function ResetPassword() {
 
   const [focused, setFocused] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // ---------------- PASSWORD RULES ----------------
   const validations = {
@@ -36,7 +36,7 @@ export default function ResetPassword() {
   // ---------------- HANDLE RESET ----------------
   const handleReset = async () => {
     setError("");
-    setSuccess("");
+    setSuccess(false);
 
     if (!allValid) {
       setError("Please follow all password rules.");
@@ -48,38 +48,44 @@ export default function ResetPassword() {
       return;
     }
 
+    setLoading(true);
     try {
       const response = await resetEmailPassword(email, password);
 
       if (response.message === "Password updated") {
-        setSuccess("Password updated successfully!");
+        setSuccess(true);
+        setLoading(false);
         setTimeout(() => navigate("/success"), 1500);
+      } else {
+        // in case API returns something unexpected
+        setLoading(false);
+        setError(response.message || "Unexpected response from server.");
       }
     } catch (err) {
       console.error(err);
+      setLoading(false);
       setError(err.response?.data?.detail || "Something went wrong.");
     }
   };
 
   return (
-   
-       <div className="flex flex-col relative bg-[#1d0e2d]" >
-   
-       <div className=" md:fixed  z-999" > 
-   
-           <HeaderAuth />
-       </div>
-     
-       <div className="min-h-screen p-4 justify-center items-center flex flex-col md:flex-row bg-[#1d0e2d] relative overflow-hidden">
-    <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="w-full md:w-1/2  p-2 md:p-0"
-          >
-            <div className="items-center md:mt-30 justify-center flex  
+    <div className="flex flex-col relative bg-[#1d0e2d]">
+      <div className=" md:fixed  z-999">
+        <HeaderAuth />
+      </div>
+
+      <div className="min-h-screen p-4 justify-center items-center flex flex-col md:flex-row bg-[#1d0e2d] relative overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className="w-full md:w-1/2  p-2 md:p-0"
+        >
+          <div
+            className="items-center md:mt-30 justify-center flex  
                             origin-center scale-85 md:scale-100
-                            " >
+                            "
+          >
             <ZylaNewPassword />
           </div>
         </motion.div>
@@ -238,19 +244,57 @@ export default function ResetPassword() {
           </div>
 
           {/* ERROR MESSAGE */}
-          {error && <p className="text-[#f20a0e] font-semibold text-sm mb-3">{error}</p>}
-
-          {/* SUCCESS MESSAGE */}
-          {success && <p className="text-green-400 font-semibold text-sm mb-3">{success}</p>}
+          {error && (
+            <p role="alert" className="text-[#f20a0e] font-semibold text-sm mb-3">
+              {error}
+            </p>
+          )}
 
           {/* RESET BUTTON */}
           <button
             onClick={handleReset}
-            className="w-full text-white py-2.5 sm:py-3 rounded-lg font-semibold shadow-lg transition text-sm sm:text-base"
+            disabled={loading || success}
+            aria-busy={loading}
+            className={`w-full text-white py-2.5 sm:py-3 cursor-pointer rounded-lg font-semibold shadow-lg transition text-sm sm:text-base flex items-center justify-center gap-2
+              ${loading || success ? "opacity-80 pointer-events-none" : ""}`}
             style={{ backgroundColor: "rgba(58, 44, 73, 1)" }}
-            aria-label="Reset password"
           >
-            Reset Password
+            {loading ? (
+              <>
+                {/* spinner */}
+                <svg
+                  className="w-5 h-5 text-white animate-spin"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+                <span>Resetting...</span>
+              </>
+            ) : success ? (
+              <>
+                {/* check icon */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Success</span>
+              </>
+            ) : (
+              <span>Reset Password</span>
+            )}
           </button>
         </div>
       </div>

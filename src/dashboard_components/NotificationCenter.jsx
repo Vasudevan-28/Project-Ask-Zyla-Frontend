@@ -85,8 +85,7 @@ export default function NotificationCenter({
             </p>
           </div>
         </div>
-
-        {/* Right Section: Mark all / Close */}
+        
         <div className="flex items-center gap-2">
           {unreadCount > 0 && (
             <button
@@ -96,13 +95,13 @@ export default function NotificationCenter({
               Mark all
             </button>
           )}
-          <button
+          {/* <button
             onClick={onClose}
             className="text-purple-300 hover:text-[#1d0e2d] transition text-sm"
             aria-label="Close notifications"
           >
             ✕
-          </button>
+          </button> */}
         </div>
       </div>
 

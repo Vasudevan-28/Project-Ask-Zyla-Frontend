@@ -49,7 +49,7 @@ export const ArchiveChatBotApiService = {
    },
 
    async sendArchMessage(token, currentConversationId, userText) {
-      const res = await fetch(`${ARCH_CHAT_API_URL}/chatgraph`, {
+      const res = await fetch(`${ARCH_CHAT_API_URL}/chatbot/chatgraph`, {
         method: "POST",
         headers: authHeaders(token, true),
         body: JSON.stringify({

@@ -1,13 +1,11 @@
 // const API_URL = "http://localhost:8484";
 // const API_URL = "https://project-ask-zyla-devteam.onrender.com"
-const API_URL = import.meta.env.VITE_API_URL
-const TODO_API = `${API_URL}/todoCall`
-const PRO_API = `${API_URL}/prods`
+const API_URL = import.meta.env.VITE_API_URL;
+const TODO_API = `${API_URL}/todoCall`;
+const PRO_API = `${API_URL}/prods`;
 
 function authHeaders(token) {
-  return token
-    ? { "Authorization": `Bearer ${token}` }
-    : {};
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 export const ApiService = {
@@ -17,14 +15,14 @@ export const ApiService = {
     });
     if (!res.ok) throw new Error("Failed to fetch products");
     const products = await res.json();
-    
+
     const routines = { morning: [], afternoon: [], evening: [] };
-    products.forEach(p => {
+    products.forEach((p) => {
       if (routines[p.routine]) {
         routines[p.routine].push({ ...p, id: p._id });
       }
     });
-    Object.keys(routines).forEach(k => {
+    Object.keys(routines).forEach((k) => {
       routines[k].sort((a, b) => a.slot - b.slot);
     });
     return routines;
@@ -35,7 +33,7 @@ export const ApiService = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...authHeaders(token)
+        ...authHeaders(token),
       },
       body: JSON.stringify(product),
     });
@@ -47,7 +45,7 @@ export const ApiService = {
   async deleteProduct(id, token) {
     const res = await fetch(`${PRO_API}/products/${id}`, {
       method: "DELETE",
-      headers: { ...authHeaders(token) }
+      headers: { ...authHeaders(token) },
     });
     if (!res.ok) throw new Error("Failed to delete product");
     return true;
@@ -55,11 +53,11 @@ export const ApiService = {
 
   async getTodos(date, token) {
     const res = await fetch(`${TODO_API}/todos?date=${date}`, {
-      headers: { ...authHeaders(token) }
+      headers: { ...authHeaders(token) },
     });
     if (!res.ok) throw new Error("Failed to fetch todos");
     const todos = await res.json();
-    return todos.map(t => ({ ...t, id: t._id }));
+    return todos.map((t) => ({ ...t, id: t._id }));
   },
 
   async addTodo(todo, token) {
@@ -67,7 +65,7 @@ export const ApiService = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...authHeaders(token)
+        ...authHeaders(token),
       },
       body: JSON.stringify(todo),
     });
@@ -81,7 +79,7 @@ export const ApiService = {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        ...authHeaders(token)
+        ...authHeaders(token),
       },
       body: JSON.stringify({ checked }),
     });
@@ -93,7 +91,7 @@ export const ApiService = {
   async deleteTodo(id, token) {
     const res = await fetch(`${TODO_API}/todos/${id}`, {
       method: "DELETE",
-      headers: { ...authHeaders(token) }
+      headers: { ...authHeaders(token) },
     });
     if (!res.ok) throw new Error("Failed to delete todo");
     return true;
@@ -101,14 +99,14 @@ export const ApiService = {
 
   async getStreak(token) {
     const res = await fetch(`${TODO_API}/streak`, {
-      headers: { ...authHeaders(token) }
+      headers: { ...authHeaders(token) },
     });
     if (!res.ok) throw new Error("Failed to fetch streak");
     const data = await res.json();
     return data.streak;
   },
 
-   async getCompletedDates(token) {
+  async getCompletedDates(token) {
     const res = await fetch(`${TODO_API}/completed-dates`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -116,7 +114,6 @@ export const ApiService = {
     return await res.json();
   },
 
-  
   // Notifications
   async getNotifications(token) {
     const res = await fetch(`${API_URL}/notifications/getAll`, {
@@ -142,6 +139,5 @@ export const ApiService = {
     });
     if (!res.ok) throw new Error("Failed to mark all notifications read");
     return await res.json();
-  }
-
+  },
 };

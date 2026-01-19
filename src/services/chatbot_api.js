@@ -49,7 +49,7 @@ export const ChatBotApiService = {
    },
 
    async sendMessage(token, currentConversationId, userText) {
-      const res = await fetch(`${CHAT_API_URL}/chatgraph`, {
+      const res = await fetch(`${CHAT_API_URL}/chatbot/chatgraph`, {
         method: "POST",
         headers: authHeaders(token, true),
         body: JSON.stringify({
@@ -92,6 +92,5 @@ async  archiveConversation(token, id) {
     headers : authHeaders(token, true),
   });
 }
-
 
 };

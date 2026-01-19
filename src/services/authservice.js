@@ -15,12 +15,11 @@ import { checkGoogleUser } from "../services/backendAPI";
 
 
 
-//
+
 // ------------------- Email/Password Auth -------------------
-//
 
 // Signup (Email)
-export const signupUser = async (email, password) => {
+export const signupUser = async (email, password) => {  // paxx  //registration page
   try {
     return await createUserWithEmailAndPassword(auth, email, password);
   } catch (error) {
@@ -30,7 +29,7 @@ export const signupUser = async (email, password) => {
 };
 
 // Login (Email)
-export const loginUser = async (email, password) => {
+export const loginUser = async (email, password) => {   // paxx   //login page
   try {
     return await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
@@ -39,10 +38,10 @@ export const loginUser = async (email, password) => {
   }
 };
 
-//
+
 // ------------------- Google Auth -------------------
-//
-export const loginWithGoogle = async () => {
+
+export const loginWithGoogle = async () => {  // paxx     // login & signup page
   const provider = new GoogleAuthProvider();
 
     const result = await signInWithPopup(auth, provider);
@@ -73,32 +72,6 @@ export const loginWithGoogle = async () => {
 };
 
 
-//
-// ------------------- Apple Auth -------------------
-//
-export const loginWithApple = async () => {
-  const provider = new OAuthProvider("apple.com");
-  try {
-    return await signInWithPopup(auth, provider);
-  } catch (error) {
-    console.error("Apple login error:", error.message);
-    throw error;
-  }
-};
-
-//
-// ------------------- Phone Number Auth -------------------
-//
-export const updateFirebasePassword = async (newPassword) => {
-  const user = auth.currentUser;
-
-  if (!user) {
-    throw new Error("No Firebase user logged in");
-  }
-
-  await updatePassword(user, newPassword);
-};
-
 
 // Setup ReCAPTCHA (make invisible)
 export const setupRecaptcha = () => {
@@ -109,7 +82,7 @@ export const setupRecaptcha = () => {
       {
         size: "invisible",
         callback: (response) => {
-          console.log("✅ reCAPTCHA verified!");
+          console.log("reCAPTCHA verified!");
         },
       }
     );
@@ -117,31 +90,31 @@ export const setupRecaptcha = () => {
 };
 
 // Send OTP
-export const sendOTP = async (phoneNumber) => {
-  try {
-    setupRecaptcha();
-    const appVerifier = window.recaptchaVerifier;
-    const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-    window.confirmationResult = confirmationResult;
-    console.log("📲 OTP sent successfully!");
-    return confirmationResult;
-  } catch (error) {
-    console.error("❌ Error sending OTP:", error.message);
-    throw error;
-  }
-};
+// export const sendOTP = async (phoneNumber) => {      // not needed
+//   try {
+//     setupRecaptcha();
+//     const appVerifier = window.recaptchaVerifier;
+//     const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+//     window.confirmationResult = confirmationResult;
+//     console.log("OTP sent successfully!");
+//     return confirmationResult;
+//   } catch (error) {
+//     console.error("❌ Error sending OTP:", error.message);
+//     throw error;
+//   }
+// };
 
 // Verify OTP
-export const verifyOTP = async (otp) => {
-  try {
-    const result = await window.confirmationResult.confirm(otp);
-    console.log("✅ OTP verified successfully!");
-    return result.user;
-  } catch (error) {
-    console.error("❌ Invalid OTP:", error.message);
-    throw error;
-  }
-};
+// export const verifyOTP = async (otp) => {   // not needed
+//   try {
+//     const result = await window.confirmationResult.confirm(otp);
+//     console.log("✅ OTP verified successfully!");
+//     return result.user;
+//   } catch (error) {
+//     console.error("❌ Invalid OTP:", error.message);
+//     throw error;
+//   }
+// };
 
 // export const resetFirebasePassword = async (email, newPassword) => {
 //   // const apiKey = process.env.REACT_APP_FIREBASE_API_KEY;
@@ -194,63 +167,79 @@ export const verifyOTP = async (otp) => {
 // Update Firebase password
 
 
-export const updatePasswordInFirebase = async (newPassword) => {
-  try {
-    const user = auth.currentUser;
-    if (!user) throw new Error("No logged in user");
+// export const updatePasswordInFirebase = async (newPassword) => {
+//   try {
+//     const user = auth.currentUser;
+//     if (!user) throw new Error("No logged in user");
 
-    await updatePassword(user, newPassword);
-    console.log("Firebase password updated");
-  } catch (error) {
-    console.error("Firebase password update error:", error.message);
-    throw error;
-  }
-};
+//     await updatePassword(user, newPassword);
+//     console.log("Firebase password updated");
+//   } catch (error) {
+//     console.error("Firebase password update error:", error.message);
+//     throw error;
+//   }
+// };
 
 
 //
 // ------------------- Logout -------------------
-export const logoutUser = async () => {
-  try {
-    return await signOut(auth);
-  } catch (error) {
-    console.error("Logout error:", error.message);
-    throw error;
-  }
-};
+// export const logoutUser = async () => {
+//   try {
+//     return await signOut(auth);
+//   } catch (error) {
+//     console.error("Logout error:", error.message);
+//     throw error;
+//   }
+// };
 
 //
 // ------------------- Delete Account -------------------
-export const deleteUserAccount = async () => {
-  try {
-    const user = auth.currentUser;
-    if (user) {
-      await deleteUser(user);
-      console.log("🗑️ User account deleted successfully");
-    } else {
-      console.warn("⚠️ No user currently logged in to delete");
-    }
-  } catch (error) {
-    console.error("Delete account error:", error.message);
-    throw error;
-  }
-};
+// export const deleteUserAccount = async () => {
+//   try {
+//     const user = auth.currentUser;
+//     if (user) {
+//       await deleteUser(user);
+//       console.log("🗑️ User account deleted successfully");
+//     } else {
+//       console.warn("⚠️ No user currently logged in to delete");
+//     }
+//   } catch (error) {
+//     console.error("Delete account error:", error.message);
+//     throw error;
+//   }
+// };
 
 // Validate password using Firebase rules
-export const validateFirebasePassword = async (email, password) => {
-  try {
-    await createUserWithEmailAndPassword(auth, email, password);
+// export const validateFirebasePassword = async (email, password) => {
+//   try {
+//     await createUserWithEmailAndPassword(auth, email, password);
 
-    // If account exists, this will throw "email-already-in-use"
-    // which means password is valid (strong)
-    return true;
-  } catch (err) {
-    if (err.code === "auth/email-already-in-use") {
-      return true; // Password is valid
-    }
+//     // If account exists, this will throw "email-already-in-use"
+//     // which means password is valid (strong)
+//     return true;
+//   } catch (err) {
+//     if (err.code === "auth/email-already-in-use") {
+//       return true; // Password is valid
+//     }
 
-    // This contains Firebase's full password rule message
-    alert(err.message);
-    return false;
-  }
-};
+//     // This contains Firebase's full password rule message
+//     alert(err.message);
+//     return false;
+//   }
+// };
+
+
+
+
+//
+// ------------------- Phone Number Auth -------------------
+//
+// export const updateFirebasePassword = async (newPassword) => {
+//   const user = auth.currentUser;
+
+//   if (!user) {
+//     throw new Error("No Firebase user logged in");
+//   }
+
+//   await updatePassword(user, newPassword);
+// };

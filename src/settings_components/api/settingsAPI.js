@@ -4,36 +4,33 @@ import axios from "axios";
 
 const SETT_URL = import.meta.env.VITE_API_URL_SETT
 
-// Hold the current auth token ("Bearer <token>")
-let authToken = null;
+// let authToken = null;
 
-
-
-export function setAuthToken(token) {
-  authToken = typeof token === "string" && token ? `Bearer ${token}` : null;
-}
+// export function setAuthToken(token) {
+//   authToken = typeof token === "string" && token ? `Bearer ${token}` : null;
+// }
 
 
 // Create axios instance
-const apiClient = axios.create({
-  baseURL: SETT_URL,
-  timeout: 10000,
-  headers: {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-  },
-});
+// const apiClient = axios.create({
+//   baseURL: SETT_URL,
+//   timeout: 10000,
+//   headers: {
+//     "Content-Type": "application/json",
+//     "Accept": "application/json",
+//   },
+// });
 
-// Inject Authorization header
-function withAuth(config = {}) {
-  return {
-    ...config,
-    headers: {
-      ...(config.headers || {}),
-      ...(authToken ? { Authorization: authToken } : {}),
-    },
-  };
-}
+// // Inject Authorization header
+// function withAuth(config = {}) {
+//   return {
+//     ...config,
+//     headers: {
+//       ...(config.headers || {}),
+//       ...(authToken ? { Authorization: authToken } : {}),
+//     },
+//   };
+// }
 
 /* ===========================
    PROFILE
@@ -41,17 +38,17 @@ function withAuth(config = {}) {
    PUT /profile
    =========================== */
 
-export async function getProfile() {
-  const config = withAuth();
-  const res = await apiClient.get("/profile", config);
-  return res.data;
-}
+// export async function getProfile() {
+//   const config = withAuth();
+//   const res = await apiClient.get("/profile", config);
+//   return res.data;
+// }
 
-export async function updateProfile(payload) {
-  const config = withAuth();
-  const res = await apiClient.put("/profile", payload, config);
-  return res.data;
-}
+// export async function updateProfile(payload) {
+//   const config = withAuth();
+//   const res = await apiClient.put("/profile", payload, config);
+//   return res.data;
+// }
 
 /* ===========================
    RATING
@@ -59,17 +56,17 @@ export async function updateProfile(payload) {
    PUT /rating
    =========================== */
 
-export async function getRating() {
-  const config = withAuth();
-  const res = await apiClient.get("/rating", config);
-  return res.data;
-}
+// export async function getRating() {
+//   const config = withAuth();
+//   const res = await apiClient.get("/rating", config);
+//   return res.data;
+// }
 
-export async function updateRating(value) {
-  const config = withAuth();
-  const res = await apiClient.put("/rating", { rating: value }, config);
-  return res.data;
-}
+// export async function updateRating(value) {
+//   const config = withAuth();
+//   const res = await apiClient.put("/rating", { rating: value }, config);
+//   return res.data;
+// }
 
 /* ===========================
    FEEDBACK
@@ -77,17 +74,17 @@ export async function updateRating(value) {
    PUT /feedback
    =========================== */
 
-export async function getFeedback() {
-  const config = withAuth();
-  const res = await apiClient.get("/feedback", config);
-  return res.data;
-}
+// export async function getFeedback() {
+//   const config = withAuth();
+//   const res = await apiClient.get("/feedback", config);
+//   return res.data;
+// }
 
-export async function updateFeedback(feedback) {
-  const config = withAuth();
-  const res = await apiClient.put("/feedback", { feedback }, config);
-  return res.data;
-}
+// export async function updateFeedback(feedback) {
+//   const config = withAuth();
+//   const res = await apiClient.put("/feedback", { feedback }, config);
+//   return res.data;
+// }
 
 /* ===========================
    SUPPORT
@@ -95,17 +92,17 @@ export async function updateFeedback(feedback) {
    PUT /support
    =========================== */
 
-export async function getSupport() {
-  const config = withAuth();
-  const res = await apiClient.get("/support", config);
-  return res.data;
-}
+// export async function getSupport() {
+//   const config = withAuth();
+//   const res = await apiClient.get("/support", config);
+//   return res.data;
+// }
 
-export async function updateSupport(message) {
-  const config = withAuth();
-  const res = await apiClient.put("/support", { message }, config);
-  return res.data;
-}
+// export async function updateSupport(message) {
+//   const config = withAuth();
+//   const res = await apiClient.put("/support", { message }, config);
+//   return res.data;
+// }
 
 export async function sendGenSupport(name, email, combined){
     const data =   await fetch(`${SETT_URL}/general-support`, {
@@ -122,9 +119,7 @@ export async function sendGenSupport(name, email, combined){
 }
 
 export async function getUserProfile(token) {
-     
       const res = await fetch(`${SETT_URL}/profile`, {
-        // headers: { Authorization: AUTH_TOKEN },
         headers: { Authorization: `Bearer ${token}` },
       })
 
@@ -182,13 +177,12 @@ export async function submitSupportRequest(idToken, message) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      message: message, // EXACT as your original
+      message: message, 
     }),
   });
 
   return res;
 }
-
 
 
 
@@ -202,7 +196,7 @@ export async function updateSettProfile(idToken, payload) {
     body: JSON.stringify(payload),
   });
 
-  return res; // caller handles json() and errors
+  return res; 
 }
 
 export async function submitSettRating(idToken, rating) {
@@ -216,25 +210,25 @@ export async function submitSettRating(idToken, rating) {
       rating : rating }),
   });
 
-  return res; // caller will handle .ok or .json
+  return res; 
 }
 
 
-export async function updateUserLocation(token, profileData) {
-  const res = await fetch(`${SETT_URL}/profile`, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(profileData),
-  });
+// export async function updateUserLocation(token, profileData) {
+//   const res = await fetch(`${SETT_URL}/profile`, {
+//     method: "PUT",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(profileData),
+//   });
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text || "Failed to update profile");
-  }
+//   if (!res.ok) {
+//     const text = await res.text();
+//     throw new Error(text || "Failed to update profile");
+//   }
 
-  const data = await res.json();
-  return data;
-}
+//   const data = await res.json();
+//   return data;
+// }

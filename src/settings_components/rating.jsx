@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { getRating, updateRating, setAuthToken, submitSettRating } from "./api/settingsAPI";
+import { submitSettRating } from "./api/settingsAPI";
 import { VscArrowCircleLeft } from "react-icons/vsc";
 import { FaStar } from "react-icons/fa";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
