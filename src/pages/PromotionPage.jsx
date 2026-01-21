@@ -10,40 +10,10 @@ import FeedbackSection from "../promotion_components/FeedbackSection";
 import FooterPromo from "../home_components/FooterPromo";
 import HeaderPromo from "../home_components/HeaderPromo";
 
-import { useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import CookieBanner from "../cookie_components/CookieBanner";
 
 
 export default function PromotionPage() {
-  const auth = getAuth()
-    const navigate = useNavigate();
-const [user, setUser] = useState(null);
-const [loading, setLoading] = useState(true);
-
-useEffect(() => {
-  const unsub = onAuthStateChanged(auth, (u) => {
-    setUser(u);
-    setLoading(false);
-  });
-
-  return () => unsub();
-}, []);
-
-useEffect(() => {
-  if (user) {
-    navigate('/dashboard');
-  }
-}, [user, navigate]);
-
-// if (loading) {
-//   return <div>Loading...</div>;
-// }
-
-
-
-
   return (
     <>
      <CookieBanner />

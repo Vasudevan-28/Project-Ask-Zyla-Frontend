@@ -8,7 +8,7 @@ import ArchiveConversations from "../chatbot_components/ArchiveConversations";
 import Chatbot from "../chatbot_components/Chatbotx";
 
 
-import { onAuthStateChanged, getAuth } from "firebase/auth";
+import { onIdTokenChanged, getAuth } from "firebase/auth";
 // import HeaderMain from "../home_components/HeaderMain";
 import { ThemeContext } from "../contexts/ThemeContext";
 
@@ -69,41 +69,61 @@ const recognitionRef = useRef(null);
   
   const [randomQs, setRandomQs] = useState([]);
 
-  
+    const [interimText, setInterimText] = useState("");
+  const finalTextRef = useRef("");
+  const silenceTimerRef = useRef(null);
+
     const [user, setUser] = useState(null);
   
-    useEffect(() => {
-      const unsub = onAuthStateChanged(auth, (u) => {
-        setUser(u);
-        console.log(u)
-      });
-         return () => unsub();
-    }, [auth]);
+  //   useEffect(() => {
+  //     const unsub = onAuthStateChanged(auth, (u) => {
+  //       setUser(u);
+  //       console.log(u)
+  //     });
+  //        return () => unsub();
+  //   }, [auth]);
   
 
 
-  useEffect(() => {
-    let mounted = true;
+  // useEffect(() => {
+  //   let mounted = true;
 
-    async function fetchToken() {
-      if (!user) return;
-      try {
-        const token = await user.getIdToken(false);
-        if (mounted) {
-          setIdToken(token);
-        }
-      } catch (err) {
-        console.error("Failed to get ID token:", err);
-      }
+  //   async function fetchToken() {
+  //     if (!user) return;
+  //     try {
+  //       const token = await user.getIdToken(false);
+  //       if (mounted) {
+  //         setIdToken(token);
+  //       }
+  //     } catch (err) {
+  //       console.error("Failed to get ID token:", err);
+  //     }
+  //   }
+
+  //   fetchToken();
+
+  //   return () => {
+  //     mounted = false;
+  //   };
+  // }, [user]);
+
+  
+useEffect(() => {
+  const unsub = onIdTokenChanged(auth, async (u) => {
+    setUser(u);
+
+    if (u) {
+      const token = await u.getIdToken();
+      setIdToken(token);
+    } else {
+      setIdToken(null);
     }
 
-    fetchToken();
+    setLoading(false);
+  });
 
-    return () => {
-      mounted = false;
-    };
-  }, [user]);
-
+  return () => unsub();
+}, []);
   
   
   useEffect(() => {
@@ -132,87 +152,128 @@ const recognitionRef = useRef(null);
     }
   };
 
+useEffect(() => {
+  if (
+    typeof window === "undefined" ||
+    (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window))
+  ) {
+    setSpeechSupported(false);
+    return;
+  }
 
-  
-    useEffect(() => {
-      if (
-        typeof window === "undefined" ||
-        (!("webkitSpeechRecognition" in window) &&
-          !("SpeechRecognition" in window))
-      ) {
-        setSpeechSupported(false);
-        return;
-      }
-  
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-  
-      const recognition = new SpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = true;
-      recognition.lang = "en-US";
-  
-      recognition.onstart = () => setIsListening(true);
-  
-      recognition.onresult = (event) => {
-        let finalTranscript = "";
-  
-        for (let i = 0; i < event.results.length; i++) {
-          if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript;
-          }
-        }
-  
-        if (finalTranscript) {
-          setInput(finalTranscript);
-        }
-      };
-  
-      recognition.onerror = () => setIsListening(false);
-      recognition.onend = () => setIsListening(false);
-  
-      recognitionRef.current = recognition;
-  
-      return () => recognition.stop();
-    }, []);
-  
-    useEffect(() => {
-      if (typeof window === "undefined" || !("speechSynthesis" in window)) {
-        setTtsSupported(false);
-        return;
-      }
-  
-      const loadVoices = () => {
-        const voices = window.speechSynthesis.getVoices();
-        if (!voices.length) return;
-  
-        voiceRef.current =
-          voices.find(
-            (v) =>
-              v.lang === "en-US" &&
-              v.name.toLowerCase().includes("female")
-          ) ||
-          voices.find((v) => v.lang === "en-US") ||
-          voices[0];
-      };
-  
-      loadVoices();
-      window.speechSynthesis.onvoiceschanged = loadVoices;
-    }, []);
-  
-  
-    const toggleListening = () => {
-      if (!speechSupported || !recognitionRef.current) return;
-  
-      try {
-        isListening
-          ? recognitionRef.current.stop()
-          : recognitionRef.current.start();
-      } catch (e) {
-        console.log(e)
-      }
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  const recognition = new SpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = "en-US";
+
+  recognition.onstart = () => {
+    setIsListening(true);
+    setInterimText("");
+  };
+
+  recognition.onresult = (event) => {
+  let interim = "";
+  let finalChunk = "";
+
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    const transcript = event.results[i][0].transcript;
+
+    if (event.results[i].isFinal) {
+      finalChunk += transcript;
+    } else {
+      interim += transcript;
+    }
+  }
+
+  if (finalChunk) {
+    finalTextRef.current =
+      (finalTextRef.current + " " + finalChunk).trim();
+  }
+
+  setInput(
+    (finalTextRef.current + " " + interim).trim()
+  );
+
+  if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+  silenceTimerRef.current = setTimeout(() => {
+    recognition.stop();
+  }, 3000); 
+};
+
+  recognition.onerror = (e) => {
+  if (e.error === "aborted") return; 
+  console.warn("Speech recognition error:", e.error);
+  setIsListening(false);
+};
+
+
+  recognition.onend = () => {
+    setIsListening(false);
+    setInterimText("");
+    if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+  };
+
+  recognitionRef.current = recognition;
+
+  return () => {
+    recognition.abort(); 
+    if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+  };
+}, []);
+
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      setTtsSupported(false);
+      return;
+    }
+
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices.length) return;
+
+      voiceRef.current =
+        voices.find(
+          (v) =>
+            v.lang === "en-US" &&
+            v.name.toLowerCase().includes("female")
+        ) ||
+        voices.find((v) => v.lang === "en-US") ||
+        voices[0];
     };
-  
+
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }, []);
+
+
+ const toggleListening = () => {
+  if (!speechSupported || !recognitionRef.current) return;
+
+  try {
+    if (isListening) {
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+
+      recognitionRef.current.abort(); 
+      setIsListening(false);
+      setInterimText("");
+    } else {
+      finalTextRef.current = input || "";
+      recognitionRef.current.start();
+    }
+  } catch (err) {
+    console.warn("Mic toggle error:", err);
+  }
+};
+
+
+
   
     const utteranceRef = useRef(null)
   
@@ -407,7 +468,7 @@ const recognitionRef = useRef(null);
         {/* Center  */}
           <Chatbot scrollerRef={scrollerRef} messages={messages} loading={loading} ttsSupported={ttsSupported} speakingId={speakingId} handleSpeak={handleSpeak}
                         input={input} setInput={setInput} handleSubmit={handleSubmit} speechSupported={speechSupported}
-                        isListening={isListening} toggleListening={toggleListening} idToken={idToken}   onOpenConversations={() => setIsConversationsOpen(true)}
+                        isListening={isListening} toggleListening={toggleListening} idToken={idToken}   onOpenConversations={() => setIsConversationsOpen(true)} interim = {interimText}
                />
 
 

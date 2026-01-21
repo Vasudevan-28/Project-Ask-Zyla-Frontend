@@ -62,7 +62,7 @@ import GenSupport from "./pages/GenSupport.jsx";
 import ArchivedChatPage from "./pages/ArchivedChatPage.jsx";
 
 // import ZylaCompo from "./zyla_components/ZylaCompo.jsx"
-import AboutUs from "./promotion_components/AboutUs/Aboutus.jsx";
+// import AboutUs from "./promotion_components/AboutUs/Aboutus.jsx";
 
 // import TrainGif from './team-pages/proto-pages/TrainGif'
 import { Toaster } from "react-hot-toast";
@@ -71,14 +71,21 @@ import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import DashLayout from "./layout/DashLayout.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
+// import ChatPage3 from "./pages/ChatPage3.jsx"
 import Loading from "./home_components/Loading.jsx";
-import AboutUsNew from "./promotion_components/AboutUs/AboutusN.jsx";
+import AboutUsNew from "./promotion_components/AboutUs/AboutUsNew.jsx";
 
 import { CookieProvider } from "./contexts/CookieContext.jsx";
-import TimePickerr from "./TimePickerr.jsx";
+// import TimePickerr from "./TimePickerr.jsx";
+import { AuthProvider } from "./contexts/authContext.jsx";
+// import PublicRoute from "./routes/PublicRoute.jsx";
+// import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import PublicLayout from "./routes/PublicLayout.jsx";
+import ProtectedLayout from "./routes/ProtectedLayout.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    <AuthProvider>
     <CookieProvider>
     <ThemeProvider>
       <Toaster
@@ -88,49 +95,53 @@ createRoot(document.getElementById("root")).render(
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
+
+          <Route element={ <PublicLayout />} >
           {/* Promotion */}
           <Route path="/" element={<PromotionPage />} />
           <Route path="/TrialChat" element={<TrialChat />} />
           <Route path="/general-support" element={<GenSupport />} />
 
           {/* Auth */}
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login /> } />
           <Route path="/verification" element={<VerificationPage />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/logout" element={<LogOut />} />
-          <Route path="/questionnaire" element={<Questionnaire />} />
+         
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route
-            path="/forgotPhonePasswordReset"
-            element={<ForgotPhonePassword />}
-          />
+          <Route path="/forgotPhonePasswordReset" element={<ForgotPhonePassword />} />
           <Route path="/register" element={<RegistrationPage />} />
-          <Route path="/newPassword" element={<NewPassword />} />
           <Route path="/resetPassword" element={<ResetPassword />} />
+          </Route>
+
           <Route path="/success" element={<ResetSuccess />} />
           <Route path="/successGoogle" element={<SuccessGoogle />} />
           <Route path="/successEmail" element={<SuccessEmail />} />
-
+          
+          <Route element={ <ProtectedLayout />} >
           {/* Home  */}
           <Route element={<DashLayout />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/dashboard" element={ <DashboardPage /> } />
             <Route path="/chatbot" element={<ChatPage />} />
+            {/* <Route path="/chatbot" element={<ChatPage3 />} /> */}
             <Route path="/skinProfile" element={<SkinProfilePage />} />
             <Route path="/archivedChats" element={<ArchivedChatPage />} />
           </Route>
-
+          
+          <Route path="/questionnaire" element={<Questionnaire />} />
           <Route path="/newAbout" element={<AboutUsNew />} />
-
           <Route path="/settings" element={<SettHome />} />
+          <Route path="/newPassword" element={<NewPassword />} />
+          </Route>
 
           {/* Common  */}
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/cookie-policy" element={<CookiePolicy />} />
           <Route path="/loading" element={<Loading />} />
-          <Route path="/aboutUs" element={<AboutUs />} />
+          {/* <Route path="/aboutUs" element={<AboutUs />} /> */}
 
-
-          <Route path="/goodnight" element={<TimePickerr />} />
+{/* 
+          <Route path="/goodnight" element={<TimePickerr />} /> */}
 
 
 
@@ -155,5 +166,6 @@ createRoot(document.getElementById("root")).render(
       </BrowserRouter>
     </ThemeProvider>
     </CookieProvider>
+    </AuthProvider>
   </StrictMode>
 );

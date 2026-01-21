@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useEffect, useRef, useContext } from "react";
 // import ProductCard from "./ProductCard";
 import ChatMessage from "./ChatMessage";
 
@@ -9,6 +9,7 @@ import Thinking from "../gifs/thinking-zyla.gif";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 import { TbMenu3 } from "react-icons/tb";
+import { FaMicrophone } from "react-icons/fa";
 
 export default function Chatbot({
   scrollerRef,
@@ -25,9 +26,30 @@ export default function Chatbot({
   toggleListening,
   idToken,
   onOpenConversations = () => {},
+  interimText,
 }) {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
+
+  
+const textareaRef = useRef(null);
+
+useEffect(() => {
+  const textarea = textareaRef.current;
+  if (!textarea) return;
+
+  textarea.style.height = "auto";
+
+  const maxHeight = 160; // matches max-h-40 (40 * 4px)
+  const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+
+  textarea.style.height = newHeight + "px";
+
+  // Toggle scrollbar ONLY when needed
+  textarea.style.overflowY =
+    textarea.scrollHeight > maxHeight ? "auto" : "hidden";
+}, [input, interimText]);
+
 
   return (
     <div className="flex-1 flex flex-col p-1 custom-scrollbar max-h-[85vh] md:max-h-[95vh]">
@@ -94,17 +116,29 @@ export default function Chatbot({
           </div>
 
           <div className="p-2  bg-transparent  relative z-10">
-            <form onSubmit={handleSubmit} className="flex gap-2">
+            <form onSubmit={handleSubmit} className="flex gap-2 items-center ">
               <div className="flex-1 flex justify-end relative">
                 <div className="absolute inset-0 bg-white/10 rounded-xl blur-sm"></div>
-                <input
-                  className={`w-full border text-sm focus:outline-none focus:ring-0 border-white/25 rounded-xl px-4 py-3 pr-14 relative z-10
-                        ${isLight ? "bg-[#E9D9E3] placeholder-gray-600 text-slate-900 " : "bg-white/10 placeholder-gray-400 text-slate-50"}`}
-                  placeholder="Ask me anything about skincare…"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  disabled={loading}
-                />
+                  <textarea
+  ref={textareaRef}
+  rows={1} 
+  className={`w-full max-h-30  resize-none overflow-y-hidden custom-scrollbar border text-sm focus:outline-none focus:ring-0 border-white/25 rounded-xl px-4 py-3 pr-14 relative z-10
+    ${isLight
+      ? "bg-[#E9D9E3] placeholder-gray-600 text-slate-900"
+      : "bg-white/10 placeholder-gray-400 text-slate-50"
+    }   `   }
+  placeholder="Ask me anything about skincare…"
+  value={input + (isListening && interimText ? " " + interimText : "")}
+  onChange={(e) => setInput(e.target.value)}
+  disabled={loading}
+  onKeyDown={(e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    e.currentTarget.form.requestSubmit()
+  }
+}}
+/>
+
                 {speechSupported && (
                   <button
                     type="button"
@@ -122,10 +156,7 @@ export default function Chatbot({
                         <rect x="6" y="6" width="12" height="12" rx="1" />
                       </svg>
                     ) : (
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-                      </svg>
+                    <FaMicrophone size={14} />
                     )}
                   </button>
                 )}
@@ -133,7 +164,7 @@ export default function Chatbot({
               <button
                 type="submit"
                 disabled={loading || !input.trim()}
-                className="px-6 py-2 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 disabled:opacity-50 hover:scale-105 hover:bg-white/25 relative overflow-hidden"
+                className="px-6 h-11 cursor-pointer rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 disabled:opacity-50 hover:scale-105 hover:bg-white/25 relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-linear-to-r from-[#ab4da8] to-[#CA88B1] rounded-xl" />
                 <span className="relative z-10 text-sm">Send</span>

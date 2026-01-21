@@ -63,6 +63,11 @@ const [randomQs, setRandomQs] = useState([]);
 
   const [isConversationsOpen, setIsConversationsOpen] = useState(false);
 
+  const [interimText, setInterimText] = useState("");
+const finalTextRef = useRef("");
+const silenceTimerRef = useRef(null);
+
+
 
   const [user, setUser] = useState(null);
 
@@ -91,49 +96,78 @@ useEffect(() => {
   setRandomQs(shuffled.slice(0, 5));
 }, []);
 
+useEffect(() => {
+  if (
+    typeof window === "undefined" ||
+    (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window))
+  ) {
+    setSpeechSupported(false);
+    return;
+  }
 
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  useEffect(() => {
-    if (
-      typeof window === "undefined" ||
-      (!("webkitSpeechRecognition" in window) &&
-        !("SpeechRecognition" in window))
-    ) {
-      setSpeechSupported(false);
-      return;
+  const recognition = new SpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = "en-US";
+
+  recognition.onstart = () => {
+    setIsListening(true);
+    setInterimText("");
+  };
+
+  recognition.onresult = (event) => {
+  let interim = "";
+  let finalChunk = "";
+
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    const transcript = event.results[i][0].transcript;
+
+    if (event.results[i].isFinal) {
+      finalChunk += transcript;
+    } else {
+      interim += transcript;
     }
+  }
 
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (finalChunk) {
+    finalTextRef.current =
+      (finalTextRef.current + " " + finalChunk).trim();
+  }
 
-    const recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.lang = "en-US";
+  setInput(
+    (finalTextRef.current + " " + interim).trim()
+  );
 
-    recognition.onstart = () => setIsListening(true);
+  if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+  silenceTimerRef.current = setTimeout(() => {
+    recognition.stop();
+  }, 3000); 
+};
 
-    recognition.onresult = (event) => {
-      let finalTranscript = "";
+  recognition.onerror = (e) => {
+  if (e.error === "aborted") return; 
+  console.warn("Speech recognition error:", e.error);
+  setIsListening(false);
+};
 
-      for (let i = 0; i < event.results.length; i++) {
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript;
-        }
-      }
 
-      if (finalTranscript) {
-        setInput(finalTranscript);
-      }
-    };
+  recognition.onend = () => {
+    setIsListening(false);
+    setInterimText("");
+    if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+  };
 
-    recognition.onerror = () => setIsListening(false);
-    recognition.onend = () => setIsListening(false);
+  recognitionRef.current = recognition;
 
-    recognitionRef.current = recognition;
+  return () => {
+    recognition.abort(); 
+    if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+  };
+}, []);
 
-    return () => recognition.stop();
-  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) {
@@ -160,17 +194,28 @@ useEffect(() => {
   }, []);
 
 
-  const toggleListening = () => {
-    if (!speechSupported || !recognitionRef.current) return;
+ const toggleListening = () => {
+  if (!speechSupported || !recognitionRef.current) return;
 
-    try {
-      isListening
-        ? recognitionRef.current.stop()
-        : recognitionRef.current.start();
-    } catch (e) {
-      console.log(e)
+  try {
+    if (isListening) {
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+
+      recognitionRef.current.abort(); 
+      setIsListening(false);
+      setInterimText("");
+    } else {
+      finalTextRef.current = input || "";
+      recognitionRef.current.start();
     }
-  };
+  } catch (err) {
+    console.warn("Mic toggle error:", err);
+  }
+};
+
 
 
   const utteranceRef = useRef(null)
@@ -239,7 +284,8 @@ const [pageLoading, setPageLoading] = useState(true);
   async function loadConversations() {
   setLoadingConversations(true);
   try {
-   const data = await ChatBotApiService.loadConversations(idToken)
+  //  const data = await ChatBotApiService.loadConversations(idToken)
+   const data = await ChatBotApiService.loadConversations()
 
     if (!data || data.length === 0) {
       await createNewConversation({ autoOpen: true, fromLoad: true });
@@ -261,7 +307,8 @@ const [pageLoading, setPageLoading] = useState(true);
 
   async function createNewConversation({ autoOpen = true } = {}) {
   try {
-    const data = await ChatBotApiService.createNewConvo(idToken)
+    // const data = await ChatBotApiService.createNewConvo(idToken)
+    const data = await ChatBotApiService.createNewConvo()
 
     const newConversation = {
       id: data.id,
@@ -287,7 +334,8 @@ const [pageLoading, setPageLoading] = useState(true);
 
     try {
       setLoading(true);
-     const data = await ChatBotApiService.openConversation(idToken, id)
+    //  const data = await ChatBotApiService.openConversation(idToken, id)
+     const data = await ChatBotApiService.openConversation(id)
 
       const mapped = (data || []).map((m) => ({
         role: m.role,
@@ -336,7 +384,8 @@ const [pageLoading, setPageLoading] = useState(true);
 
     try {
       
-      const data = await ChatBotApiService.sendMessage(idToken, currentConversationId, userText)
+      // const data = await ChatBotApiService.sendMessage(idToken, currentConversationId, userText)
+      const data = await ChatBotApiService.sendMessage(currentConversationId, userText)
 
       // const { reply, hits, intent_recommend } = data || {};
       const { reply } = data || {};
@@ -446,6 +495,7 @@ const [pageLoading, setPageLoading] = useState(true);
           toggleListening={toggleListening}
           idToken={idToken}
           onOpenConversations={() => setIsConversationsOpen(true)}
+          interim = {interimText}
         />
 
         <div className="hidden md:flex w-50 flex-col justify-center rounded-2xl m-1 p-4 relative overflow-hidden">

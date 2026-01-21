@@ -58,7 +58,7 @@ export default function HeaderMain() {
       // setUserToken(u.getIdToken(false))
 
       if (u) {
-        const tok = await u.getIdToken(false);
+        const tok = await u.getIdToken();
         setUserToken(tok);
       } else {
         setUserToken("");
@@ -83,7 +83,6 @@ export default function HeaderMain() {
             lastNotifIdRef.current = latest.id;
             isFirstLoadRef.current = false;
           } else {
-            // If new unread notification detected
             if (latest.id !== lastNotifIdRef.current && !latest.read) {
               setToastMessage(latest.message);
               lastNotifIdRef.current = latest.id;

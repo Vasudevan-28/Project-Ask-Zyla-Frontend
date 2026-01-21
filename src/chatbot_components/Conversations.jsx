@@ -120,7 +120,8 @@ export default function ChatBotConversations({
                 <button
                   className="w-full text-left px-3 py-2 text-sm hover:bg-gray-200 rounded-md"
                   onClick={async () => {
-                    await ChatBotApiService.archiveConversation(idToken, c.id);
+                    // await ChatBotApiService.archiveConversation(idToken, c.id);
+                    await ChatBotApiService.archiveConversation(c.id);
                     refreshConversations();
                     closeMenu();
                   }}
@@ -248,7 +249,8 @@ export default function ChatBotConversations({
                       <button
                         className="w-full text-left px-3 py-2 text-sm hover:bg-gray-200 rounded-md"
                         onClick={async () => {
-                          await ChatBotApiService.archiveConversation(idToken, c.id);
+                          // await ChatBotApiService.archiveConversation(idToken, c.id);
+                          await ChatBotApiService.archiveConversation(c.id);
                           refreshConversations();
                           closeMenu();
                         }}
@@ -292,7 +294,6 @@ export default function ChatBotConversations({
         </div>
       )}
 
-      {/* Rename / Delete popups (unchanged) */}
       {renamePopup && (
         <div className="fixed inset-0 text-black bg-black/50 flex items-center justify-center z-50">
           <div className="bg-[#E9D9E3] p-5 rounded-lg shadow-lg w-80 animate-fadeIn">
@@ -312,7 +313,8 @@ export default function ChatBotConversations({
 
               <button
                 onClick={async () => {
-                  await ChatBotApiService.renameConversation(idToken, renamePopup.id, renamePopup.title);
+                  // await ChatBotApiService.renameConversation(idToken, renamePopup.id, renamePopup.title);
+                  await ChatBotApiService.renameConversation(renamePopup.id, renamePopup.title);
                   setRenamePopup(null);
                   refreshConversations();
                 }}
@@ -344,7 +346,8 @@ export default function ChatBotConversations({
 
               <button
                 onClick={async () => {
-                  await ChatBotApiService.deleteConversation(idToken, deletePopup.id);
+                  // await ChatBotApiService.deleteConversation(idToken, deletePopup.id);
+                  await ChatBotApiService.deleteConversation(deletePopup.id);
                   setDeletePopup(null);
                   refreshConversations();
                 }}
