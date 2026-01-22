@@ -1,125 +1,89 @@
-// const API_URL = "http://127.0.0.1:8484";
+import { apiClient, publicClient } from "./apiClient";
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL;
 
 // ---------------------- SAVE USER ----------------------
 export const saveUserToDB = async (userData) => {
-  const res = await fetch(`${API_URL}/auth/signup`, {    // paxx
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userData),
-  });
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.detail || "Failed to save user in DB");
+  try {
+    const { data } = await publicClient.post(`/auth/signup`, userData); // paxx
+    return data;
+  } catch (error) {
+    const err = error.response?.data;
+    throw new Error(err?.detail || "Failed to save user in DB");
   }
-
-  return await res.json();
 };
 
 export const saveGoogleSignup = async (userData) => {  // paxx    // registration page
-  const response = await fetch(`${API_URL}/auth/save-user`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userData),
-  });
-
-  if (!response.ok) throw new Error(await response.text());
-  return await response.json();
+  const { data } = await publicClient.post(`/auth/save-user`, userData);
+  return data;
 };
 
 
 // ---------------------- LOGIN ----------------------
 export const loginWithBackend = async (identifier, password) => {   // paxx   // login page
-  const res = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ identifier, password }),
-  });
+  try {
+    const { data } = await publicClient.post(`/auth/login`, {
+      identifier,
+      password,
+    });
 
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.detail || "Login failed");
+    console.log(data.method);
+    console.log(data.message);
+    return data;
+  } catch (error) {
+    const err = error.response?.data;
+    throw new Error(err?.detail || "Login failed");
   }
-
-  const data = await res.json()
-  console.log(data.method)
-  console.log(data.message)
-  return data;
 };
 
 
 export const getEmailForPhone = async (phone) => {          // paxx     // ForgotPhonePassword page
-  const res = await fetch(`${API_URL}/auth/getemailforphone`, {
-    method : "POST", 
-    headers : { "Content-Type" : "application/json"},
-    body: JSON.stringify({phone})
-  })
-
-  const data = await res.json()
-
-  if (!res.ok) {
-    throw new Error(data.detail || "Failed to retrieve email");
+  try {
+    const { data } = await publicClient.post(`/auth/getemailforphone`, { phone });
+    return data;
+  } catch (error) {
+    const err = error.response?.data;
+    throw new Error(err?.detail || "Failed to retrieve email");
   }
-
-  return data
-}
+};
 
 // ---------------------- EMAIL OTP ----------------------
 export const sendEmailOtp = async (email) => {          // paxx     // ForgotPassword & ForgotPhonePassword & VerificationPage
-  const res = await fetch(`${API_URL}/auth/send-email-otp`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email }),
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data.detail || "Failed to send OTP");
+  try {
+    const { data } = await publicClient.post(`/auth/send-email-otp`, { email });
+    return data;
+  } catch (error) {
+    const err = error.response?.data;
+    throw new Error(err?.detail || "Failed to send OTP");
   }
-
-  return data;
 };
 
 
 export const verifyEmailOtp = async (email, otp) => {       // paxx     // VerificationPage
-  const res = await fetch(`${API_URL}/auth/verify-email-otp`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, otp }), 
-  });
-
-  if (!res.ok) {
-    let errorBody = {};
-    try {
-      errorBody = await res.json();
-    } catch (e) {
-      console.log(e)
-    }
-
+  try {
+    const { data } = await publicClient.post(`/auth/verify-email-otp`, {
+      email,
+      otp,
+    });
+    return data;
+  } catch (error) {
+    const err = error.response?.data;
     const message =
-      errorBody?.detail || errorBody?.message || "OTP verification failed";
+      err?.detail || err?.message || "OTP verification failed";
     throw new Error(message);
   }
-
-  return await res.json();
 };
 
 
 
-
-
-import axios from "axios";
-
+// ---------------------- RESET PASSWORD ----------------------
 export const resetEmailPassword = async (email, new_password) => {
   try {
-    const res = await axios.post(     // paxx       // NewPassword & ResetPassword & RegistrationPage
-      `${API_URL}/auth/resetpassemail`, 
+    const { data } = await publicClient.post(     // paxx       // NewPassword & ResetPassword & RegistrationPage
+      `/auth/resetpassemail`,
       { email, new_password }
     );
-    return res.data;
+    return data;
   } catch (error) {
     if (error.response) {
       return error.response.data;
@@ -132,118 +96,38 @@ export const resetEmailPassword = async (email, new_password) => {
 
 // ---------------------- PHONE OTP ----------------------
 export const sendOtpToPhone = async (phone) => {
-  const res = await fetch(`${API_URL}/auth/send-otp`, {   // paxx     // VerificationPage
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ phone }),
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data.detail || "Failed to send phone OTP");
+  try {
+    const { data } = await publicClient.post(   // paxx     // VerificationPage
+      `/auth/send-otp`,
+      { phone }
+    );
+    return data;
+  } catch (error) {
+    const err = error.response?.data;
+    throw new Error(err?.detail || "Failed to send phone OTP");
   }
+};
 
+
+
+
+export const deleteAccountAPI = async (email) => {   // paxx      // setting
+  const { data } = await apiClient.post(`/auth/delete-account`, { email });
+  return data;
+};
+
+export const clearCacheAPI = async () => {      // paxx      // setting
+  const { data } = await apiClient.post(`/sensitive/clear_cache`);
   return data;
 };
 
 
 
-
-export const deleteAccountAPI = async (email) => {   // paxx      //setting
-  return await fetch(`${API_URL}/auth/delete-account`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email }),
-  }).then((res) => res.json());
-};
-
-export const clearCacheAPI = async (token) => {      // paxx      //setting
-  return await fetch(`${API_URL}/sensitive/clear_cache`,
-    {
-      method : "POST",
-      headers : { "Authorization" : `Bearer ${token}`, "Content-Type": "application/json"},
-    }
-  ).then((res) => res.json())
-}
-
-
-
 // ---------------------- CHECK IF USER EXISTS ----------------------
 export const checkGoogleUser = async (email) => {
-  const response = await fetch(`${API_URL}/auth/check-google-user`, {   // paxx    // Signup & authservice
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email }),
-  });
-  return await response.json();
+  const { data } = await publicClient.post(   // paxx    // Signup & authservice
+    `/auth/check-google-user`,
+    { email }
+  );
+  return data;
 };
-
-
-
-
-
-
-
-// not implemented
-
-// export const phoneOtpAttempt = async (phone) => {
-//   const res = await fetch(`${API_URL}/phone-otp-attempt`, {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ phone }),
-//   });
-
-//   if (!res.ok) {
-//     const data = await res.json().catch(() => ({}));
-//     throw new Error(data.detail || "Too many OTP requests. Try again after 30 minutes.");
-//   }
-
-//   return await res.json();
-// };
-
-export const verifyPhoneOtp = async (phone, otp) => {
-  const res = await fetch(`${API_URL}/auth/verify-otp`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ phone, otp: Number(otp) }),
-  });
-
-  return await res.json();
-};
-
-// not implemented
-
-// export const resetPasswordPhone = async (phone, newPassword) => {
-//   const res = await fetch(`${API_URL}/reset-password-phone`, {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ phone, new_password: newPassword }),
-//   });
-
-//   return await res.json();
-// };
-
-
-
-// ---------------------- SAVE FCM TOKEN ----------------------
-// export const saveFcmToken = async (email, fcm_token) => {
-//   const res = await fetch(`${API_URL}/save-token`, {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ email, fcm_token }),
-//   });
-
-//   return await res.json();
-// };
-
-
-// export const resetEmailPassword = async (email, new_password) => {
-//   const res = await fetch(`${API_URL}/resetpassemail`, {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ email, new_password }),
-//   });
-
-//   return await res.json();
-// };

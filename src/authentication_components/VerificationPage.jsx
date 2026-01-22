@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate, useLocation, replace } from "react-router-dom";
 import {
   verifyEmailOtp,
-  verifyPhoneOtp,
+  // verifyPhoneOtp,
   sendEmailOtp,
   sendOtpToPhone,
 } from "../services/backendAPI";
@@ -85,10 +85,11 @@ export default function VerificationPage() {
         localStorage.setItem("reset_email", email);
         // navigate to reset page
         navigate("/resetPassword", { state: { email }, replace: true },);
-      } else if (phone) {
-        await verifyPhoneOtp(phone, otp);
-        localStorage.setItem("reset_phone", phone);
-      }
+      } 
+      // else if (phone) {
+      //   await verifyPhoneOtp(phone, otp);
+      //   localStorage.setItem("reset_phone", phone);
+      // }
     } catch (err) {
       setError(err?.response?.data?.detail || err?.message || "Invalid or expired OTP");
     } finally {
@@ -242,7 +243,6 @@ export default function VerificationPage() {
         </div>
       </div>
 
-      {/* Simple OTP sent dialog/toast */}
     {showSentDialog && (
   <div
     className="fixed left-1/2 top-24 -translate-x-1/2 z-50 pointer-events-none"

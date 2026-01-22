@@ -224,8 +224,8 @@ useEffect(() => {
       [parentField]: {
         ...parent,
         [childField]: exists
-          ? current.filter((v) => v !== option) // remove
-          : [...current, option],              // add
+          ? current.filter((v) => v !== option) 
+          : [...current, option],              
       },
     };
   });

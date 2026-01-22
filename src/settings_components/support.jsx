@@ -27,43 +27,44 @@ function Support({ onBack }) {
 
     return () => unsub();
   }, [auth]);
+  
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+  setSuccess("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+  if (!issue.trim() || !help.trim()) {
+    setError("Please fill in both fields");
+    return;
+  }
+
+  const combined = `${issue.trim()}\n\n${help.trim()}`;
+  if (!idToken) return;
+
+  try {
+    setSaving(true);
+
+    await submitSupportRequest(combined);
+
+    toast.success("Support request submitted");
+    setIssue("");
+    setHelp("");
     setSuccess("");
+  } catch (err) {
+    console.error("Failed to submit support request:", err);
 
-    if (!issue.trim() || !help.trim()) {
-      setError("Please fill in both fields");
-      return;
-    }
+    const message =
+      err.response?.data?.detail ||
+      err.response?.data?.message ||
+      "Failed to submit support request";
 
-    const combined = `${issue.trim()}\n\n${help.trim()}`;
+    toast.error(message);
+    setError(message);
+  } finally {
+    setSaving(false);
+  }
+};
 
-    if (!idToken) return;
-
-    try {
-      setSaving(true);
-
-      const res = await submitSupportRequest(idToken, combined);
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        throw new Error(data?.detail || "Failed to submit support request");
-      }
-
-      toast.success("Support request submitted");
-      setIssue("");
-      setHelp("");
-      setSuccess("");
-    } catch (err) {
-      console.error("Failed to save support request:", err);
-      toast.error("Failed to submit support request");
-      setError("");
-    } finally {
-      setSaving(false);
-    }
-  };
 
   if (loading) {
     return (

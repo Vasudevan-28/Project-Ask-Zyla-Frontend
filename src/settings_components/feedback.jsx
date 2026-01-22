@@ -48,7 +48,8 @@ function Feedback({ onBack }) {
         name: name,
       };
 
-      const res = await submitSettFeedback(idToken, feedbackData);
+      // const res = await submitSettFeedback(idToken, feedbackData);
+      const res = await submitSettFeedback(feedbackData);
 
       if (!res.ok) {
         throw new Error("Server returned an error");

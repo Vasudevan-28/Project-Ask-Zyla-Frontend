@@ -5,7 +5,6 @@ import Setting from "./setting";
 import Support from "./support";
 import Feedback from "./feedback";
 import Rating from "./rating";
-import Privacy from "./privacy";
 import HeaderMain from "../home_components/HeaderMain";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +12,7 @@ import { ThemeContext } from "../contexts/ThemeContext";
 
 function SettHome() {
   const auth = getAuth();
-  const [showPrivacy, setShowPrivacy] = useState(false);
+  // const [showPrivacy, setShowPrivacy] = useState(false);
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
 
@@ -85,8 +84,6 @@ function SettHome() {
         </div>
       </main>
 
-      {/* PRIVACY POPUP */}
-      <Privacy isOpen={showPrivacy} onClose={() => setShowPrivacy(false)} />
     </div>
   );
 }

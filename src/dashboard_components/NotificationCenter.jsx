@@ -9,11 +9,12 @@ export default function NotificationCenter({
   onClose,
   onMarkRead,
   onMarkAllRead,
-  userToken,
+  // userToken,
 }) {
   const handleMarkRead = async (id) => {
     try {
-      await ApiService.markNotificationRead(id, userToken);
+      // await ApiService.markNotificationRead(id, userToken);
+      await ApiService.markNotificationRead(id);
       onMarkRead(id);
     } catch (error) {
       console.error("Failed to mark notification as read", error);
@@ -22,7 +23,8 @@ export default function NotificationCenter({
 
   const handleMarkAllRead = async () => {
     try {
-      await ApiService.markAllNotificationsRead(userToken);
+      // await ApiService.markAllNotificationsRead(userToken);
+      await ApiService.markAllNotificationsRead();
       onMarkAllRead();
     } catch (error) {
       console.error("Failed to mark all notifications as read", error);

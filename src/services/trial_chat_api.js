@@ -1,46 +1,19 @@
-
-// const TRIAL_CHAT_ENDPOINT = "http://localhost:8484/chatApp/trial/chat";
-
-const TRIAL_CHAT_ENDPOINT = import.meta.env.VITE_API_URL_TRIAL
-
-
-function authHeaders(token, hasBody = false) {
-  const headers = {};
-
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-  if (hasBody) headers["Content-Type"] = "application/json";
-
-  return headers;
-}
-
+import { publicClientWithCreds } from "./apiClient";
 
 export const TrialChatApiService = {
-    async fetchTrial() {
-         const res = await fetch(`${TRIAL_CHAT_ENDPOINT}/trialUser`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-      return res
-    },
 
-    async sendTrialMessage(conversationId, userText) {
-             const res = await fetch(TRIAL_CHAT_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", 
-        body: JSON.stringify({
-          conversation_id: conversationId, 
-          message: userText,
-        }),
-      });
-      
-      return res
-    },
+  async fetchTrial() {
+    const res = await publicClientWithCreds.post(`/trialUser`);
+    return res.data; 
+  },
 
+  async sendTrialMessage(conversationId, userText) {
+    const res = await publicClientWithCreds.post(`/`, {
+      conversation_id: conversationId,
+      message: userText,
+    });
+
+    return res.data; 
+  },
 
 };

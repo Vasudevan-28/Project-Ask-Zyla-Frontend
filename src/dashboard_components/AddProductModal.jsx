@@ -164,7 +164,6 @@ useEffect(() => {
         >
           <div className="font-semibold text-lg md:text-xl mb-1">Add Routine</div>
 
-          {/* Stack on mobile, two-column on md+ */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div>
               <label className="text-sm font-medium">Routine</label>

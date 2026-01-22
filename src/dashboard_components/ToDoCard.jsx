@@ -33,7 +33,8 @@ export default function ToDoCard({ selectedDate, userToken }) {
     }
     async function fetchTodos() {
       try {
-        const data = await ApiService.getTodos(selectedIso, userToken);
+        // const data = await ApiService.getTodos(selectedIso, userToken);
+        const data = await ApiService.getTodos(selectedIso);
         setTasks(data && data.length > 0 ? data : []);
       } catch (e) {
         console.error("Failed to fetch todos", e);
@@ -54,7 +55,8 @@ export default function ToDoCard({ selectedDate, userToken }) {
     setIsAdding(true);
     try {
       const nt = { text: newText.trim(), checked: false, date: selectedIso };
-      const created = await ApiService.addTodo(nt, userToken);
+      // const created = await ApiService.addTodo(nt, userToken);
+      const created = await ApiService.addTodo(nt);
       setTasks([...tasks, created]);
       setNewText("");
       setMsg("Task successfully added");
@@ -75,7 +77,8 @@ export default function ToDoCard({ selectedDate, userToken }) {
     const task = tasks.find((t) => t.id === id);
     if (!task) return;
     try {
-      const updated = await ApiService.updateTodo(id, !task.checked, userToken);
+      // const updated = await ApiService.updateTodo(id, !task.checked, userToken);
+      const updated = await ApiService.updateTodo(id, !task.checked);
       setTasks(tasks.map((t) => (t.id === id ? updated : t)));
       window.dispatchEvent(new Event("zyla:todos-updated"));
     } catch (e) {
@@ -86,7 +89,8 @@ export default function ToDoCard({ selectedDate, userToken }) {
   async function remove(id) {
     if (isPast || isBeforeCutoff || !userToken) return;
     try {
-      await ApiService.deleteTodo(id, userToken);
+      // await ApiService.deleteTodo(id, userToken);
+      await ApiService.deleteTodo(id);
       setTasks(tasks.filter((t) => t.id !== id));
       window.dispatchEvent(new Event("zyla:todos-updated"));
     } catch (e) {

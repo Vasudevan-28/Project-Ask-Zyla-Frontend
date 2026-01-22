@@ -50,7 +50,7 @@ export default function ForgotPassword() {
         navigate("/verification", {
           state: { email, otp_expiry: res.otp_expiry },
         });
-        return; // avoid resetting loading after navigation
+        return; 
       } else {
         setError("Something went wrong.");
       }

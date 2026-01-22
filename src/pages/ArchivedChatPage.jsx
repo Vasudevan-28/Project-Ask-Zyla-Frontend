@@ -75,37 +75,6 @@ const recognitionRef = useRef(null);
 
     const [user, setUser] = useState(null);
   
-  //   useEffect(() => {
-  //     const unsub = onAuthStateChanged(auth, (u) => {
-  //       setUser(u);
-  //       console.log(u)
-  //     });
-  //        return () => unsub();
-  //   }, [auth]);
-  
-
-
-  // useEffect(() => {
-  //   let mounted = true;
-
-  //   async function fetchToken() {
-  //     if (!user) return;
-  //     try {
-  //       const token = await user.getIdToken(false);
-  //       if (mounted) {
-  //         setIdToken(token);
-  //       }
-  //     } catch (err) {
-  //       console.error("Failed to get ID token:", err);
-  //     }
-  //   }
-
-  //   fetchToken();
-
-  //   return () => {
-  //     mounted = false;
-  //   };
-  // }, [user]);
 
   
 useEffect(() => {
@@ -319,7 +288,8 @@ useEffect(() => {
   async function loadConversations() {
     setLoadingConversations(true);
     try {
-      const data = await ArchiveChatBotApiService.loadArchivedConversations(idToken)
+      // const data = await ArchiveChatBotApiService.loadArchivedConversations(idToken)
+      const data = await ArchiveChatBotApiService.loadArchivedConversations()
    
       setConversations(data || []);
 
@@ -335,7 +305,8 @@ useEffect(() => {
 
   async function createNewConversation() {
     try {
-      const data = await ArchiveChatBotApiService.createArchNewConvo(idToken);
+      // const data = await ArchiveChatBotApiService.createArchNewConvo(idToken);
+      const data = await ArchiveChatBotApiService.createArchNewConvo();
       const newId = data.id;
 
       await loadConversations();
@@ -352,7 +323,8 @@ useEffect(() => {
 
     try {
       setLoading(true);
-    const data = await ArchiveChatBotApiService.openArchConversation(idToken, id)
+    // const data = await ArchiveChatBotApiService.openArchConversation(idToken, id)
+    const data = await ArchiveChatBotApiService.openArchConversation(id)
 
       const mapped = (data || []).map((m) => ({
         role: m.role,
@@ -399,7 +371,8 @@ useEffect(() => {
 
     try {
     
-      const data = await ArchiveChatBotApiService.sendArchMessage(idToken, currentConversationId, userText)
+      // const data = await ArchiveChatBotApiService.sendArchMessage(idToken, currentConversationId, userText)
+      const data = await ArchiveChatBotApiService.sendArchMessage(currentConversationId, userText)
       // const { reply, hits, intent_recommend } = data || {};
       const { reply} = data || {};
 

@@ -3,7 +3,7 @@ import { ThemeContext } from "../contexts/ThemeContext";
 import { ArchiveChatBotApiService } from "../services/archive_chatbot_api";
 import { useNavigate } from "react-router-dom";
 
-export default function ChatBotConversations({
+export default function ArchiveConversations({
   createNewConversation,
   loadingConversations,
   conversations,
@@ -119,7 +119,8 @@ export default function ChatBotConversations({
                 <button
                   className="w-full text-left px-3 py-2 text-sm hover:bg-gray-200 rounded-md"
                   onClick={async () => {
-                    await ArchiveChatBotApiService.unArchiveConversation(idToken, c.id);
+                    // await ArchiveChatBotApiService.unArchiveConversation(idToken, c.id);
+                    await ArchiveChatBotApiService.unArchiveConversation(c.id);
                     refreshConversations();
                     closeMenu();
                   }}
@@ -245,7 +246,8 @@ export default function ChatBotConversations({
                       <button
                         className="w-full text-left px-3 py-2 text-sm hover:bg-gray-200 rounded-md"
                         onClick={async () => {
-                          await ArchiveChatBotApiService.unArchiveConversation(idToken, c.id);
+                          // await ArchiveChatBotApiService.unArchiveConversation(idToken, c.id);
+                          await ArchiveChatBotApiService.unArchiveConversation(c.id);
                           refreshConversations();
                           closeMenu();
                         }}
@@ -343,7 +345,8 @@ export default function ChatBotConversations({
 
               <button
                 onClick={async () => {
-                  await ArchiveChatBotApiService.deleteConversation(idToken, deletePopup.id);
+                  // await ArchiveChatBotApiService.deleteConversation(idToken, deletePopup.id);
+                  await ArchiveChatBotApiService.deleteConversation(deletePopup.id);
                   setDeletePopup(null);
                   refreshConversations();
                 }}

@@ -39,6 +39,12 @@ export const loginUser = async (email, password) => {   // paxx   //login page
 };
 
 
+export async function logout() {
+  await signOut(auth);
+  localStorage.clear();
+}
+
+
 // ------------------- Google Auth -------------------
 
 export const loginWithGoogle = async () => {  // paxx     // login & signup page
@@ -153,7 +159,7 @@ export const setupRecaptcha = () => {
 //     }),
 //   });
 
-//   const resetData = await resetRes.json();
+//   const resetData = await resethe();
 
 //   if (!resetData.email) {
 //     console.error("Firebase Password Update Error:", resetData);

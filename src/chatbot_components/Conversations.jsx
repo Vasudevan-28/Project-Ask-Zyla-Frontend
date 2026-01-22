@@ -1,4 +1,3 @@
-
 import { useState, useContext, useEffect, useRef } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { ChatBotApiService } from "../services/chatbot_api";
@@ -11,7 +10,7 @@ export default function ChatBotConversations({
   openConversation,
   currentConversationId,
   refreshConversations,
-  idToken,
+  // idToken,
   isArchived,
   isMobileOpen = false,
   onClose = () => {},

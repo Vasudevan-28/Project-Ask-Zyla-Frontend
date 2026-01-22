@@ -24,7 +24,7 @@ export default function Chatbot({
   speechSupported,
   isListening,
   toggleListening,
-  idToken,
+  // idToken,
   onOpenConversations = () => {},
   interimText,
 }) {

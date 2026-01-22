@@ -33,7 +33,7 @@ export default function ChatPage() {
   const navigate = useNavigate();
   const scrollerRef = useRef(null);
 
-  const [idToken, setIdToken] = useState("");
+  // const [idToken, setIdToken] = useState("");
 
   const [conversations, setConversations] = useState([]);
   const [currentConversationId, setCurrentConversationId] = useState(null);
@@ -68,28 +68,6 @@ const finalTextRef = useRef("");
 const silenceTimerRef = useRef(null);
 
 
-
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-  const unsub = onIdTokenChanged(auth, async (u) => {
-    setUser(u);
-
-    if (!u) {
-      setIdToken(null);
-      return;
-    }
-
-    try {
-      const token = await u.getIdToken();
-      setIdToken(token);
-    } catch (err) {
-      console.error("Failed to get ID token:", err);
-    }
-  });
-
-  return () => unsub();
-}, []);
 
 useEffect(() => {
   const shuffled = [...QUICK_QUESTIONS].sort(() => 0.5 - Math.random());
@@ -262,10 +240,10 @@ const handleSpeak = (text, id) => {
 const [pageLoading, setPageLoading] = useState(true);
   
   useEffect(() => {
-    if (!idToken) return;
+    // if (!idToken) return;
     setPageLoading(false);
     loadConversations();
-  }, [idToken]);
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -418,33 +396,8 @@ const [pageLoading, setPageLoading] = useState(true);
     e.preventDefault();
     sendMessage();
   }
-  // if (!user) {
-  //   return <div>Loading...</div>;
-  // }
 
-  if (!user){
-    return(
-      <div className={`min-h-screen min-w-screen flex justify-center items-center
-       ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}
-      `}>
-        <div  className={`animate-spin h-8 w-8 rounded-full border-3  border-t-transparent
-          ${!isLight ? "border-[#e9d9e3]" : "border-[#1d0e2d]"}
-          `} ></div>
-      </div>
-    )
-  }
   if (pageLoading){
-    return(
-      <div className={`min-h-screen min-w-screen flex justify-center items-center
-       ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}
-      `}>
-        <div  className={`animate-spin h-8 w-8 rounded-full border-3  border-t-transparent
-          ${!isLight ? "border-[#e9d9e3]" : "border-[#1d0e2d]"}
-          `} ></div>
-      </div>
-    )
-  }
-  if (!user){
     return(
       <div className={`min-h-screen min-w-screen flex justify-center items-center
        ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}
@@ -473,7 +426,7 @@ const [pageLoading, setPageLoading] = useState(true);
             setIsConversationsOpen(false);
           }}
           refreshConversations={loadConversations}
-          idToken={idToken}
+          // idToken={idToken}
           isArchived={false}
           isMobileOpen={isConversationsOpen}
           onClose={() => setIsConversationsOpen(false)}
@@ -493,7 +446,7 @@ const [pageLoading, setPageLoading] = useState(true);
           speechSupported={speechSupported}
           isListening={isListening}
           toggleListening={toggleListening}
-          idToken={idToken}
+          // idToken={idToken}
           onOpenConversations={() => setIsConversationsOpen(true)}
           interim = {interimText}
         />

@@ -69,14 +69,15 @@ function Profile() {
       setLoading(true);
       setLoadError("");
 
-      const res = await getUserProfile(currentToken);
-      if (!res.ok) {
-        // try to get text body for better error message
-        const txt = await res.text().catch(() => "");
-        throw new Error(txt || `Failed to fetch profile (status ${res.status})`);
-      }
-      const data = await res.json().catch(() => ({}));
-      const next = mapProfileToForm(data);
+      // const res = await getUserProfile(currentToken);
+      const res = await getUserProfile();
+      // if (!res.ok) {
+      //   // try to get text body for better error message
+      //   const txt = await res.text().catch(() => "");
+      //   throw new Error(txt || `Failed to fetch profile (status ${res.status})`);
+      // }
+      // const data = await res.json().catch(() => ({}));
+      const next = mapProfileToForm(res);
 
       setForm(next);
       setInitialForm(next);
@@ -123,32 +124,32 @@ function Profile() {
 
       console.debug("Profile update payload:", payload);
 
-      const res = await updateSettProfile(idToken, payload);
+      // const res = await updateSettProfile(idToken, payload);
+      const data = await updateSettProfile(payload);
 
-      let data = {};
-      try {
-        data = await res.json();
-      } catch (err) {
-        console.debug("Update response body not JSON or empty:", err);
-      }
+      // let data = {};
+      // try {
+      //   data = await res.json();
+      // } catch (err) {
+      //   console.debug("Update response body not JSON or empty:", err);
+      // }
 
-      console.debug("Update response status:", res.status, "body:", data);
+      // console.debug("Update response status:", res.status, "body:", data);
 
-      if (!res.ok) {
-        // prefer structured data.detail/message if present
-        const errMsg =
-          (data && (data.detail || data.message)) ||
-          `Update failed with status ${res.status}`;
-        throw new Error(errMsg);
-      }
+      // if (!res.ok) {
+      //   // prefer structured data.detail/message if present
+      //   const errMsg =
+      //     (data && (data.detail || data.message)) ||
+      //     `Update failed with status ${res.status}`;
+      //   throw new Error(errMsg);
+      // }
 
-      // If server returns the updated profile, use it. Otherwise, re-fetch profile to ensure UI matches DB.
       if (data && data.profile) {
         const next = mapProfileToForm(data.profile);
         setForm(next);
         setInitialForm(next);
       } else {
-        // re-fetch authoritative profile from backend
+       
         await fetchProfile(idToken);
       }
 
@@ -254,7 +255,6 @@ function Profile() {
     return form.name.trim().split(" ")[0][0].toUpperCase();
   };
 
-  // shared input class for consistent sizing
   const inputClass =
     "border rounded-md px-2 py-1 text-[13px] w-full max-w-[220px] text-right focus:outline-none focus:ring-1 focus:ring-indigo-500";
 
@@ -284,7 +284,7 @@ function Profile() {
           {saveError && <p className="text-xs text-red-600 mb-1">{saveError}</p>}
           {success && <p className="text-xs text-green-600 mb-1">{success}</p>}
 
-          {/* Info rows */}
+          
           <div className="w-full space-y-1">
             {/* Name */}
             <div className="flex items-center justify-between py-1 text-[13px]">
@@ -309,7 +309,7 @@ function Profile() {
               <span className={labelClass}>DOB</span>
               <div className="flex-1 text-right">
                 {isEditing ? (
-                  // date picker
+
                   <input
                     name="dob"
                     type="date"
@@ -323,7 +323,6 @@ function Profile() {
               </div>
             </div>
 
-            {/* Email (read-only) */}
             <div className="flex items-center justify-between py-1 text-[13px]">
               <span className={labelClass}>Email</span>
               <div className="flex-1 text-right">
@@ -331,7 +330,6 @@ function Profile() {
               </div>
             </div>
 
-            {/* Phone (read-only) */}
             <div className="flex items-center justify-between py-1 text-[13px]">
               <span className={labelClass}>Phone</span>
               <div className="flex-1 text-right">

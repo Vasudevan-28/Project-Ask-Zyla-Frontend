@@ -217,7 +217,8 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
     }
 
     try {
-      await updateCityAndState(idToken, city, state);
+      // await updateCityAndState(idToken, city, state);
+      await updateCityAndState(city, state);
 
       setLocationStatus(`Saved: ${city || "Unknown city"}, ${state || "Unknown state"}`);
     } catch (err) {
@@ -265,7 +266,8 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
     setSuccess("");
 
     try {
-      await clearCacheAPI(idToken);
+      // await clearCacheAPI(idToken);
+      await clearCacheAPI();
     } catch (err) {
       console.error("Clear Cache error : ", err);
       setError("Can't connect to backend");

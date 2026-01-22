@@ -4,7 +4,8 @@ import ZaLogo from "../assets/ZaLogo.png";
 import ZylaToggleImg from "../assets/ZylaToggle.png";
 import ProfilePopup from "../dashboard_components/ProfilePopup";
 import FeedbackModal from "../dashboard_components/FeedbackModal";
-import { getAuth, signOut, onIdTokenChanged } from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { logout } from "../services/authservice";
 import { useLocation } from "react-router-dom";
 import { ApiService } from "../services/dashboardApi";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +23,7 @@ import { submitLogOutFeedback } from "../settings_components/api/settingsAPI";
 
 export default function HeaderMain() {
   const navigate = useNavigate();
-  const auth = getAuth();
+  // const auth = getAuth();
   const location = useLocation();
 
   //   const user = auth.currentUser;
@@ -49,31 +50,13 @@ export default function HeaderMain() {
   const notificationCenterRef = useRef(null);
   const notificationBtnRef = useRef(null);
 
-  const [user, setUser] = useState(null);
-  const [userToken, setUserToken] = useState("");
 
   useEffect(() => {
-    const unsub = onIdTokenChanged(auth, async (u) => {
-      setUser(u);
-      // setUserToken(u.getIdToken(false))
-
-      if (u) {
-        const tok = await u.getIdToken();
-        setUserToken(tok);
-      } else {
-        setUserToken("");
-      }
-    });
-
-    return () => unsub();
-  }, [auth]);
-
-  useEffect(() => {
-    if (!userToken) return;
 
     const fetchNotifications = async () => {
       try {
-        const data = await ApiService.getNotifications(userToken);
+        // const data = await ApiService.getNotifications(userToken);
+        const data = await ApiService.getNotifications();
         setNotifications(data);
 
         if (data.length > 0) {
@@ -99,7 +82,7 @@ export default function HeaderMain() {
     // fetchNotifications();
     const interval = setInterval(fetchNotifications, 10000);
     return () => clearInterval(interval);
-  }, [userToken]);
+  }, []);
 
   const handleMarkRead = (id) => {
     setNotifications((prev) =>
@@ -169,7 +152,6 @@ export default function HeaderMain() {
     return () => document.removeEventListener("keydown", onKey);
   }, [showProfile, showNotificationCenter]);
 
-  // focus popup on open (prevent scroll attempt)
   useEffect(() => {
     if (showProfile) {
       const t = setTimeout(() => {
@@ -187,11 +169,8 @@ export default function HeaderMain() {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
-      localStorage.clear();
-
-      // window.location.href = "/login";
-      setTimeout(() => navigate("/login", { replace: true }), 500);
+     await logout();
+navigate("/login", { replace: true });
     } catch (err) {
       console.error(err);
     }
@@ -371,7 +350,7 @@ export default function HeaderMain() {
                   onClose={() => setShowNotificationCenter(false)}
                   onMarkRead={handleMarkRead}
                   onMarkAllRead={handleMarkAllRead}
-                  userToken={userToken}
+                  // userToken={userToken}
                 />
               </div>
             )}
@@ -433,10 +412,10 @@ export default function HeaderMain() {
         <FeedbackModal
           onClose={() => setShowFeedback(false)}
           onSubmit={async (feedbackData) => {
-            console.log("User feedback:", userToken);
+            // console.log("User feedback:", userToken);
 
             try {
-              await submitLogOutFeedback(userToken, feedbackData);
+              await submitLogOutFeedback(feedbackData);
             } catch (err) {
               console.log(err);
             }

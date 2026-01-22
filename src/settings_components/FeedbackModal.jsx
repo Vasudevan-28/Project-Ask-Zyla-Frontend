@@ -4,7 +4,7 @@ import { ThemeContext } from "../contexts/ThemeContext";
 export default function FeedbackModal({ onClose, onSubmit }) {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
-  const [selectedEmotion, setSelectedEmotion] = useState(3); // Default to neutral (middle)
+  const [selectedEmotion, setSelectedEmotion] = useState(3);
 
   const emotions = [
     { value: 1, label: "Very Sad", emoji: "😢" },

@@ -47,54 +47,45 @@ const recognitionRef = useRef(null);
     };
   }, [trialOver]);
 
-  useEffect(() => {
-    const run = async () => {
-      try {
-        const res = await TrialChatApiService.fetchTrial();
+useEffect(() => {
+  const run = async () => {
+    try {
+      const data = await TrialChatApiService.fetchTrial();
 
-        if (!res.ok) {
-          const text = await res.text();
-          try {
-            const data = JSON.parse(text);
+      const { remaining_trials, trials_exhausted } = data || {};
 
-            if (data.detail?.code === "TRIAL_EXHAUSTED") {
-              setTrialOver(true);
-              setMessages((prev) => [
-                ...prev,
-                {
-                  role: "assistant",
-                  text:
-                    data.detail.message ||
-                    "Your free trial is over. Please sign up to continue chatting.",
-                },
-              ]);
-              return;
-            }
-          } catch {
-            console.log("something fishy...");
-          }
-          throw new Error(text || `HTTP ${res.status}`);
-        }
-
-        const data = await res.json();
-        const { remaining_trials, trials_exhausted } = data || {};
-
-        if (typeof remaining_trials === "number") {
-          setTrialRemaining(remaining_trials);
-        }
-
-        if (trials_exhausted) {
-          setTrialOver(true);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
+      if (typeof remaining_trials === "number") {
+        setTrialRemaining(remaining_trials);
       }
-    };
 
-    run();
-  }, []);
+      if (trials_exhausted) {
+        setTrialOver(true);
+      }
+    } catch (err) {
+      const data = err.response?.data;
+
+      if (data?.detail?.code === "TRIAL_EXHAUSTED") {
+        setTrialOver(true);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            text:
+              data.detail.message ||
+              "Your free trial is over. Please sign up to continue chatting.",
+          },
+        ]);
+        return;
+      }
+
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  run();
+}, []);
 
  
 
@@ -241,69 +232,61 @@ const recognitionRef = useRef(null);
     setMessages((prev) => [...prev, { role: "user", text: userText }]);
     setInput("");
 
+
     try {
-      const res = await TrialChatApiService.sendTrialMessage(
-        conversationId,
-        userText
-      );
+  const data = await TrialChatApiService.sendTrialMessage(conversationId, userText);
 
-      if (!res.ok) {
-        const text = await res.text();
-        try {
-          const data = JSON.parse(text);
-          if (data.detail?.code === "TRIAL_EXHAUSTED") {
-            setTrialOver(true);
-            setMessages((prev) => [
-              ...prev,
-              {
-                role: "assistant",
-                text:
-                  data.detail.message ||
-                  "Your free trial is over. Please sign up to continue chatting.",
-              },
-            ]);
-            return;
-          }
-        } catch {
-          console.log("something fishy...");
-        }
-        throw new Error(text || `HTTP ${res.status}`);
-      }
+  const { reply, remaining_trials, trials_exhausted } = data || {};
 
-      const data = await res.json();
-      const { reply, remaining_trials, trials_exhausted } = data || {};
+  if (!conversationId && data.conversation_id) {
+    setConversationId(data.conversation_id);
+  }
 
-      if (!conversationId && data.conversation_id) {
-        setConversationId(data.conversation_id);
-      }
+  if (typeof remaining_trials === "number") {
+    setTrialRemaining(remaining_trials);
+  }
 
-      if (typeof remaining_trials === "number") {
-        setTrialRemaining(remaining_trials);
-      }
+  if (trials_exhausted) {
+    setTrialOver(true);
+  }
 
-      if (trials_exhausted) {
-        setTrialOver(true);
-      }
+  setMessages((prev) => [
+    ...prev,
+    {
+      role: "assistant",
+      text: reply || "",
+    },
+  ]);
+} catch (err) {
+  // Axios error handling
+  const data = err.response?.data;
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          text: reply || "",
-        },
-      ]);
-    } catch (err) {
-      console.error(err);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          text: "Sorry, I couldn't reach the server right now. Please try again later.",
-        },
-      ]);
-    } finally {
-      setLoading(false);
-    }
+  if (data?.detail?.code === "TRIAL_EXHAUSTED") {
+    setTrialOver(true);
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        text:
+          data.detail.message ||
+          "Your free trial is over. Please sign up to continue chatting.",
+      },
+    ]);
+    return;
+  }
+
+  console.error(err);
+  setMessages((prev) => [
+    ...prev,
+    {
+      role: "assistant",
+      text: "Sorry, I couldn't reach the server right now. Please try again later.",
+    },
+  ]);
+} finally {
+  setLoading(false);
+}
+
   }
 
   function handleSubmit(e) {

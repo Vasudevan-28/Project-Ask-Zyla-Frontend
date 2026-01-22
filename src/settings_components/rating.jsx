@@ -32,30 +32,31 @@ function Rating({ onBack }) {
   };
 
   // ---------- SAVE RATING ----------
-  async function handleSave() {
-    try {
-      setSaving(true);
-      setError("");
-      setSuccess("");
+ async function handleSave() {
+  try {
+    setSaving(true);
+    setError("");
+    setSuccess("");
 
-      const res = await submitSettRating(idToken, rating);
+    await submitSettRating(rating);
 
-      const data = await res.json().catch(() => ({}));
+    toast.success("Ratings saved successfully!");
+    setSuccess("");
+  } catch (err) {
+    console.error("Failed to save rating:", err);
 
-      if (!res.ok) {
-        throw new Error(data?.detail || "Failed to save rating");
-      }
+    const message =
+      err.response?.data?.detail ||
+      err.response?.data?.message ||
+      "Failed to save your rating";
 
-      toast.success("Ratings saved successfully!");
-      setSuccess("");
-    } catch (err) {
-      console.error("Failed to save rating:", err);
-      toast.error("Failed to save your rating");
-      setError("");
-    } finally {
-      setSaving(false);
-    }
+    toast.error(message);
+    setError(message);
+  } finally {
+    setSaving(false);
   }
+}
+
 
   if (loading) {
     return (

@@ -78,7 +78,8 @@ export default function DashboardPage() {
 
   async function fetchRoutines() {
     try {
-      const data = await ApiService.getProducts(userToken);
+      // const data = await ApiService.getProducts(userToken);
+      const data = await ApiService.getProducts();
       setRoutines(data);
     } catch (err) {
       console.error("Failed to fetch routines", err);
@@ -87,7 +88,8 @@ export default function DashboardPage() {
 
   async function fetchCompletedDates() {
     try {
-      const dates = await ApiService.getCompletedDates(userToken);
+      // const dates = await ApiService.getCompletedDates(userToken);
+      const dates = await ApiService.getCompletedDates();
       setCompletedDates(dates);
     } catch (err) {
       console.error("Failed to fetch completed dates", err);
@@ -100,7 +102,8 @@ export default function DashboardPage() {
 
   async function handleAddProduct(product) {
     try {
-      await ApiService.addProduct(product, userToken);
+      // await ApiService.addProduct(product, userToken);
+      await ApiService.addProduct(product);
       await fetchRoutines();
     } catch (err) {
       console.error("Failed to add product", err);
@@ -110,7 +113,8 @@ export default function DashboardPage() {
 
   async function handleRemoveProduct(routineKey, id) {
     try {
-      await ApiService.deleteProduct(id, userToken);
+      // await ApiService.deleteProduct(id, userToken);
+      await ApiService.deleteProduct(id);
       await fetchRoutines();
     } catch (err) {
       console.error("Failed to remove product", err);
