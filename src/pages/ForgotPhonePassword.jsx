@@ -16,7 +16,7 @@ export default function ForgotPhonePassword() {
   const [isLoading, setIsLoading] = useState(false);
 
   const expectedLengths = {
-    "+91": 10, // India
+    "+91": 10, 
     "+1": 10, 
     "+44": 10,
     "+61": 9, 
@@ -24,13 +24,11 @@ export default function ForgotPhonePassword() {
   };
   const expectedLength = expectedLengths[countryCode] || 10;
 
-  // Shake animation
   const shakeVariant = {
     shake: { x: [-8, 8, -8, 8, 0], transition: { duration: 0.4 } },
     none: { x: 0 },
   };
 
-  // Slide-in error
   const errorSlide = {
     hidden: { opacity: 0, x: -20 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
@@ -40,13 +38,11 @@ export default function ForgotPhonePassword() {
     setError("");
     setMessage("");
 
-    // basic presence check
     if (!phone.trim()) {
       setError("Enter valid phone number");
       return;
     }
 
-    // partial submission check
     if (phone.length < expectedLength) {
       setMessage(
         `Please enter complete phone number (${expectedLength} digits for ${countryCode}).`
@@ -70,7 +66,7 @@ export default function ForgotPhonePassword() {
       const res = await sendEmailOtp(foundEmail);
 
       if (res.message === "OTP sent to email") {
-        // navigate to verification with state
+        
         navigate("/verification", {
           state: { email: foundEmail, otp_expiry: res.otp_expiry },
         });
@@ -86,7 +82,6 @@ export default function ForgotPhonePassword() {
         setError(errMsg);
       }
     } finally {
-      // if not navigated away, turn loading off
       setIsLoading(false);
     }
   };
@@ -137,10 +132,8 @@ export default function ForgotPhonePassword() {
                 value={phone}
                 onChange={(e) => {
                   const raw = e.target.value.replace(/\D/g, "");
-                  // Respect expected length for the selected country
                   if (raw.length <= expectedLength) {
                     setPhone(raw);
-                    // Clear partial message as user types to completion
                     if (raw.length >= expectedLength) setMessage("");
                   } else {
                     setPhone(raw.slice(0, expectedLength));

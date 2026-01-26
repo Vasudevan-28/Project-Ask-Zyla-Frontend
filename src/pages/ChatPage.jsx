@@ -2,9 +2,6 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import Conversations from "../chatbot_components/Conversations";
 import Chatbot from "../chatbot_components/Chatbotx";
-import { onIdTokenChanged, getAuth } from "firebase/auth";
-// import HeaderMain from "../home_components/HeaderMain";
-// import FooterMain from "../home_components/FooterMain";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { ChatBotApiService } from "../services/chatbot_api";
 
@@ -23,21 +20,15 @@ const QUICK_QUESTIONS = [
 ];
 
 export default function ChatPage() {
-  const  auth  = getAuth()
 
     const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
   
-
-  // console.log(user.uid)
   const navigate = useNavigate();
   const scrollerRef = useRef(null);
 
-  // const [idToken, setIdToken] = useState("");
-
   const [conversations, setConversations] = useState([]);
   const [currentConversationId, setCurrentConversationId] = useState(null);
-  //   const [currentConversationTitle, setCurrentConversationTitle] = useState("");
 
   const [messages, setMessages] = useState([
     {
@@ -240,7 +231,6 @@ const handleSpeak = (text, id) => {
 const [pageLoading, setPageLoading] = useState(true);
   
   useEffect(() => {
-    // if (!idToken) return;
     setPageLoading(false);
     loadConversations();
   }, []);
@@ -262,7 +252,6 @@ const [pageLoading, setPageLoading] = useState(true);
   async function loadConversations() {
   setLoadingConversations(true);
   try {
-  //  const data = await ChatBotApiService.loadConversations(idToken)
    const data = await ChatBotApiService.loadConversations()
 
     if (!data || data.length === 0) {
@@ -285,7 +274,6 @@ const [pageLoading, setPageLoading] = useState(true);
 
   async function createNewConversation({ autoOpen = true } = {}) {
   try {
-    // const data = await ChatBotApiService.createNewConvo(idToken)
     const data = await ChatBotApiService.createNewConvo()
 
     const newConversation = {
@@ -308,11 +296,9 @@ const [pageLoading, setPageLoading] = useState(true);
 
   async function openConversation(id) {
     setCurrentConversationId(id);
-    // setCurrentConversationTitle(title || "");
 
     try {
       setLoading(true);
-    //  const data = await ChatBotApiService.openConversation(idToken, id)
      const data = await ChatBotApiService.openConversation(id)
 
       const mapped = (data || []).map((m) => ({
@@ -362,7 +348,6 @@ const [pageLoading, setPageLoading] = useState(true);
 
     try {
       
-      // const data = await ChatBotApiService.sendMessage(idToken, currentConversationId, userText)
       const data = await ChatBotApiService.sendMessage(currentConversationId, userText)
 
       // const { reply, hits, intent_recommend } = data || {};
@@ -426,13 +411,11 @@ const [pageLoading, setPageLoading] = useState(true);
             setIsConversationsOpen(false);
           }}
           refreshConversations={loadConversations}
-          // idToken={idToken}
           isArchived={false}
           isMobileOpen={isConversationsOpen}
           onClose={() => setIsConversationsOpen(false)}
         />
 
-        {/* Chat area */}
         <Chatbot
           scrollerRef={scrollerRef}
           messages={messages}
@@ -446,7 +429,6 @@ const [pageLoading, setPageLoading] = useState(true);
           speechSupported={speechSupported}
           isListening={isListening}
           toggleListening={toggleListening}
-          // idToken={idToken}
           onOpenConversations={() => setIsConversationsOpen(true)}
           interim = {interimText}
         />

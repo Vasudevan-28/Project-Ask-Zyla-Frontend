@@ -4,16 +4,14 @@ import React, { useEffect, useRef } from "react";
 export default function Location({ enabled, onLocationDetected }) {
   const API_KEY = import.meta.env.VITE_LOCATION_API;
 
-  // Track if location has already been fetched
   const fetchedRef = useRef(false);
 
   useEffect(() => {
     if (!enabled) {
-      fetchedRef.current = false; // reset when toggle off
+      fetchedRef.current = false; 
       return;
     }
 
-    // Only fetch once
     if (fetchedRef.current) return;
 
     if (!("geolocation" in navigator)) {
@@ -79,7 +77,7 @@ export default function Location({ enabled, onLocationDetected }) {
             msg = err.message || "Unknown geolocation error";
         }
 
-        fetchedRef.current = true; // prevent retry loops
+        fetchedRef.current = true; 
         if (typeof onLocationDetected === "function") {
           onLocationDetected({ error: msg });
         }

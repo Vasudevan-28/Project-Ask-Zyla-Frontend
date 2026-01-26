@@ -10,7 +10,6 @@ export default function ArchiveConversations({
   openConversation,
   currentConversationId,
   refreshConversations,
-  idToken,
   isArchived,
   isMobileOpen = false,
   onClose = () => {},
@@ -65,7 +64,7 @@ export default function ArchiveConversations({
         </button>
       </div>
 
-      <div className="overflow-y-auto relative z-10 h-full" style={{ minHeight: "calc(100vh - 160px)" }}>
+      <div className="min-h-[calc(100vh-160px)] overflow-y-auto custom-scrollbar relative z-10 h-full" style={{ maxHeight: "calc(100vh - 160px)" }}>
         {loadingConversations && (
           <div className="flex items-center justify-center py-3">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white/60"></div>
@@ -119,13 +118,12 @@ export default function ArchiveConversations({
                 <button
                   className="w-full text-left px-3 py-2 text-sm hover:bg-gray-200 rounded-md"
                   onClick={async () => {
-                    // await ArchiveChatBotApiService.unArchiveConversation(idToken, c.id);
                     await ArchiveChatBotApiService.unArchiveConversation(c.id);
                     refreshConversations();
                     closeMenu();
                   }}
                 >
-                  Archive
+                  UnArchive
                 </button>
 
                 <button
@@ -166,7 +164,6 @@ export default function ArchiveConversations({
             aria-hidden="true"
           />
 
-          {/* Drawer */}
           <div className={`absolute left-0 top-0 bottom-0 w-11/12 max-w-xs  backdrop-blur-md rounded-2xl p-3 overflow-auto
             ${isLight ? "bg-[#e9d9e3] border border-[#1d0e2d9c] " : "bg-[#1d0e2d] border border-white/30"}
             `}>
@@ -214,8 +211,7 @@ export default function ArchiveConversations({
                       </div>
                     </div>
 
-                    {/* Mobile menu button - provides same actions as desktop menu */}
-                    <div className="flex-shrink-0 ml-2">
+                    <div className="shrink-0 ml-2">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -230,7 +226,6 @@ export default function ArchiveConversations({
                     </div>
                   </div>
 
-                  {/* Mobile menu - rendered as a small panel below the item */}
                   {menuOpenFor === c.id && (
                     <div className="mt-2 ml-2 mr-2 bg-[#E9D9E3] text-black rounded-lg shadow-lg border border-gray-200 p-2 z-50 animate-fadeIn">
                       <button
@@ -246,7 +241,6 @@ export default function ArchiveConversations({
                       <button
                         className="w-full text-left px-3 py-2 text-sm hover:bg-gray-200 rounded-md"
                         onClick={async () => {
-                          // await ArchiveChatBotApiService.unArchiveConversation(idToken, c.id);
                           await ArchiveChatBotApiService.unArchiveConversation(c.id);
                           refreshConversations();
                           closeMenu();
@@ -293,7 +287,6 @@ export default function ArchiveConversations({
         </div>
       )}
 
-      {/* Rename / Delete popups (unchanged) */}
       {renamePopup && (
         <div className="fixed inset-0 text-black bg-black/50 flex items-center justify-center z-50">
           <div className="bg-[#E9D9E3] p-5 rounded-lg shadow-lg w-80 animate-fadeIn">
@@ -313,7 +306,7 @@ export default function ArchiveConversations({
 
               <button
                 onClick={async () => {
-                  await ArchiveChatBotApiService.renameConversation(idToken, renamePopup.id, renamePopup.title);
+                  await ArchiveChatBotApiService.renameConversation(renamePopup.id, renamePopup.title);
                   setRenamePopup(null);
                   refreshConversations();
                 }}
@@ -345,7 +338,6 @@ export default function ArchiveConversations({
 
               <button
                 onClick={async () => {
-                  // await ArchiveChatBotApiService.deleteConversation(idToken, deletePopup.id);
                   await ArchiveChatBotApiService.deleteConversation(deletePopup.id);
                   setDeletePopup(null);
                   refreshConversations();

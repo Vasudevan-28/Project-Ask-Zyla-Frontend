@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { FiEdit, FiSave, FiX } from 'react-icons/fi';
 // import axios from 'axios';
 import AIDescription from '../skin_profile_components/AIDescription';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+// import { getAuth, onAuthStateChanged } from 'firebase/auth';
 // import HeaderMain from '../team-pages/HeaderMain';
 import HeaderMain from '../home_components/HeaderMain';
 // import Header from '../team-pages/dash_components/Header';
@@ -16,7 +16,6 @@ import { useNavigate } from 'react-router-dom';
 
 
 const SkinProfilePage = () => {
-  const auth = getAuth()
 
   const navigate = useNavigate()
   
@@ -25,15 +24,6 @@ const SkinProfilePage = () => {
   
   const [profileCleared, setProfileCleared] = useState(false)
 
-  const [user, setUser] = useState(null);
-  
-    useEffect(() => {
-      const unsub = onAuthStateChanged(auth, (u) => {
-        setUser(u);
-      });
-  
-      return () => unsub();
-    }, [auth]);
 
   const [isEditing, setIsEditing] = useState(false);
   const [skinData, setSkinData] = useState(null);
@@ -97,11 +87,10 @@ ${isLight ? "bg-[#B9A3C7]" : "bg-white/30"}
 `
 
 useEffect(() => {
-  if (!user) return;
 
-  const triggerSummaryGeneration = async (USER_ID, profile) => {
+  const triggerSummaryGeneration = async (profile) => {
     try {
-      const updatedProfile = await SkinProfileApiService.updateSkinProfile(USER_ID, profile);
+      const updatedProfile = await SkinProfileApiService.updateSkinProfile(profile);
 
       if (updatedProfile.zyla_summary) {
         setZylaSummary(updatedProfile.zyla_summary);
@@ -113,15 +102,13 @@ useEffect(() => {
 
   const fetchSkinProfile = async () => {
     try {
-      const USER_ID = user.uid;
       setLoading(true);
 
-      const res = await SkinProfileApiService.loadSkinProfile(USER_ID);
+      const res = await SkinProfileApiService.loadSkinProfile();
 
       if (res.cleared) {
         setLoading(false)
         setProfileCleared(true)
-        // navigate('/settings');
         return;
       }
 
@@ -139,7 +126,7 @@ useEffect(() => {
       setTempData(JSON.parse(JSON.stringify(profile)));
 
       if (!profile.zyla_summary) {
-        triggerSummaryGeneration(USER_ID, profile);
+        triggerSummaryGeneration(profile);
       }
     } catch (err) {
       console.error("Fetch error:", err.message);
@@ -150,7 +137,7 @@ useEffect(() => {
   };
 
   fetchSkinProfile();
-}, [user]);
+}, []);
 
 
   const handleEdit = () => {
@@ -162,9 +149,7 @@ useEffect(() => {
   const handleSave = async () => {
   try {
     setError(null);
-    const USER_ID = user?.uid
-
-    const updatedProfile = await SkinProfileApiService.saveSkinProfile(USER_ID, tempData)
+    const updatedProfile = await SkinProfileApiService.saveSkinProfile(tempData)
     setSkinData(updatedProfile)
     setZylaSummary(updatedProfile.zyla_summary)
 
@@ -262,11 +247,9 @@ useEffect(() => {
           {options.map((option) => (
             <label
               key={option}
-              // className="flex items-center space-x-2 p-1 hover:bg-purple-50 rounded"
                className={`flex items-center space-x-2 p-2 rounded-lg  transition-all cursor-pointer ${
                 currentValues.includes(option)
                   ? ` text-white/90  ${buttonStyle} ` 
-                  // : 'bg-gray-50 border-gray-200 text-black/90 hover:bg-purple-50 hover:border-[#994A97]'
                   : `${isLight ? "bg-white text-slate-900 border border-slate-300 " : "bg-white/10 text-slate-50"}`
               }`}
             >
@@ -275,7 +258,6 @@ useEffect(() => {
                 type="checkbox"
                 checked={currentValues.includes(option)}
                 onChange={() => handleMultiSelect(field, option)}
-                // className="w-3 h-3 text-[#994A97] border-gray-300 rounded focus:ring-[#994A97]"
                 className='hidden'
               />
               <span className="text-xs font-medium">{option}</span>
@@ -311,13 +293,9 @@ useEffect(() => {
           {options.map((option) => (
             <label
               key={option}
-              // className="flex items-center space-x-2 p-1 hover:bg-purple-50 rounded"
               className={`flex items-center space-x-2 p-2 rounded-xl  transition-all cursor-pointer ${
                 currentValue === option
-                  // ? 'bg-[#B9A3C7] text-white border-[#994A97]'
-                  // ? 'bg-gray-50 border-gray-200 hover:bg-purple-50 text-black/90  hover:border-[#994A97]'
                    ? ` text-white/90  ${buttonStyle} `
-                  // : 'bg-gray-50 border-gray-200 text-black/90 hover:bg-purple-50 hover:border-[#994A97]'
                   : `${isLight ? "bg-white text-slate-900 border border-slate-300 " : "bg-white/10 text-slate-50"}`
 
               }`}
@@ -327,7 +305,6 @@ useEffect(() => {
                 type="radio"
                 checked={currentValue === option}
                 onChange={() => handleSingleSelect(field, option)}
-                // className="w-3 h-3 text-[#994A97] border-gray-300 focus:ring-[#994A97]"
                 className='hidden'
               />
               <span className="text-xs font-medium">{option}</span>
@@ -418,10 +395,7 @@ useEffect(() => {
                   key={option}
                  className={`flex items-center space-x-2 mb-2  p-2 rounded-xl  transition-all cursor-pointer ${
                 tempData.menstrualCycle?.nextCycle === option
-                  // ? ' bg-[#B9A3C7] text-white border-[#994A97]'
-                  // : 'bg-gray-50 border-gray-200 hover:bg-purple-50 text-black/90  hover:border-[#994A97]'
                    ? 'bg-[#B9A3C7] text-white/90  '
-                  // : 'bg-gray-50 border-gray-200 text-black/90 hover:bg-purple-50 hover:border-[#994A97]'
                   : `${isLight ? "bg-white text-slate-900 border border-slate-300 " : "bg-white/10 text-slate-50"}`
 
               }`}
@@ -582,7 +556,6 @@ useEffect(() => {
                 type="radio"
                 checked={hasValue}
                 onChange={() => onChange(true)}
-                // className="bg-red-500 border-gray-300 focus:ring-[#994A97]"
                 className='hidden'
               />
               <span className="text-xs font-medium">Yes</span>
@@ -599,7 +572,6 @@ useEffect(() => {
                 type="radio"
                 checked={!hasValue}
                 onChange={() => onChange(false)}
-                // className="w-3 h-3 text-[#994A97] border-gray-300 focus:ring-[#994A97]"
                 className='hidden'
               />
               <span className="text-xs font-medium">No</span>
@@ -676,10 +648,8 @@ if (profileCleared) {
       
       <HeaderMain />
 
-      {/* MAIN CONTENT (takes available space so footer goes to bottom) */}
       <div className="flex-1 min-h-screen relative justify-center items-center flex">
         
-        {/* POPUP OVERLAY */}
         <div className="flex items-center justify-center z-50">
           <div className={`w-full max-w-md  rounded-xl p-6 shadow-xl space-y-4
             ${isLight ? "bg-white/90 text-slate-700 " : "bg-white/10 text-slate-100"}

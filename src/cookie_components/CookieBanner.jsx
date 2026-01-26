@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { CookieContext } from "../contexts/CookieContext";
 import { setConsent as persistConsent } from "../utils/cookies";
 import { loadAnalytics } from "../utils/analytics";
-// import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function CookieBanner() {
   const { consent, setConsent } = useContext(CookieContext);
@@ -30,7 +29,7 @@ export default function CookieBanner() {
             className="text-gray-400 hover:text-gray-600 transition-colors"
             aria-label="Close"
           >
-            {/* <XMarkIcon className="w-5 h-5" /> */} X
+            X
           </button>
         </div>
         

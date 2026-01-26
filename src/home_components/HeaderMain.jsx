@@ -4,7 +4,6 @@ import ZaLogo from "../assets/ZaLogo.png";
 import ZylaToggleImg from "../assets/ZylaToggle.png";
 import ProfilePopup from "../dashboard_components/ProfilePopup";
 import FeedbackModal from "../dashboard_components/FeedbackModal";
-import { signOut } from "firebase/auth";
 import { logout } from "../services/authservice";
 import { useLocation } from "react-router-dom";
 import { ApiService } from "../services/dashboardApi";
@@ -23,15 +22,10 @@ import { submitLogOutFeedback } from "../settings_components/api/settingsAPI";
 
 export default function HeaderMain() {
   const navigate = useNavigate();
-  // const auth = getAuth();
   const location = useLocation();
-
-  //   const user = auth.currentUser;
 
   const { theme, toggleTheme } = useContext(ThemeContext);
   const isLight = theme === "light";
-
-  // const { theme } = useContext(ThemeContext);
 
   const [activeNav, setActiveNav] = useState("HOME");
   const [showProfile, setShowProfile] = useState(false);
@@ -55,7 +49,6 @@ export default function HeaderMain() {
 
     const fetchNotifications = async () => {
       try {
-        // const data = await ApiService.getNotifications(userToken);
         const data = await ApiService.getNotifications();
         setNotifications(data);
 
@@ -79,8 +72,7 @@ export default function HeaderMain() {
       }
     };
 
-    // fetchNotifications();
-    const interval = setInterval(fetchNotifications, 10000);
+    const interval = setInterval(fetchNotifications, 100000);
     return () => clearInterval(interval);
   }, []);
 
@@ -114,7 +106,6 @@ export default function HeaderMain() {
 
   useEffect(() => {
     function onDocClick(e) {
-      // Profile popup close
       if (
         showProfile &&
         popupRef.current &&
@@ -125,7 +116,6 @@ export default function HeaderMain() {
         setShowProfile(false);
       }
 
-      // Notification center close
       if (
         showNotificationCenter &&
         notificationCenterRef.current &&
@@ -169,8 +159,8 @@ export default function HeaderMain() {
 
   const handleLogout = async () => {
     try {
-     await logout();
-navigate("/login", { replace: true });
+       await logout();
+       navigate("/login", { replace: true });
     } catch (err) {
       console.error(err);
     }
@@ -182,7 +172,6 @@ navigate("/login", { replace: true });
         className={"fixed top-0 left-0  right-0 h-2 z-99999 bg-transparent"}
       />
 
-      {/* header */}
       <header
         role="banner"
         className={
@@ -192,12 +181,10 @@ navigate("/login", { replace: true });
           } `
         }
       >
-        {/* Brand */}
         <div
           className="flex items-center gap-0.5 cursor-pointer"
           onClick={() => {
             setActiveNav("HOME");
-            // navigate("/dashboard");
             navigate("/loading", { state: { nextPage: "/dashboard" } });
           }}
         >
@@ -208,7 +195,6 @@ navigate("/login", { replace: true });
           </div>
         </div>
 
-        {/* center nav - absolutely centered */}
         <div className="absolute left-1/2 -translate-x-1/2 hidden md:block">
           <nav
             className="flex gap-2 px-2 py-1 rounded-full bg-transparent shadow-md items-center"
@@ -216,8 +202,6 @@ navigate("/login", { replace: true });
             aria-label="Main"
           >
             <div className="flex gap-1">
-              {/* reusable base classes */}
-              {/* HOME button */}
               <button
                 className={
                   "px-3 h-8 rounded-full text-black font-semibold text-xs tracking-wide uppercase transition " +
@@ -231,7 +215,6 @@ navigate("/login", { replace: true });
                 }
                 onClick={() => {
                   setActiveNav("HOME");
-                  // navigate("/dashboard");
                   navigate("/loading", { state: { nextPage: "/dashboard" } });
                 }}
                 aria-current={activeNav === "HOME" ? "page" : undefined}
@@ -240,7 +223,6 @@ navigate("/login", { replace: true });
                 HOME
               </button>
 
-              {/* SKIN PROFILE button */}
               <button
                 className={
                   "px-3 h-8 rounded-full font-semibold text-black text-xs tracking-wide uppercase transition " +
@@ -254,7 +236,6 @@ navigate("/login", { replace: true });
                 }
                 onClick={() => {
                   setActiveNav("SKIN PROFILE");
-                  // navigate("/skinProfile");
                   navigate("/loading", { state: { nextPage: "/skinProfile" } });
                 }}
                 aria-current={activeNav === "SKIN PROFILE" ? "page" : undefined}
@@ -263,7 +244,6 @@ navigate("/login", { replace: true });
                 SKIN PROFILE
               </button>
 
-              {/* CHATBOT button */}
               <button
                 className={
                   "px-3 h-8 rounded-full font-semibold text-black text-xs tracking-wide uppercase transition " +
@@ -277,7 +257,6 @@ navigate("/login", { replace: true });
                 }
                 onClick={() => {
                   setActiveNav("CHATBOT");
-                  // navigate("/chatbot");
                   navigate("/loading", { state: { nextPage: "/chatbot" } });
                 }}
                 aria-current={activeNav === "CHATBOT" ? "page" : undefined}
@@ -289,9 +268,7 @@ navigate("/login", { replace: true });
           </nav>
         </div>
 
-        {/* right controls */}
         <div className="ml-auto flex items-center gap-3 z-10">
-          {/* Theme toggle */}
           <button
             className="relative w-[70px] h-8 p-[3px] rounded-full border-2 border-purple-300/60 bg-transparent flex items-center justify-between overflow-hidden"
             aria-label="Toggle theme"
@@ -307,7 +284,7 @@ navigate("/login", { replace: true });
               aria-hidden
             />
             <div className="absolute inset-0 pointer-events-none" />
-            {/* knob */}
+
             <div
               className={
                 "relative z-10 w-7 h-7 rounded-full bg-transparent shadow-md flex items-center justify-center transition-transform duration-200 " +
@@ -350,13 +327,12 @@ navigate("/login", { replace: true });
                   onClose={() => setShowNotificationCenter(false)}
                   onMarkRead={handleMarkRead}
                   onMarkAllRead={handleMarkAllRead}
-                  // userToken={userToken}
+
                 />
               </div>
             )}
           </div>
 
-          {/* Profile button - HIDDEN ON MOBILE */}
           <div className="hidden md:block">
             <button
               ref={profileBtnRef}
@@ -368,14 +344,12 @@ navigate("/login", { replace: true });
                 }
                 
                 `}
-              // ${showProfile ? "bg-purple-400 " :  "bg-white"}
               onClick={() => setShowProfile((s) => !s)}
               aria-haspopup="true"
               aria-expanded={showProfile}
               title="Profile"
               type="button"
             >
-              {/* <FaRegUser size={15} className="text-[#1d0e2d]" /> */}
               <IoPerson size={16} className="text-[#1d0e2d]" />
             </button>
           </div>
@@ -394,14 +368,11 @@ navigate("/login", { replace: true });
             <ProfilePopup
               onSettings={() => {
                 setShowProfile(false);
-                // window.location.href = "/profile";
-                // navigate('/settings')
                 navigate("/loading", { state: { nextPage: "/settings" } });
               }}
               onLogout={() => {
                 setShowProfile(false);
                 setShowFeedback(true);
-                // handleLogout();
               }}
             />
           </div>
@@ -412,7 +383,6 @@ navigate("/login", { replace: true });
         <FeedbackModal
           onClose={() => setShowFeedback(false)}
           onSubmit={async (feedbackData) => {
-            // console.log("User feedback:", userToken);
 
             try {
               await submitLogOutFeedback(feedbackData);
@@ -426,7 +396,6 @@ navigate("/login", { replace: true });
         />
       )}
 
-      {/* Toast Notification */}
       {toastMessage && (
         <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
       )}

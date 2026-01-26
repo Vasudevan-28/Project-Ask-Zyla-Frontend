@@ -6,10 +6,6 @@ import { ThemeContext } from "../contexts/ThemeContext";
 export default function AIDescription({zylaSum}) {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
-//   const points =
-//     "1. Delicate\n2. Sensitive\n3. Visible\n4. Thinner\n5. Regenerates";
-
-//   const genDes = "1. You have combination skin that's sensitive to fragrance and essential oils, making you prone to allergies.\n2. Your skin concerns include acne, dark spots, dryness, dullness, aging, and oily skin, which can be challenging to manage.\n3. You follow a daily skincare routine, which is great for maintaining healthy skin.\n4. You experience occasional redness and irritation, and your skin gets oily during your menstrual cycle, although you mentioned you don't have one.\n5. Your skincare goals are to achieve clearer skin, a brighter glow, smoother texture, and anti-aging, which we can work towards with a customized routine."
 
   const genDesArray = zylaSum.split("\n").map((line) => line.replace(/^\d+\.\s*/, ""))
 

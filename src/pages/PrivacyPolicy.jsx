@@ -1,8 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-// import Footer from "./Footer";
-
 export default function PrivacyPolicy() {
   const navigate = useNavigate();
 
@@ -197,7 +195,6 @@ export default function PrivacyPolicy() {
         </div>
       </div>
 
-      {/* <Footer /> */}
     </>
   );
 }

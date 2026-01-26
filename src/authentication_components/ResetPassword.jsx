@@ -22,7 +22,6 @@ export default function ResetPassword() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // ---------------- PASSWORD RULES ----------------
   const validations = {
     length: password.length >= 8,
     uppercase: /[A-Z]/.test(password),
@@ -33,7 +32,6 @@ export default function ResetPassword() {
 
   const allValid = Object.values(validations).every((v) => v === true);
 
-  // ---------------- HANDLE RESET ----------------
   const handleReset = async () => {
     setError("");
     setSuccess(false);
@@ -57,7 +55,6 @@ export default function ResetPassword() {
         setLoading(false);
         setTimeout(() => navigate("/success"), 1500);
       } else {
-        // in case API returns something unexpected
         setLoading(false);
         setError(response.message || "Unexpected response from server.");
       }
@@ -90,9 +87,8 @@ export default function ResetPassword() {
           </div>
         </motion.div>
 
-        {/* Form container */}
         <div className="w-full h-fit max-w-xl bg-white/20 backdrop-blur-xl shadow-xl rounded-3xl p-6 sm:p-8 md:p-10 border border-white/30 relative">
-          {/* TITLE */}
+          
           <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-semibold mt-3 mb-2 text-white">
             Set New Password
           </h2>
@@ -115,7 +111,6 @@ export default function ResetPassword() {
               aria-label="New password"
             />
 
-            {/* Eye icon */}
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
@@ -166,7 +161,6 @@ export default function ResetPassword() {
               )}
             </button>
 
-            {/* PASSWORD VALIDATION POPUP */}
             {focused && (
               <div className="absolute top-full left-0 mt-2 w-full sm:w-[70%] bg-white/95 rounded-lg shadow-lg p-3 sm:p-4 text-xs sm:text-sm text-gray-800 z-10">
                 <p className={validations.length ? "text-green-500" : ""}>Be at least 8 characters</p>
@@ -178,7 +172,6 @@ export default function ResetPassword() {
             )}
           </div>
 
-          {/* CONFIRM PASSWORD */}
           <div className="mb-6 relative">
             <input
               type={showConfirm ? "text" : "password"}
@@ -191,7 +184,6 @@ export default function ResetPassword() {
               aria-label="Confirm password"
             />
 
-            {/* Eye icon */}
             <button
               type="button"
               onClick={() => setShowConfirm(!showConfirm)}
@@ -243,14 +235,12 @@ export default function ResetPassword() {
             </button>
           </div>
 
-          {/* ERROR MESSAGE */}
           {error && (
             <p role="alert" className="text-[#f20a0e] font-semibold text-sm mb-3">
               {error}
             </p>
           )}
 
-          {/* RESET BUTTON */}
           <button
             onClick={handleReset}
             disabled={loading || success}
@@ -261,7 +251,6 @@ export default function ResetPassword() {
           >
             {loading ? (
               <>
-                {/* spinner */}
                 <svg
                   className="w-5 h-5 text-white animate-spin"
                   xmlns="http://www.w3.org/2000/svg"
@@ -279,7 +268,6 @@ export default function ResetPassword() {
               </>
             ) : success ? (
               <>
-                {/* check icon */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-5 h-5 text-white"

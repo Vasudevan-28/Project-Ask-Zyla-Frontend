@@ -1,15 +1,9 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
-// import Conversations from "../chatbot_components/Conversations";
-
 import ArchiveConversations from "../chatbot_components/ArchiveConversations";
 
 import Chatbot from "../chatbot_components/Chatbotx";
 
-
-import { onIdTokenChanged, getAuth } from "firebase/auth";
-// import HeaderMain from "../home_components/HeaderMain";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 import { ArchiveChatBotApiService } from "../services/archive_chatbot_api"
@@ -29,10 +23,7 @@ const QUICK_QUESTIONS = [
 ];
 
 export default function ArchivedChatPage() {
-  
-  const  auth  = getAuth()
-  // console.log(user.uid)
-  const navigate = useNavigate();
+    const navigate = useNavigate();
   const scrollerRef = useRef(null);
 
     const { theme } = useContext(ThemeContext);
@@ -40,13 +31,8 @@ export default function ArchivedChatPage() {
   
  const [isConversationsOpen, setIsConversationsOpen] = useState(false);
 
-
-
-  const [idToken, setIdToken] = useState("");
-
   const [conversations, setConversations] = useState([]);
   const [currentConversationId, setCurrentConversationId] = useState(null);
-  //   const [currentConversationTitle, setCurrentConversationTitle] = useState("");
 
   const [messages, setMessages] = useState([
     {
@@ -73,27 +59,6 @@ const recognitionRef = useRef(null);
   const finalTextRef = useRef("");
   const silenceTimerRef = useRef(null);
 
-    const [user, setUser] = useState(null);
-  
-
-  
-useEffect(() => {
-  const unsub = onIdTokenChanged(auth, async (u) => {
-    setUser(u);
-
-    if (u) {
-      const token = await u.getIdToken();
-      setIdToken(token);
-    } else {
-      setIdToken(null);
-    }
-
-    setLoading(false);
-  });
-
-  return () => unsub();
-}, []);
-  
   
   useEffect(() => {
     const shuffled = [...QUICK_QUESTIONS].sort(() => 0.5 - Math.random());
@@ -104,9 +69,8 @@ useEffect(() => {
  
 
   useEffect(() => {
-    if (!idToken) return;
     loadConversations();
-  }, [idToken]);
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -288,7 +252,6 @@ useEffect(() => {
   async function loadConversations() {
     setLoadingConversations(true);
     try {
-      // const data = await ArchiveChatBotApiService.loadArchivedConversations(idToken)
       const data = await ArchiveChatBotApiService.loadArchivedConversations()
    
       setConversations(data || []);
@@ -305,7 +268,6 @@ useEffect(() => {
 
   async function createNewConversation() {
     try {
-      // const data = await ArchiveChatBotApiService.createArchNewConvo(idToken);
       const data = await ArchiveChatBotApiService.createArchNewConvo();
       const newId = data.id;
 
@@ -319,11 +281,9 @@ useEffect(() => {
 
   async function openConversation(id) {
     setCurrentConversationId(id);
-    // setCurrentConversationTitle(title || "");
 
     try {
       setLoading(true);
-    // const data = await ArchiveChatBotApiService.openArchConversation(idToken, id)
     const data = await ArchiveChatBotApiService.openArchConversation(id)
 
       const mapped = (data || []).map((m) => ({
@@ -371,7 +331,6 @@ useEffect(() => {
 
     try {
     
-      // const data = await ArchiveChatBotApiService.sendArchMessage(idToken, currentConversationId, userText)
       const data = await ArchiveChatBotApiService.sendArchMessage(currentConversationId, userText)
       // const { reply, hits, intent_recommend } = data || {};
       const { reply} = data || {};
@@ -404,44 +363,33 @@ useEffect(() => {
     e.preventDefault();
     sendMessage();
   }
-  // if (!user) return <Navigate to="/" replace />;
-
-
-  if (!user) {
-    return <div>Loading...</div>;
-  }
-
-  
+ 
 
   return (
      <div className={`min-h-screen w-full overflow-auto  text-white flex flex-col ${isLight ? "bg-[#E9D9E3]": "bg-[#1D0E2D]"}`}>
      
-   {/* <HeaderMain /> */}
-
-
       <div className="flex-1 flex p-3 mt-15">
         
 
         <ArchiveConversations conversations={conversations} createNewConversation={createNewConversation} 
                   currentConversationId={currentConversationId} loadingConversations={loadingConversations}
                   openConversation={(id, title) => {
-            // close mobile drawer after opening on mobile
             openConversation(id, title);
             setIsConversationsOpen(false);
           }}
           refreshConversations={loadConversations}
-          idToken={idToken}
           isArchived={true}
-          // mobile overlay control:
+
           isMobileOpen={isConversationsOpen}
           onClose={() => setIsConversationsOpen(false)}
 
                   />
 
-        {/* Center  */}
           <Chatbot scrollerRef={scrollerRef} messages={messages} loading={loading} ttsSupported={ttsSupported} speakingId={speakingId} handleSpeak={handleSpeak}
                         input={input} setInput={setInput} handleSubmit={handleSubmit} speechSupported={speechSupported}
-                        isListening={isListening} toggleListening={toggleListening} idToken={idToken}   onOpenConversations={() => setIsConversationsOpen(true)} interim = {interimText}
+                        isListening={isListening} toggleListening={toggleListening} 
+
+                         onOpenConversations={() => setIsConversationsOpen(true)} interim = {interimText}
                />
 
 

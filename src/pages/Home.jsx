@@ -2,9 +2,7 @@ import React, {useContext} from "react";
 import { ThemeProvider, ThemeContext } from "../contexts/ThemeContext";
 
 import DashboardPage from "./DashboardPage";
-// import HeaderMain from "../team-pages/HeaderMain";
 import HeaderMain from "../home_components/HeaderMain";
-// import FooterMain from "../team-pages/FooterMain";
 import FooterMain from "../home_components/FooterMain";
 
 export default function Home() {

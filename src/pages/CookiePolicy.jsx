@@ -9,7 +9,7 @@ export default function CookiePolicy() {
     <>
       <div className="w-full pb-16 min-h-screen bg-linear-to-b from-[#0B0014] via-[#1A0D28] to-[#0B0014] text-white relative overflow-x-hidden">
 
-        {/* ⭐ Floating Stars */}
+        
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute w-0.5 h-0.5 bg-white/40 rounded-full animate-pulse top-[10%] left-[20%]"></div>
           <div className="absolute w-0.5 h-0.5 bg-white/30 rounded-full animate-ping top-[40%] left-[80%]"></div>

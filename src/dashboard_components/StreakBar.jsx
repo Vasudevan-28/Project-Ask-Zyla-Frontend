@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext, useCallback } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { ApiService } from "../services/dashboardApi";
 
-export default function StreakBar({ userToken, selectedIso }) {
+export default function StreakBar({ selectedIso }) {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
 
@@ -10,14 +10,13 @@ export default function StreakBar({ userToken, selectedIso }) {
   const [streak, setStreak] = useState(0);
 
   const fetchStreak = useCallback(async () => {
-    if (!userToken) return;
     try {
-      const s = await ApiService.getStreak(userToken);
+      const s = await ApiService.getStreak();
       setStreak(s);
     } catch (e) {
       console.error("Failed to fetch streak", e);
     }
-  }, [userToken]);
+  }, []);
 
   useEffect(() => {
     fetchStreak();
@@ -36,10 +35,10 @@ export default function StreakBar({ userToken, selectedIso }) {
   }, [fetchStreak]);
 
   async function fetchTodos() {
-    if (!userToken || !selectedIso) return;
+    if (!selectedIso) return;
 
     try {
-      const data = await ApiService.getTodos(selectedIso, userToken);
+      const data = await ApiService.getTodos(selectedIso);
       setTodos(data ?? []);
     } catch (e) {
       console.error("Failed to fetch todos", e);
@@ -58,7 +57,7 @@ export default function StreakBar({ userToken, selectedIso }) {
     return () => {
       window.removeEventListener("zyla:todos-updated", onTodosUpdated);
     };
-  }, [userToken, selectedIso]);
+  }, [selectedIso]);
 
   // calculate daily progress
   const total = todos.length;

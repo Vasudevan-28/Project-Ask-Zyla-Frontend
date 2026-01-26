@@ -7,7 +7,6 @@ import NormalQuestion from "../questionnaire_components/NormalQuestion";
 import TextAreaQuestion from "../questionnaire_components/TextAreaQuestion";
 import CycleQuestion from "../questionnaire_components/CycleQuestion";
 import NextButton from "../questionnaire_components/NavigationButtons";
-// import HeaderQP from "../team-pages/HeaderQP";
 import HeaderQP from "../home_components/HeaderQP";
 
 import { ThemeContext } from "../contexts/ThemeContext";

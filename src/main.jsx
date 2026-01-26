@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 // import App from './App.jsx'
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 // import Favourites from './components/Favourites.jsx'
 // import { AuthProvider } from './AuthContext.jsx'
 // import Auth from './Auth.jsx'
@@ -23,7 +23,7 @@ import Questionnaire from "./pages/Questionnaire.jsx";
 // import ForgotPassword from "./team-pages/ForgotPassword";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 // import PhoneNumberReset from "./team-pages/PhoneNumberReset";
-import PhoneNumberReset from "./authentication_components/PhoneNumberReset.jsx";
+// import PhoneNumberReset from "./authentication_components/PhoneNumberReset.jsx";
 // import VerificationPage from "./team-pages/VerificationPage";
 import VerificationPage from "./authentication_components/VerificationPage.jsx";
 // import NewPassword from "./team-pages/NewPassword";
@@ -82,90 +82,94 @@ import { AuthProvider } from "./contexts/authContext.jsx";
 // import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import PublicLayout from "./routes/PublicLayout.jsx";
 import ProtectedLayout from "./routes/ProtectedLayout.jsx";
+import OpenLayout from "./routes/OpenLayout.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-    <CookieProvider>
-    <ThemeProvider>
-      <Toaster
-        position="top-right"
-        containerClassName="toast-top-right-custom"
-      />
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
+      <CookieProvider>
+        <ThemeProvider>
+          <Toaster
+            position="top-right"
+            containerClassName="toast-top-right-custom"
+          />
+          <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              <Route element={<OpenLayout />}>
+                             <Route path="/questionnaire" element={<Questionnaire />} />
+                <Route path="/success" element={<ResetSuccess />} />
+                <Route path="/successGoogle" element={<SuccessGoogle />} />
+                <Route path="/successEmail" element={<SuccessEmail />} />
+                   <Route path="/register" element={<RegistrationPage />} />
+                     <Route path="/logout" element={<LogOut />} />
+              </Route>
 
-          <Route element={ <PublicLayout />} >
-          {/* Promotion */}
-          <Route path="/" element={<PromotionPage />} />
-          <Route path="/TrialChat" element={<TrialChat />} />
-          <Route path="/general-support" element={<GenSupport />} />
+              <Route element={<PublicLayout />}>
+                {/* Promotion */}
+                <Route path="/" element={<PromotionPage />} />
+                <Route path="/TrialChat" element={<TrialChat />} />
+                <Route path="/general-support" element={<GenSupport />} />
 
-          {/* Auth */}
-          <Route path="/login" element={<Login /> } />
-          <Route path="/verification" element={<VerificationPage />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/logout" element={<LogOut />} />
-         
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/forgotPhonePasswordReset" element={<ForgotPhonePassword />} />
-          <Route path="/register" element={<RegistrationPage />} />
-          <Route path="/resetPassword" element={<ResetPassword />} />
-          </Route>
+                {/* Auth */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/verification" element={<VerificationPage />} />
+                <Route path="/signup" element={<Signup />} />
+              
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route
+                  path="/forgotPhonePasswordReset"
+                  element={<ForgotPhonePassword />}
+                />
+             
+                <Route path="/resetPassword" element={<ResetPassword />} />
+              </Route>
 
-          <Route path="/success" element={<ResetSuccess />} />
-          <Route path="/successGoogle" element={<SuccessGoogle />} />
-          <Route path="/successEmail" element={<SuccessEmail />} />
-          
-          <Route element={ <ProtectedLayout />} >
-          {/* Home  */}
-          <Route element={<DashLayout />}>
-            <Route path="/dashboard" element={ <DashboardPage /> } />
-            <Route path="/chatbot" element={<ChatPage />} />
-            {/* <Route path="/chatbot" element={<ChatPage3 />} /> */}
-            <Route path="/skinProfile" element={<SkinProfilePage />} />
-            <Route path="/archivedChats" element={<ArchivedChatPage />} />
-          </Route>
-          
-          <Route path="/questionnaire" element={<Questionnaire />} />
-          <Route path="/newAbout" element={<AboutUsNew />} />
-          <Route path="/settings" element={<SettHome />} />
-          <Route path="/newPassword" element={<NewPassword />} />
-          </Route>
+              <Route element={<ProtectedLayout />}>
+                {/* Home  */}
+                <Route element={<DashLayout />}>
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/chatbot" element={<ChatPage />} />
+                  {/* <Route path="/chatbot" element={<ChatPage3 />} /> */}
+                  <Route path="/skinProfile" element={<SkinProfilePage />} />
+                  <Route path="/archivedChats" element={<ArchivedChatPage />} />
+                </Route>
 
-          {/* Common  */}
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/cookie-policy" element={<CookiePolicy />} />
-          <Route path="/loading" element={<Loading />} />
-          {/* <Route path="/aboutUs" element={<AboutUs />} /> */}
+ 
+                <Route path="/newAbout" element={<AboutUsNew />} />
+                <Route path="/settings" element={<SettHome />} />
+                <Route path="/newPassword" element={<NewPassword />} />
+              </Route>
 
-{/* 
+              {/* Common  */}
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/cookie-policy" element={<CookiePolicy />} />
+              <Route path="/loading" element={<Loading />} />
+            
+            </Routes>
+            {/* <App /> */}
+          </BrowserRouter>
+        </ThemeProvider>
+      </CookieProvider>
+    </AuthProvider>
+  </StrictMode>,
+);
+
+
+  {/* <Route path="/aboutUs" element={<AboutUs />} /> */}
+
+              {/* 
           <Route path="/goodnight" element={<TimePickerr />} /> */}
 
+              {/* <Route path="/trainGif" element={<TrainGif />} /> */}
+              {/* <Route path="/chatbot" element={<ChatBot />} /> */}
+              {/* <Route path="/gifcompo" element={<GifCompo />} /> */}
+              {/* <Route path='/dashboard' element={<Dashboard />} /> */}
+              {/* <Route path='/dashboard' element={<Home />} /> */}
 
-
-
-
-          {/* <Route path="/trainGif" element={<TrainGif />} /> */}
-          {/* <Route path="/chatbot" element={<ChatBot />} /> */}
-          {/* <Route path="/gifcompo" element={<GifCompo />} /> */}
-          {/* <Route path='/dashboard' element={<Dashboard />} /> */}
-          {/* <Route path='/dashboard' element={<Home />} /> */}
-
-
-
-          {/* <Route path='/gifcompo' element={<GifCompo />} />
+              {/* <Route path='/gifcompo' element={<GifCompo />} />
       
         <Route path='/ZylaCompo' element={<ZylaCompo />} /> */}
 
-          {/* <Route path="/phoneReset" element={<PhoneNumberReset />} /> */}
-          {/* <Route path="/forgotPhonePassword" element={<ForgotPasswordPhone />} /> */}
-        </Routes>
-        {/* <App /> */}
-      </BrowserRouter>
-    </ThemeProvider>
-    </CookieProvider>
-    </AuthProvider>
-  </StrictMode>
-);
+              {/* <Route path="/phoneReset" element={<PhoneNumberReset />} /> */}
+              {/* <Route path="/forgotPhonePassword" element={<ForgotPasswordPhone />} /> */}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { submitSupportRequest } from "./api/settingsAPI";
 import { VscArrowCircleLeft } from "react-icons/vsc";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 import toast from "react-hot-toast";
@@ -17,16 +16,6 @@ function Support({ onBack }) {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
 
-  const [idToken, setIdToken] = useState("");
-
-  const auth = getAuth();
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (u) => {
-      setIdToken(await u.getIdToken(false));
-    });
-
-    return () => unsub();
-  }, [auth]);
   
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -39,7 +28,7 @@ const handleSubmit = async (e) => {
   }
 
   const combined = `${issue.trim()}\n\n${help.trim()}`;
-  if (!idToken) return;
+
 
   try {
     setSaving(true);
@@ -76,7 +65,7 @@ const handleSubmit = async (e) => {
 
   return (
     <section className={`w-full md:w-[90%] max-w-[900px] flex-1 min-w-0 h-full px-4 md:px-6 pt-4 pb-6 flex flex-col rounded-2xl overflow-y-auto ${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"}`}>
-      {/* Top row: back + title */}
+
       <div style={{ display: "flex", alignItems: "center", marginBottom: "24px" }}>
         <button type="button" onClick={() => onBack && onBack()}>
           <VscArrowCircleLeft size={40} />
@@ -85,13 +74,13 @@ const handleSubmit = async (e) => {
         <h1 className="m-0 flex-1 text-center tracking-[3px] font-bold text-[20px] md:text-[28px] uppercase">CONTACT SUPPORT</h1>
       </div>
 
-      {/* Error / Success messages */}
+
       {error && <p style={{ color: "red", marginBottom: "12px" }}>{error}</p>}
       {success && <p style={{ color: "green", marginBottom: "12px" }}>{success}</p>}
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="w-full max-w-[520px]">
-        {/* Issue field */}
+       
         <div className="mb-6">
           <label className="block mb-2 text-base">
             What is your issue?<span className="text-red-600"> *</span>
@@ -113,7 +102,6 @@ const handleSubmit = async (e) => {
           />
         </div>
 
-        {/* Help field */}
         <div className="mb-6">
           <label className="block mb-2 text-base">
             How can we help?<span className="text-red-600"> *</span>

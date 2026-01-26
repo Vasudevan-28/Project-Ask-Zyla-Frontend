@@ -39,7 +39,6 @@ export default function FooterMain() {
           role="navigation"
           aria-label="Footer navigation"
         >
-          {/* Brand */}
          <div className="flex md:mt-12 items-center justify-center md:justify-start cursor-pointer  gap-3"
           onClick={() => navigate('/dashboard')}
           >
@@ -50,7 +49,6 @@ export default function FooterMain() {
             </div>
           </div>
 
-          {/* Company Overview */}
           <div className="mt-2  sm:mt-6 md:mt-0">
             <div className="font-semibold mb-2 text-[#1c0d25]">
               Company Overview
@@ -80,7 +78,6 @@ export default function FooterMain() {
                 <button
                   className="hover:underline cursor-pointer text-sm sm:text-base"
                   onClick={() => {
-                    // scrollToSection("features-title");
                     handleFooterNav("faq")
                   }}
                 >
@@ -91,7 +88,6 @@ export default function FooterMain() {
                 <button
                   className="hover:underline cursor-pointer text-sm sm:text-base"
                   onClick={() => {
-                    // scrollToSection("feedback");
                     handleFooterNav("feedback")
                   }}
                 >
@@ -101,7 +97,6 @@ export default function FooterMain() {
             </ul>
           </div>
 
-          {/* Quick Links */}
           <div className="mt-2 sm:mt-6 md:mt-0">
             <div className="font-semibold mb-2 text-[#1c0d25]">Quick Links</div>
             <ul className="list-none m-0 p-0 text-[#4b4450]">
@@ -164,7 +159,6 @@ export default function FooterMain() {
             </ul>
           </div>
 
-          {/* Contact Us */}
           <div className="mt-2 sm:mt-6 md:mt-0">
             <div className="font-semibold mb-2 text-[#1c0d25]">Contact Us</div>
 
@@ -229,7 +223,6 @@ export default function FooterMain() {
         </div>
       </div>
 
-      {/* Copyright row */}
       <div className="h-12 sm:h-14 flex items-center justify-center bg-white border-t border-black/6 text-sm">
         <span>copyright © 2025 Ask Zyla</span>
       </div>

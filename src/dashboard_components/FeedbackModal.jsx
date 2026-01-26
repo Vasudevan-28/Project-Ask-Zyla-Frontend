@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 
-import { getAuth, onIdTokenChanged } from "firebase/auth";
 
 export default function FeedbackModal({ onClose, onSubmit }) {
   const { theme } = useContext(ThemeContext);
@@ -9,18 +8,6 @@ export default function FeedbackModal({ onClose, onSubmit }) {
   const [selectedEmotion, setSelectedEmotion] = useState(3);
 
   
-  
-   const [idToken, setIdToken] = useState("")
-       
-        const auth = getAuth();
-           useEffect(() => {
-             const unsub = onIdTokenChanged(auth, async (u) => {
-             
-               setIdToken(await u.getIdToken(false))
-             });
-         
-             return () => unsub();
-           }, [auth]);
 
   const emotions = [
     { value: 1, label: "Very Sad", emoji: "😢" },

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-// import InteractiveFeatures from "../team-pages/Components/InteractiveFeatures";
 import InteractiveFeatures from "./InteractiveFeatures";
 
 const FeaturesSection = () => {

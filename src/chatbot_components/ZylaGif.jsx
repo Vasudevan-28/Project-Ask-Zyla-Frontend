@@ -15,7 +15,6 @@ export default function ZylaGif() {
       <div className="flex items-center gap-2 max-w-[80%] flex-row-reverse" >
 
           <img
-            // src="src/assets/Zyla-no-bg.png"
             src= {`${Thinking}?ts=${gifTime}`}
             className="w-26 h-26"
             alt="Assistant"

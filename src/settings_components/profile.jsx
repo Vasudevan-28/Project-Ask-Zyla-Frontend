@@ -6,7 +6,6 @@ import {
   getUserProfile,
   updateSettProfile,
 } from "./api/settingsAPI";
-import { getAuth, onIdTokenChanged } from "firebase/auth";
 
 function Profile() {
   const navigate = useNavigate();
@@ -34,23 +33,6 @@ function Profile() {
 
   const [initialForm, setInitialForm] = useState(null);
 
-  const [idToken, setIdToken] = useState("");
-
-  const auth = getAuth();
-  useEffect(() => {
-    const unsub = onIdTokenChanged(auth, async (u) => {
-      if (u) {
-        const tok = await u.getIdToken(false);
-        setIdToken(tok);
-      } else {
-        setIdToken("");
-      }
-    });
-
-    return () => unsub();
-  }, [auth]);
-
-  // Helper to map backend profile -> form state
   function mapProfileToForm(data) {
     return {
       name: data?.name || "",
@@ -63,20 +45,13 @@ function Profile() {
     };
   }
 
-  async function fetchProfile(currentToken) {
-    if (!currentToken) return;
+  async function fetchProfile() {
     try {
       setLoading(true);
       setLoadError("");
 
-      // const res = await getUserProfile(currentToken);
       const res = await getUserProfile();
-      // if (!res.ok) {
-      //   // try to get text body for better error message
-      //   const txt = await res.text().catch(() => "");
-      //   throw new Error(txt || `Failed to fetch profile (status ${res.status})`);
-      // }
-      // const data = await res.json().catch(() => ({}));
+      
       const next = mapProfileToForm(res);
 
       setForm(next);
@@ -89,11 +64,10 @@ function Profile() {
     }
   }
 
-  // LOAD PROFILE when idToken becomes available
   useEffect(() => {
-    if (!idToken) return;
-    fetchProfile(idToken);
-  }, [idToken]);
+    
+    fetchProfile();
+  }, []);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -105,9 +79,7 @@ function Profile() {
     setSuccess("");
   }
 
-  // SAVE PROFILE
   async function handleSave() {
-    if (!idToken) return;
 
     setSaving(true);
     setSaveError("");
@@ -124,25 +96,7 @@ function Profile() {
 
       console.debug("Profile update payload:", payload);
 
-      // const res = await updateSettProfile(idToken, payload);
       const data = await updateSettProfile(payload);
-
-      // let data = {};
-      // try {
-      //   data = await res.json();
-      // } catch (err) {
-      //   console.debug("Update response body not JSON or empty:", err);
-      // }
-
-      // console.debug("Update response status:", res.status, "body:", data);
-
-      // if (!res.ok) {
-      //   // prefer structured data.detail/message if present
-      //   const errMsg =
-      //     (data && (data.detail || data.message)) ||
-      //     `Update failed with status ${res.status}`;
-      //   throw new Error(errMsg);
-      // }
 
       if (data && data.profile) {
         const next = mapProfileToForm(data.profile);
@@ -150,7 +104,7 @@ function Profile() {
         setInitialForm(next);
       } else {
        
-        await fetchProfile(idToken);
+        await fetchProfile();
       }
 
       setSuccess("Profile updated successfully");
@@ -450,18 +404,19 @@ function Profile() {
 
       {/* Password row */}
       <div
-        className={`flex items-center  py-1 rounded-xl px-1 text-[13px] ${
+        className={`flex items-center cursor-pointer py-1 rounded-xl px-1 text-[13px] ${
           isLight ? "text-slate-900 bg-[#e2d2dc]" : "text-slate-50 bg-white/10"
         }`}
+         onClick={() => navigate("/newPassword")}
       >
-        <div className="flex cursor-pointer  p-2 items-center gap-2 flex-1">
+        <div className="flex  p-2 items-center gap-2 flex-1">
           <FaLock />
-          <button
-            
-            onClick={() => navigate("/newPassword")}
-          >
+          <div>
             Password Reset
-          </button>
+          </div>
+            
+          
+          
         </div>
         <span className="text-[18px] mr-4">›</span>
       </div>

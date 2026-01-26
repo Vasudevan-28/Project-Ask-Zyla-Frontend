@@ -70,9 +70,8 @@ export default function ForgotPassword() {
     <div className="min-h-screen min-w-screen bg-[#1A0D28]">
       <HeaderAuth />
 
-      {/* Main container: stacked on small screens, side-by-side on md+ */}
       <div className="flex flex-col md:flex-row items-start justify-center px-4 md:px-10 gap-8 mt-8 md:mt-16">
-        {/* Left visual: centered on small screens, left-aligned on desktop */}
+
         <div className="w-1/2 flex justify-start scale-85 md:scale-100">
           <div className="max-w-md w-full p-0">
             <ZylaForgotPassword />

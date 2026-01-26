@@ -5,7 +5,6 @@ import ZylaToggleImg from "../assets/ZylaToggle.png";
 import { useNavigate } from "react-router-dom";
 
 export default function HeaderQP() {
-  //   const user = auth.currentUser;
   
   const { theme, toggleTheme } = useContext(ThemeContext); 
 
@@ -18,13 +17,9 @@ return (
     <div
       className={
         "fixed top-0 left-0 right-0 h-2 z-99999 bg-transparent"
-        // (theme === "light"
-        //   ? "bg-gray-100 shadow-sm"
-        //   : "bg-[#1a0e28] shadow-sm")
       }
     />
 
-    {/* header */}
     <header
       role="banner"
       className={
@@ -44,11 +39,6 @@ return (
           <div className="text-[22px] text-[#1c0d25]">Zyla</div>
         </div>
       </div>
-{/* text-[#1c0d25] */}
-    
-    
-
-      {/* right controls */}
       <div className="ml-auto flex items-center gap-3 z-10">
         {/* Theme toggle */}
         <button

@@ -5,21 +5,36 @@ import {
   saveGoogleSignup,
   resetEmailPassword,
 } from "../services/backendAPI.js";
-import { signupUser } from "../services/authservice.js";
-import {
-  getAuth,
-  onAuthStateChanged,
-  sendEmailVerification,
-} from "firebase/auth";
+import { signupUser, logout } from "../services/authservice.js";
 import HeaderAuth from "../authentication_components/HeaderAuth.jsx";
+import { useAuth } from "../contexts/authContext.jsx";
 
 function RegistrationPage() {
   const locaState = useLocation();
   const navigate = useNavigate();
-  const { email, isGoogle } = locaState.state || {};
+  let { email, isGoogle } = locaState.state || {};
 
-  const auth = getAuth();
-  const [user, setUser] = useState(null);
+  const { profile, authUser, loading } = useAuth()
+
+  const emid = email ?? authUser?.email ?? ""
+
+  isGoogle = authUser ? true : false
+
+  useEffect(() => {
+    if (loading) return;
+
+    if (authUser && profile?.registered) {
+      navigate("/dashboard", { replace: true });
+      return;
+    }
+
+    if (authUser && profile?.exists === true && profile?.registered === false) {
+      navigate("/questionnaire", { replace: true });
+      return;
+    }
+ }, [authUser, profile, loading]);
+
+ 
 
   const [showPass, setShowPass] = useState(false);
   const [showRetypePass, setShowRetypePass] = useState(false);
@@ -29,15 +44,6 @@ function RegistrationPage() {
   const minDOB = "1950-01-01";
   const today = new Date().toISOString().split("T")[0];
 
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-    });
-
-    return () => unsub();
-  }, [auth]);
-
-  // Form values
   const [formData, setFormData] = useState({
     firstName: "",
     dob: "",
@@ -54,7 +60,7 @@ function RegistrationPage() {
 
   const [errors, setErrors] = useState({});
   const [showPasswordRules, setShowPasswordRules] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading] = useState(false);
 
   // Validate fields
   const validateForm = () => {
@@ -77,12 +83,10 @@ function RegistrationPage() {
       if (!formData[field]) newErrors[field] = "Required";
     });
 
-    // DOB validation (no future dates, optional min age)
     if (formData.dob) {
       const dob = new Date(formData.dob);
       const now = new Date();
 
-      // Normalize today's date to midnight for clean comparison
       now.setHours(0, 0, 0, 0);
 
       if (isNaN(dob.getTime())) {
@@ -90,11 +94,10 @@ function RegistrationPage() {
       } else if (dob > now) {
         newErrors.dob = "Date of birth cannot be in the future";
       } else {
-        // Optional: minimum age check (example: 13 years)
         const ageDiffMs = now.getTime() - dob.getTime();
         const ageYears = ageDiffMs / (1000 * 60 * 60 * 24 * 365.25);
-        if (ageYears < 13) {
-          newErrors.dob = "You must be at least 13 years old";
+        if (ageYears < 5) {
+          newErrors.dob = "You must be at least 5 years old";
         }
       }
     }
@@ -124,9 +127,10 @@ function RegistrationPage() {
 
     try {
       const userData = {
-        firebase_uid: user?.uid,
+        // firebase_uid: user?.uid,
         name: formData.firstName.trim(),
-        email,
+        // email,
+        email: emid,
         phone: formData.countryCode + formData.phone,
         dob: formData.dob,
         gender: formData.gender,
@@ -135,25 +139,22 @@ function RegistrationPage() {
         country: formData.country,
         timezone: formData.timezone,
         password: formData.password,
+        registered: false,
         skin_profile: false,
       };
 
       if (isGoogle) {
-        // Set password for Google-linked account for future login
         await saveGoogleSignup(userData);
-        await resetEmailPassword(email, formData.password);
+        await resetEmailPassword(formData.password);
       } else {
-        // Firebase signup
-        const userCredential = await signupUser(email, formData.password);
-        const firebaseUser = userCredential.user;
-
-        // Send email verification
-        await sendEmailVerification(firebaseUser);
-
-        // Save to backend
+        
+        await signupUser(emid, formData.password);
+      
+        
         const userDataEP = {
           name: formData.firstName.trim(),
-          email,
+          // email,
+          email: emid,
           phone: formData.countryCode + formData.phone,
           dob: formData.dob,
           gender: formData.gender,
@@ -162,19 +163,21 @@ function RegistrationPage() {
           country: formData.country,
           timezone: formData.timezone,
           password: formData.password,
-          firebase_uid: firebaseUser.uid,
+          // firebase_uid: firebaseUser.uid,
+          registered: false,
           skin_profile: false,
           created_at: new Date().toISOString(),
         };
 
         await saveUserToDB(userDataEP);
+        // await logout()
       }
+      await logout()
+navigate(isGoogle ? "/successGoogle" : "/successEmail", { replace : true });
+console.log("navigated to success")
 
-      if (isGoogle) {
-        navigate("/successGoogle");
-      } else {
-        navigate("/successEmail");
-      }
+
+
     } catch (err) {
       setToastMsg(err?.message || "Registration failed!");
       setTimeout(() => setToastMsg(""), 3000);
@@ -182,6 +185,8 @@ function RegistrationPage() {
 
     setLoading(false);
   };
+
+  
   const locationData = {
     India: {
       states: {
@@ -235,7 +240,7 @@ function RegistrationPage() {
       <div className="max-w-2xl w-full mx-auto mt-20 mb-10  md:mt-6  py-6  px-4  bg-white/20 backdrop-blur-xl rounded-3xl shadow-xl  border border-white/30">
         <h2 className="text-2xl font-bold text-center text-white">Registration</h2>
         <p className="text-white/90 mt-1 mb-4 text-center">
-          Hello {email}! Please complete the registration to continue.
+          Hello {emid}! Please complete the registration to continue.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -609,7 +614,6 @@ function RegistrationPage() {
                 </span>
               </div>
 
-              {/* Error message placed BELOW wrapper so it doesn't push icon */}
               {errors.retypePassword && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.retypePassword}
@@ -760,10 +764,10 @@ function RegistrationPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading2}
             className="w-full bg-[#3A2C49] cursor-pointer py-3 rounded-md font-semibold hover:opacity-90"
           >
-            {loading ? "Processing..." : "CONTINUE"}
+            {loading2 ? "Processing..." : "CONTINUE"}
           </button>
         </form>
       </div>

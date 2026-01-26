@@ -8,7 +8,7 @@ function makeTask(text, checked = false, date) {
   return { text, checked, date };
 }
 
-export default function ToDoCard({ selectedDate, userToken }) {
+export default function ToDoCard({ selectedDate }) {
   const listRef = useRef(null);
   const [tasks, setTasks] = useState([]);
   const [newText, setNewText] = useState("");
@@ -27,13 +27,12 @@ export default function ToDoCard({ selectedDate, userToken }) {
   const isLight = theme === "light";
 
   useEffect(() => {
-    if (isBeforeCutoff || !userToken) {
+    if (isBeforeCutoff) {
       setTasks([]);
       return;
     }
     async function fetchTodos() {
       try {
-        // const data = await ApiService.getTodos(selectedIso, userToken);
         const data = await ApiService.getTodos(selectedIso);
         setTasks(data && data.length > 0 ? data : []);
       } catch (e) {
@@ -44,18 +43,16 @@ export default function ToDoCard({ selectedDate, userToken }) {
     requestAnimationFrame(() => {
       if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
     });
-  }, [selectedIso, userToken]);
+  }, [selectedIso]);
 
   async function handleAdd(e) {
     e.preventDefault();
-    // prevent adding for past/cutoff AND prevent duplicate clicks while adding
     if (isPast || isBeforeCutoff || isAdding) return;
-    if (!newText.trim() || !userToken) return;
+    if (!newText.trim()) return;
 
     setIsAdding(true);
     try {
       const nt = { text: newText.trim(), checked: false, date: selectedIso };
-      // const created = await ApiService.addTodo(nt, userToken);
       const created = await ApiService.addTodo(nt);
       setTasks([...tasks, created]);
       setNewText("");
@@ -73,11 +70,10 @@ export default function ToDoCard({ selectedDate, userToken }) {
   }
 
   async function toggle(id) {
-    if (!isToday || !userToken) return;
+    if (!isToday ) return;
     const task = tasks.find((t) => t.id === id);
     if (!task) return;
     try {
-      // const updated = await ApiService.updateTodo(id, !task.checked, userToken);
       const updated = await ApiService.updateTodo(id, !task.checked);
       setTasks(tasks.map((t) => (t.id === id ? updated : t)));
       window.dispatchEvent(new Event("zyla:todos-updated"));
@@ -87,9 +83,8 @@ export default function ToDoCard({ selectedDate, userToken }) {
   }
 
   async function remove(id) {
-    if (isPast || isBeforeCutoff || !userToken) return;
+    if (isPast || isBeforeCutoff) return;
     try {
-      // await ApiService.deleteTodo(id, userToken);
       await ApiService.deleteTodo(id);
       setTasks(tasks.filter((t) => t.id !== id));
       window.dispatchEvent(new Event("zyla:todos-updated"));
@@ -122,19 +117,18 @@ export default function ToDoCard({ selectedDate, userToken }) {
       <div className="mb-2 mt-4">
         <h3 className="text-base md:text-lg font-extrabold">To-Do — {selected.toLocaleDateString()}</h3>
       </div>
-      {/* Scrollable Task Area */}
       <div
         ref={listRef}
         className="flex-1 overflow-y-auto custom-scrollbar min-h-0 md:max-h-110 my-3 pr-1"
       >
         {tasks.map((task) => (
           <div key={task.id} className="flex items-center justify-between py-2 pl-2">
-            {/* Checkbox */}
+            
             <div className="flex items-center gap-3 min-w-0">
               <button
                 disabled={!isToday}
                 onClick={() => toggle(task.id)}
-                className={`rounded-full border-[2px] flex items-center justify-center transition-colors
+                className={`rounded-full border-2 flex items-center justify-center transition-colors
                   ${task.checked ? "text-white bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] border-purple-900" : "bg-transparent border-gray-400"}
                   ${!isToday ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                 style={{
@@ -154,14 +148,13 @@ export default function ToDoCard({ selectedDate, userToken }) {
                 )}
               </button>
               <span
-                className={`flex-1 break-words text-sm md:text-base ${
+                className={`flex-1 wrap-break-word text-sm md:text-base ${
                   task.checked ? "line-through opacity-70" : ""
                 }`}
               >
                 {task.text}
               </span>
             </div>
-            {/* Remove Button */}
             <button
               disabled={isPast}
               onClick={() => remove(task.id)}
@@ -177,7 +170,6 @@ export default function ToDoCard({ selectedDate, userToken }) {
         ))}
       </div>
 
-      {/* Input Bar */}
       <div>
         <form onSubmit={handleAdd} className="flex items-center gap-3 mt-2">
           <input
@@ -203,7 +195,6 @@ export default function ToDoCard({ selectedDate, userToken }) {
         </form>
       </div>
 
-      {/* Success Message */}
       <div className="flex items-center h-5 mt-2">
         <span className="text-green-700 dark:text-green-400 text-xs">{msg}</span>
       </div>

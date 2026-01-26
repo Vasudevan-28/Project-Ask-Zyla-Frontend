@@ -80,7 +80,6 @@ export default function Login() {
         existingLock = data.lockoutUntil || null;
       }
 
-      // If already locked, just sync state
       if (existingLock && existingLock > Date.now()) {
         setLockoutUntil(existingLock);
         return;
@@ -108,16 +107,15 @@ export default function Login() {
         );
       }
     } catch {
-      // fallback if localStorage fails
       setPasswordError("Incorrect password.");
     }
   };
 
- 
-  const handleLogin = async (e) => {
+
+const handleLogin = async (e) => {
   e.preventDefault();
 
-  if (loading) return; 
+  if (loading) return;
 
   if (isLocked) {
     setPasswordError(
@@ -150,14 +148,15 @@ export default function Login() {
   }
 
   if (!password) {
-    setPasswordError("Please enter a correct password");
+    setPasswordError("Please enter your password");
     return;
   }
 
   try {
     setLoading(true);
 
-    // Firebase email verification check
+    await loginWithBackend(id, password);
+
     if (looksLikeEmail) {
       const firebaseUser = await loginUser(id, password);
 
@@ -167,40 +166,29 @@ export default function Login() {
       }
     }
 
-    // Backend login
-    const result = await loginWithBackend(id, password);
+    localStorage.removeItem(LOCK_STORAGE_KEY);
+    setLockoutUntil(null);
+    setRemainingSeconds(0);
 
-    if (result.message === "success") {
-      localStorage.removeItem(LOCK_STORAGE_KEY);
-      setLockoutUntil(null);
-      setRemainingSeconds(0);
-
-      if (result.skin_profile === false) {
-        navigate("/questionnaire");
-      } else {
-        navigate("/dashboard");
-      }
-    } else {
-      navigate("/register", {
-        state: {
-          email: result.firebaseUser.email,
-          isGoogle: false,
-        },
-      });
-    }
   } catch (error) {
-    console.error(error);
 
-    if (error.code === "auth/wrong-password") {
-      registerFailedAttempt();
-    } else if (error.code === "auth/user-not-found") {
-      setEmailPhoneError("Account does not exist");
-    } else if (error.code === "auth/invalid-credential") {
-      registerFailedAttempt();
-      setPasswordError("Invalid email or password");
-    } else {
-      setPasswordError("Invalid login details");
-    }
+    console.error("Login error:", error);
+
+    const status = error?.response?.status
+
+if (status === 404) {
+  setPasswordError("User Not Found")
+}
+else if (status === 401) {
+  registerFailedAttempt();
+  setPasswordError("Invalid password");
+}
+else if (status === 403) {
+  setEmailPhoneError("Please verify your email before logging in.");
+}
+else {
+  setPasswordError("Login failed. Please try again.");
+}
   } finally {
     setLoading(false);
   }
@@ -209,26 +197,7 @@ export default function Login() {
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await loginWithGoogle();
-
-      if (result.status === "existing") {
-        localStorage.removeItem(LOCK_STORAGE_KEY);
-        setLockoutUntil(null);
-        setRemainingSeconds(0);
-
-        if (result.skin_profile === false) {
-          navigate("/questionnaire");
-        } else {
-          navigate("/dashboard");
-        }
-      } else {
-        navigate("/register", {
-          state: {
-            email: result.firebaseUser.email,
-            isGoogle: true,
-          },
-        });
-      }
+      await loginWithGoogle();
     } catch (err) {
       setEmailPhoneError(`Google login failed : ${err}`);
     }
@@ -249,8 +218,6 @@ export default function Login() {
   
     <div className="min-h-screen flex flex-col md:flex-row bg-[#1d0e2d] relative overflow-hidden">
 
-    
-      {/* LEFT GIF */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -264,7 +231,6 @@ export default function Login() {
         </div>
       </motion.div>
 
-      {/* RIGHT SIDE LOGIN CARD */}
       <div className="w-full md:w-1/2 flex justify-center  items-center p-2">
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
@@ -277,7 +243,6 @@ export default function Login() {
             Sign in to your beauty sanctuary!
           </h2>
 
-          {/* Lockout banner */}
           {isLocked && (
             <p className="text-center text-sm text-slate-200 mb-3">
               Too many failed attempts. Please wait{" "}
@@ -289,7 +254,6 @@ export default function Login() {
           )}
 
           <div className="flex flex-col gap-4">
-            {/* Identifier (Email or Phone) */}
             <motion.div animate={emailPhoneError ? "shake" : "none"} variants={shakeVariant}>
               <label className="block text-white font-medium mb-1">Email or Phone</label>
 
@@ -310,7 +274,6 @@ export default function Login() {
               )}
             </motion.div>
 
-            {/* Password */}
             <motion.div animate={passwordError ? "shake" : "none"} variants={shakeVariant}>
               <label className="block text-white font-medium mb-1">Password</label>
 
@@ -393,16 +356,6 @@ export default function Login() {
               </div>
             </motion.div>
 
-            {/* Sign In Button */}
-            {/* <motion.button
-              whileHover={{ scale: isLocked ? 1 : 1.05 }}
-              className="w-full text-white py-2.5 rounded-lg font-semibold cursor-pointer shadow-lg disabled:opacity-50"
-              style={{ backgroundColor: "rgba(58, 44, 73, 1)" }}
-              onClick={handleLogin}
-              disabled={isLocked}
-            >
-              SIGN IN
-            </motion.button> */}
 
             <motion.button
   whileHover={{ scale: loading || isLocked ? 1 : 1.05 }}
@@ -430,7 +383,6 @@ export default function Login() {
               <div className="grow h-px bg-gray-300"></div>
             </div>
 
-            {/* Google Login */}
             <motion.div
               whileHover={{ scale: isLocked ? 1 : 1.04 }}
               onClick={isLocked ? undefined : handleGoogleLogin}
@@ -460,7 +412,6 @@ export default function Login() {
               <span className="font-semibold text-white">Sign in with Google</span>
             </motion.div>
 
-            {/* Sign Up */}
             <div className="text-center text-white mt-2">
               Don’t have an account?{" "}
               <span

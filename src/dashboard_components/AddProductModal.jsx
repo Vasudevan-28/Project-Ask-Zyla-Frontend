@@ -10,9 +10,6 @@ export default function AddProductModal({ onClose, onAdd, routines = {} }) {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
 
-// const fromCookie = true; 
-
-
 
 const [is24Hr, setIs24Hr] = useState(true);
 
@@ -234,12 +231,6 @@ useEffect(() => {
 
             <div className="col-span-1 md:col-span-2">
               <label className="text-sm font-medium">Reminder Time (Optional)</label>
-              {/* <input
-                type="time"
-                value={reminderTime}
-                onChange={(e) => setReminderTime(e.target.value)}
-                className="w-full p-2 rounded border border-gray-300 bg-white text-gray-900"
-              /> */}
 <TimePickerr
   value={reminderTime}
   ampm={!is24Hr}

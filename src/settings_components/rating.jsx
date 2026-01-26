@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext } from "react";
 import { submitSettRating } from "./api/settingsAPI";
 import { VscArrowCircleLeft } from "react-icons/vsc";
 import { FaStar } from "react-icons/fa";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ThemeContext } from "../contexts/ThemeContext";
 import toast from "react-hot-toast";
 
@@ -15,23 +14,12 @@ function Rating({ onBack }) {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
 
-  const [idToken, setIdToken] = useState("");
-
-  const auth = getAuth();
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (u) => {
-      setIdToken(await u.getIdToken(false));
-    });
-
-    return () => unsub();
-  }, [auth]);
 
   const handleStarClick = (value) => {
     setRating(value);
     setSuccess("");
   };
 
-  // ---------- SAVE RATING ----------
  async function handleSave() {
   try {
     setSaving(true);
@@ -68,7 +56,7 @@ function Rating({ onBack }) {
 
   return (
     <section className={`w-full md:w-[90%] max-w-[900px]  flex-1 min-w-0 h-full px-4 md:px-6 pt-4 pb-6 flex flex-col ${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"} rounded-2xl overflow-y-auto`}>
-      {/* TOP BAR */}
+
       <div style={{ display: "flex", alignItems: "center", marginBottom: "24px" }}>
         <button type="button" onClick={() => onBack && onBack()} style={{ border: "none", background: "transparent", cursor: "pointer" }}>
           <VscArrowCircleLeft size={40} />
@@ -79,7 +67,7 @@ function Rating({ onBack }) {
         </h1>
       </div>
 
-      {/* CENTER CONTENT */}
+      
       <div style={{ textAlign: "center", width: "100%", flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", marginTop: "-20px" }}>
         {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
         {success && <p style={{ color: "green", marginBottom: "10px" }}>{success}</p>}
@@ -88,7 +76,6 @@ function Rating({ onBack }) {
           HOW WAS YOUR OVERALL EXPERIENCE?
         </h2>
 
-        {/* STAR RATING */}
         <div style={{ display: "flex", justifyContent: "center", gap: "14px", marginBottom: "20px" }}>
           {[1, 2, 3, 4, 5].map((value) => (
             <button key={value} type="button" onClick={() => handleStarClick(value)} style={{ background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>

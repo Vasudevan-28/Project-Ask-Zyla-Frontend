@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 // ---------------------- SAVE USER ----------------------
 export const saveUserToDB = async (userData) => {
   try {
-    const { data } = await publicClient.post(`/auth/signup`, userData); // paxx
+    const { data } = await apiClient.post(`/auth/signup`, userData); // paxx
     return data;
   } catch (error) {
     const err = error.response?.data;
@@ -14,27 +14,21 @@ export const saveUserToDB = async (userData) => {
 };
 
 export const saveGoogleSignup = async (userData) => {  // paxx    // registration page
-  const { data } = await publicClient.post(`/auth/save-user`, userData);
+  const { data } = await apiClient.post(`/auth/save-user`, userData);
   return data;
 };
 
 
 // ---------------------- LOGIN ----------------------
-export const loginWithBackend = async (identifier, password) => {   // paxx   // login page
-  try {
-    const { data } = await publicClient.post(`/auth/login`, {
-      identifier,
-      password,
-    });
-
-    console.log(data.method);
-    console.log(data.message);
-    return data;
-  } catch (error) {
-    const err = error.response?.data;
-    throw new Error(err?.detail || "Login failed");
-  }
+export const loginWithBackend = async (identifier, password) => {
+  const { data } = await publicClient.post(`/auth/login`, {
+    identifier,
+    password,
+  });
+  console.log(data)
+  return data;
 };
+
 
 
 export const getEmailForPhone = async (phone) => {          // paxx     // ForgotPhonePassword page
@@ -77,11 +71,28 @@ export const verifyEmailOtp = async (email, otp) => {       // paxx     // Verif
 
 
 // ---------------------- RESET PASSWORD ----------------------
-export const resetEmailPassword = async (email, new_password) => {
+export const resetEmailPassword = async (new_password) => {
   try {
-    const { data } = await publicClient.post(     // paxx       // NewPassword & ResetPassword & RegistrationPage
+    const { data } = await apiClient.post(     // paxx       // NewPassword & ResetPassword & RegistrationPage
       `/auth/resetpassemail`,
-      { email, new_password }
+      // { email, new_password }
+      { new_password}
+    );
+    return data;
+  } catch (error) {
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: error.message };
+    }
+  }
+};
+
+export const setNewPassword = async (new_password) => {
+  try {
+    const { data } = await apiClient.post(     // paxx       // NewPassword 
+      `/auth/set-new-pass`,
+      { new_password }
     );
     return data;
   } catch (error) {
@@ -111,8 +122,8 @@ export const sendOtpToPhone = async (phone) => {
 
 
 
-export const deleteAccountAPI = async (email) => {   // paxx      // setting
-  const { data } = await apiClient.post(`/auth/delete-account`, { email });
+export const deleteAccountAPI = async () => {   // paxx      // setting
+  const { data } = await apiClient.post(`/auth/delete-account`);
   return data;
 };
 

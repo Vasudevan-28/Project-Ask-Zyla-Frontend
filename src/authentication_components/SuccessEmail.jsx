@@ -1,22 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import HeaderAuth from "./HeaderAuth";
 
 export default function SuccessEmail() {
   const navigate = useNavigate();
+
+    useEffect(() => {
+  sessionStorage.removeItem("justRegistered");
+}, []);
+
   return (
     <div className="min-h-screen bg-[#1A0D28]" >
       <HeaderAuth />
     <div className=" flex items-center justify-center h-[80vh]  p-4">
-      {/* Popup Card */}
+      
       <motion.div
         initial={{ opacity: 0, scale: 0.6, y: 60 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "backOut" }}
         className="w-full max-w-md bg-white/20 backdrop-blur-xl rounded-3xl p-6 sm:p-10 shadow-xl border border-white/30 text-center flex flex-col items-center"
       >
-        {/* Circle with Tick */}
+        
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: [0, 1.4, 0.9, 1] }}
@@ -44,7 +49,6 @@ export default function SuccessEmail() {
           </motion.svg>
         </motion.div>
 
-        {/* Success Message */}
         <motion.h2
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -74,12 +78,11 @@ export default function SuccessEmail() {
           Kindly check your email and click the verification link.
         </motion.p>
 
-        {/* Back to Login Button */}
         <motion.button
           whileTap={{ scale: 0.95 }}
           whileHover={{ scale: 1.05, boxShadow: "0 0 12px rgba(255,255,255,0.4)" }}
           onClick={() => navigate("/login")}
-          className="w-full py-3 px-6 rounded-lg text-white font-semibold shadow-md transition text-sm sm:text-base"
+          className="w-full py-3 px-6 cursor-pointer rounded-lg text-white font-semibold shadow-md transition text-sm sm:text-base"
           style={{ backgroundColor: "rgba(58, 44, 73, 1)" }}
           onMouseOver={(e) =>
             (e.currentTarget.style.backgroundColor = "rgba(40, 30, 53, 1)")

@@ -8,7 +8,6 @@ export default function Loading() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Extract everything passed through state
   const nextPage = location.state?.nextPage || "/";
   const extraState = location.state || {};
 
@@ -18,7 +17,7 @@ export default function Loading() {
 
   const progress = useMotionValue(0);
 
-  // Zyla movement
+  
   const zylaX = useTransform(progress, (p) => {
     const width = progressBarRef.current?.offsetWidth || 300;
     return p * width - 35;
@@ -31,8 +30,6 @@ export default function Loading() {
       duration: 1,
       ease: "easeInOut",
       onComplete: () => {
-        // Forward state to next page
-        // navigate(nextPage, { state: extraState });
         navigate(nextPage, { state: extraState, replace: true });
       },
     });

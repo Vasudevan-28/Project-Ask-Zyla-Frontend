@@ -1,5 +1,4 @@
 import React from "react";
-// import Lightbutton from "../team-pages/Components/Lightbutton";
 import Lightbutton from "./Lightbutton";
 import { motion } from "framer-motion";
 

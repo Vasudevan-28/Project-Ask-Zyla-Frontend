@@ -30,7 +30,6 @@ export default function PromotionPage() {
       <div className="w-full h-px bg-[#FFD700]"></div>
       <FeedbackSection />
       <FooterPromo />
-      {/* <FooterMain /> */}
     </>
   );
 }

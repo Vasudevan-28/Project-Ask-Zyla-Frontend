@@ -1,25 +1,19 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { SkinProfileApiService } from "../services/skin_profile_api";
 
+import { useAuth } from "../contexts/authContext";
+
 const NextButton = ({ current, setCurrent, questions, selected, setSelected, q }) => {
+
+  const { refreshProfile } = useAuth()
+
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
-  const auth = getAuth();
   const navigate = useNavigate();
   const cycleSkipped = useRef(false);
 
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-    });
-
-    return () => unsub();
-  }, [auth]);
 
   const hasText = (val) => {
     return typeof val === "string" && val.trim().length > 0;
@@ -154,9 +148,9 @@ const NextButton = ({ current, setCurrent, questions, selected, setSelected, q }
     return formatted;
   };
 
-  const buildSkinProfilePayload = (formatted, userId) => ({
+  const buildSkinProfilePayload = (formatted) => ({
     skinProfileData: {
-      userId: userId,
+      // userId: userId,
       ...formatted,
     },
   });
@@ -167,14 +161,17 @@ const NextButton = ({ current, setCurrent, questions, selected, setSelected, q }
     if (current < questions.length - 1) {
       setCurrent(current + 1);
     } else {
-      const userIdFromAuth = user?.uid;
+      // const userIdFromAuth = user?.uid;
       const formatted = formatSelectedAnswers();
-      const payload = buildSkinProfilePayload(formatted, userIdFromAuth);
+      const payload = buildSkinProfilePayload(formatted);
 
       try {
-        const data = await SkinProfileApiService.saveSkinAnswers(userIdFromAuth, payload);
+        // const data = await SkinProfileApiService.saveSkinAnswers(userIdFromAuth, payload);
+        const data = await SkinProfileApiService.saveSkinAnswers(payload);
+        await refreshProfile()
+        // localStorage.setItem("skin_profile", "true");
         console.log("Saved to DB:", data);
-        navigate("/skinProfile");
+        navigate("/skinProfile", { replace: true });
       } catch (err) {
         console.error("Error saving skin answers:", err);
       }

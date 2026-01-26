@@ -9,14 +9,13 @@ export default function SuccessGoogle() {
    <div className="min-h-screen bg-[#1A0D28]" >
       <HeaderAuth />
     <div className=" flex items-center justify-center h-[80vh]  p-4">
-      {/* Popup Card */}
+
       <motion.div
         initial={{ opacity: 0, scale: 0.6, y: 60 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "backOut" }}
         className="w-full max-w-md bg-white/20 backdrop-blur-xl rounded-3xl p-6 sm:p-10 shadow-xl border border-white/30 text-center flex flex-col items-center"
       >
-        {/* Circle with Tick */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: [0, 1.4, 0.9, 1] }}
@@ -44,7 +43,6 @@ export default function SuccessGoogle() {
           </motion.svg>
         </motion.div>
 
-        {/* Success Message */}
         <motion.h2
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -55,7 +53,6 @@ export default function SuccessGoogle() {
           Successfully!
         </motion.h2>
 
-        {/* Subtext */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -65,7 +62,6 @@ export default function SuccessGoogle() {
           Your registration is done successfully.
         </motion.p>
 
-        {/* Back to Login Button */}
         <motion.button
           whileTap={{ scale: 0.95 }}
           whileHover={{ scale: 1.05, boxShadow: "0 0 12px rgba(255,255,255,0.4)" }}

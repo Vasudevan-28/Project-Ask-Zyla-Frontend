@@ -9,7 +9,6 @@ export const ThemeContext = createContext({
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     try {
-      // const stored = localStorage.getItem("askzyla_theme");
       const stored = getThemeCookie()
       return stored === "light" ? "light" : "dark";
     } catch (e) {
@@ -18,15 +17,13 @@ export function ThemeProvider({ children }) {
   });
 
   useEffect(() => {
-    // keep body classes in sync for CSS (important)
     document.body.classList.remove("theme-light", "theme-dark");
     document.body.classList.add(theme === "light" ? "theme-light" : "theme-dark");
 
     try {
-      // localStorage.setItem("askzyla_theme", theme);
       setThemeCookie(theme)
     } catch (e) {
-      // ignore cookie errors
+      
     }
   }, [theme]);
 

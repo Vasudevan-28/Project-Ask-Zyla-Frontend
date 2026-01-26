@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-// import { ThemeContext } from "../team-pages/contexts/ThemeContext";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
 
@@ -14,13 +13,13 @@ function SuccessPopup({ message, onClose }) {
   const navigate = useNavigate();
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      {/* Background overlay */}
+      
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       ></div>
 
-      {/* Popup box */}
+
       <div
         className="
           relative bg-white rounded-2xl px-6 sm:px-8 py-5 sm:py-6 max-w-[360px] w-full 
@@ -148,7 +147,7 @@ function GenSupport() {
 
       setSuccess("Support request submitted successfully");
       setShowSuccess(true);
-      // Clear fields after success
+      
       setName("");
       setEmail("");
       setIssue("");
@@ -196,7 +195,7 @@ function GenSupport() {
           )}
 
           <form onSubmit={handleSubmit} className="w-full">
-            {/* NAME + EMAIL ROW */}
+
             <div className="flex flex-col sm:flex-row gap-6 mb-6">
               {/* Name */}
               <div className="flex-1">

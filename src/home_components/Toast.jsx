@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-// import Zylal from "../assets/video2.gif";
 import Zylal from "../gifs/norm-purf.gif";
 import { MdCancel } from "react-icons/md";
 

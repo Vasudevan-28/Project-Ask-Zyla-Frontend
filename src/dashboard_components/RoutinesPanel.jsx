@@ -43,14 +43,11 @@ export default function RoutinesPanel({
 
   const d = new Date();
 
-  // Set time as UTC
   d.setUTCHours(h, m, 0, 0);
 
-  // Get local time
   const localH = d.getHours();
   const localM = d.getMinutes();
 
-  // Pad with leading zeros
   return `${String(localH).padStart(2, "0")}:${String(localM).padStart(2, "0")}`;
 }
 
@@ -59,7 +56,6 @@ function utcToLocal12Hr(timeStr) {
 
   const [h, m] = timeStr.split(":").map(Number);
 
-  // Create a fixed UTC date (avoids DST/date surprises)
   const utcDate = new Date(Date.UTC(1970, 0, 1, h, m));
 
   return utcDate.toLocaleTimeString([], {
@@ -73,7 +69,6 @@ function utcToLocal12Hr(timeStr) {
 
   function Row({ p, routineKey, isMany }) {
 
-    // const utcToIso = utcToLocalTime(p.reminder_time)
     const utcToIso = is24Hr ? utcToLocalTime(p.reminder_time) : utcToLocal12Hr(p.reminder_time)
     console.log(utcToIso)
 
@@ -93,9 +88,7 @@ function utcToLocal12Hr(timeStr) {
           {(p.type || p.reminder_time) && (
             <div title={p.type} style={{ fontSize: 13, opacity: 0.85, marginTop: 3 }} className="text-xs md:text-sm">
               {p.type}
-              {/* {p.type && p.reminder_time ? " • " : ""} */}
               {p.type && utcToIso ? " • " : ""}
-              {/* {p.reminder_time} */}
               {utcToIso}
             </div>
           )}

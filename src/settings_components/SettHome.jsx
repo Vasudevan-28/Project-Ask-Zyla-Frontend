@@ -12,7 +12,6 @@ import { ThemeContext } from "../contexts/ThemeContext";
 
 function SettHome() {
   const auth = getAuth();
-  // const [showPrivacy, setShowPrivacy] = useState(false);
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
 
@@ -45,13 +44,12 @@ function SettHome() {
     >
       <HeaderMain />
 
-      {/* CONTENT AREA */}
       <main className="flex-1 flex justify-center px-4 py-16 mb-16 md:py-18 md:px-16">
         
         <div className="flex w-full max-w-5xl  gap-4 md:gap-4  flex-col md:flex-row">
           <Profile />
 
-          {/* RIGHT: DYNAMIC PANELS */}
+    
           <div className="w-full md:flex-1 ">
             {activeRightPanel === "settings" && (
               <Setting

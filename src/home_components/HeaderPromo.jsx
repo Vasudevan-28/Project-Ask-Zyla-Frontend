@@ -30,16 +30,14 @@ export default function HeaderPromo() {
       setActiveSection(id);
       setMenuOpen(false);
     } else {
-      // if section not present on current page, navigate to home with hash
       navigate(`/#${id}`);
       setMenuOpen(false);
     }
   };
 
-  // Update active section on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPos = window.scrollY + HEADER_HEIGHT + 80; // little tolerance
+      const scrollPos = window.scrollY + HEADER_HEIGHT + 80; 
       let current = null;
       let foundAny = false;
 
@@ -65,7 +63,6 @@ export default function HeaderPromo() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []); 
 
-  // Recalculate underline position when activeSection changes or on resize
   useEffect(() => {
     const updateUnderline = () => {
       if (!activeSection || !navRef.current) {
@@ -75,7 +72,6 @@ export default function HeaderPromo() {
 
       const btn = navRef.current.querySelector(`#nav-${activeSection}`);
       if (btn) {
-        // btn.offsetLeft is relative to the nav container, which is what we want
         setUnderlineStyle({
           left: btn.offsetLeft,
           width: btn.offsetWidth,
@@ -90,7 +86,6 @@ export default function HeaderPromo() {
     return () => window.removeEventListener("resize", updateUnderline);
   }, [activeSection, navRef.current]);
 
-  // If user navigates with a hash, scroll to that section
   useEffect(() => {
     if (!location.hash) return;
 
@@ -135,7 +130,6 @@ export default function HeaderPromo() {
             </div>
           </div>
 
-          {/* Desktop Nav (visible md and up) */}
           <nav
             ref={navRef}
             className="relative hidden md:flex items-center gap-12"
@@ -153,7 +147,6 @@ export default function HeaderPromo() {
               </button>
             ))}
 
-            {/* Underline — only shown on desktop when there is an active section */}
             {activeSection && (
               <motion.span
                 className="absolute h-1 rounded-full shadow-md"

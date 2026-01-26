@@ -54,7 +54,6 @@ export default function SearchBar({ onSearch }) {
             py-2 md:py-3 px-3
             min-w-[160px] md:min-w-[240px]`}
         />
-        {/* icon inside input — positioned absolutely to the right */}
         <button
           type="button"
           aria-label="Search date"

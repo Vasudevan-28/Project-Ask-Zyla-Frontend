@@ -1,10 +1,8 @@
 import React, { useContext} from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import ZaLogo from "../assets/ZaLogo.png";
-import ZylaToggleImg from "../assets/ZylaToggle.png";
 
 export default function HeaderNew() {
-  //   const user = auth.currentUser;
   
     const { theme, toggleTheme } = useContext(ThemeContext); 
 
@@ -15,9 +13,7 @@ return (
     <div
       className={
         "fixed top-0 left-0 right-0 h-2 z-99999 bg-transparent"
-        // (theme === "light"
-        //   ? "bg-gray-100 shadow-sm"
-        //   : "bg-[#1a0e28] shadow-sm")
+   
       }
     />
 
@@ -37,9 +33,6 @@ return (
           <div className="text-[24px] text-[#1c0d25] ">Zyla</div>
         </div>
       </div>
-{/* text-[#1c0d25] */}
-    
-    
 
     </header>
   </>

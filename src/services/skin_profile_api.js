@@ -4,15 +4,12 @@ const SKIN_API_URL = import.meta.env.VITE_API_URL;
 
 export const SkinProfileApiService = {
   
-  async loadSkinProfile(userId) {
+  async loadSkinProfile() {
     try {
-      const res = await apiClient.get(`/skinprofile/skin-profile/${userId}`);
+      const res = await apiClient.get(`/skinprofile/skin-profile`);
       
-      // const profile = res.data.skinProfileData || res.data;
       const data = res.data;
-
-      // return profile;
-      return data;
+return data;
 
     } catch (err) {
       console.error("Load Skin Profile Error:", err.response?.data || err.message);
@@ -20,10 +17,10 @@ export const SkinProfileApiService = {
     }
   },
 
-  async updateSkinProfile(userId, profileData) {
+  async updateSkinProfile(profileData) {
     try {
       const res = await apiClient.put(
-        `/skinprofile/skin-profile/${userId}`,
+        `/skinprofile/skin-profile`,
         { skinProfileData: profileData }
       );
 
@@ -36,10 +33,10 @@ export const SkinProfileApiService = {
     }
   },
 
-  async saveSkinProfile(userId, tempData) {
+  async saveSkinProfile(tempData) {
     try {
       const res = await apiClient.put(
-        `/skinprofile/skin-profile/${userId}`, 
+        `/skinprofile/skin-profile`, 
         { skinProfileData: tempData }
       );
 
@@ -52,9 +49,9 @@ export const SkinProfileApiService = {
     }
   },
 
-  async saveSkinAnswers(userId, payload) {
+  async saveSkinAnswers(payload) {
     const res = await apiClient.put(
-      `/skinprofile/skin-answers-add/${userId}`,
+      `/skinprofile/skin-answers-add`,
       payload
     );
     return res.data;

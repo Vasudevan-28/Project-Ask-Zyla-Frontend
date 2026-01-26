@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { useNavigate, useLocation, replace } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   verifyEmailOtp,
   // verifyPhoneOtp,
@@ -26,7 +26,7 @@ export default function VerificationPage() {
 
   const dialogTimeoutRef = useRef(null);
  
-  // Timer
+  
   useEffect(() => {
     if (timeLeft <= 0) return;
     const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
@@ -83,7 +83,6 @@ export default function VerificationPage() {
       if (email) {
         await verifyEmailOtp(email, otp);
         localStorage.setItem("reset_email", email);
-        // navigate to reset page
         navigate("/resetPassword", { state: { email }, replace: true },);
       } 
       // else if (phone) {
@@ -108,7 +107,6 @@ export default function VerificationPage() {
       setCode(["", "", "", ""]);
       setTimeLeft(180);
 
-      // show simple dialog/toast instead of alert
       setShowSentDialog(true);
       if (dialogTimeoutRef.current) clearTimeout(dialogTimeoutRef.current);
       dialogTimeoutRef.current = setTimeout(() => {
@@ -122,7 +120,6 @@ export default function VerificationPage() {
     }
   };
  
-  // Animations
   const shakeVariant = {
     shake: { x: [-8, 8, -8, 8, 0], transition: { duration: 0.4 } },
     none: { x: 0 },

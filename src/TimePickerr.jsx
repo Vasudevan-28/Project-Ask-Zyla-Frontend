@@ -47,14 +47,12 @@ export default function TimePickerr({
 
     val = val.trim().toUpperCase();
 
-    // 12h
     let m12 = val.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/);
     if (m12) {
       let hh = String(m12[1]).padStart(2, "0");
       return { h: hh, m: m12[2], p: m12[3] };
     }
 
-    // 24h
     let m24 = val.match(/^([01]\d|2[0-3]):([0-5]\d)$/);
     if (m24) {
       let H = parseInt(m24[1], 10);
@@ -116,13 +114,12 @@ export default function TimePickerr({
     emitChange(val);
   };
 
-  // ---------- UI ----------
   return (
     <div className="relative" ref={ref}>
 
       {open && (
         <div className="absolute z-50 bottom-full mb-1 flex gap-2 bg-white border border-gray-300 rounded-lg shadow-lg p-2">
-          {/* Hours */}
+
           <div ref={hourRef} className="h-38 w-14 overflow-y-auto">
             {(ampm ? hours12 : hours24).map((hh) => {
               const selected = ampm
@@ -150,7 +147,6 @@ export default function TimePickerr({
             })}
           </div>
 
-          {/* Minutes */}
           <div ref={minuteRef} className="h-38 w-14 overflow-y-auto">
             {minutes.map((mm) => {
               const selected = mm === m;
@@ -171,7 +167,6 @@ export default function TimePickerr({
             })}
           </div>
 
-          {/* AM/PM */}
           {ampm && (
             <div ref={periodRef} className="w-14">
               {periods.map((pp) => {
@@ -196,7 +191,6 @@ export default function TimePickerr({
         </div>
       )}
 
-      {/* Input */}
       <div className="relative">
         <input
           value={value || ""}

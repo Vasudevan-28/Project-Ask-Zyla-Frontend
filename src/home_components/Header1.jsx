@@ -1,4 +1,3 @@
-// Registration and Q&A page header
 import React from "react";
 import ZaLogo from "../assets/ZaLogo.png";
 import "../index.css";
@@ -6,7 +5,6 @@ import "../index.css";
 export default function Header() {
   return (
     <>
-      {/* Header */}
       <header
         role="banner"
         className="bg-white fixed top-1 left-0 w-full z-50 shadow-md  border-[#1A0D28]"
@@ -15,7 +13,7 @@ export default function Header() {
           className="max-w-[1400px] mx-auto flex items-center justify-between px-4 md:px-6"
           style={{ height: "60px" }}
         >
-          {/* Brand */}
+          
           <div className="zyla-brand flex items-center">
             <img
               src={ZaLogo}

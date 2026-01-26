@@ -10,7 +10,6 @@ export default function ChatBotConversations({
   openConversation,
   currentConversationId,
   refreshConversations,
-  // idToken,
   isArchived,
   isMobileOpen = false,
   onClose = () => {},
@@ -65,7 +64,7 @@ export default function ChatBotConversations({
         </button>
       </div>
 
-      <div className="overflow-y-auto relative z-10 h-full" style={{ maxHeight: "calc(100vh - 160px)" }}>
+      <div className="min-h-[calc(100vh-160px)] overflow-y-auto custom-scrollbar relative z-10 h-full  " style={{ maxHeight: "calc(100vh - 160px)" }}>
         {loadingConversations && (
           <div className="flex items-center justify-center py-3">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white/60"></div>
@@ -102,9 +101,10 @@ export default function ChatBotConversations({
             </div>
 
             {menuOpenFor === c.id && (
-              <div
+             <div
                 className="absolute right-0 top-9 w-36 text-black bg-[#E9D9E3] backdrop-blur-md shadow-lg border border-gray-200 rounded-lg p-1 z-50 animate-fadeIn"
                 onMouseLeave={closeMenu}
+                
               >
                 <button
                   className="w-full text-left px-3 py-2 text-sm hover:bg-gray-200 rounded-md"
@@ -119,7 +119,6 @@ export default function ChatBotConversations({
                 <button
                   className="w-full text-left px-3 py-2 text-sm hover:bg-gray-200 rounded-md"
                   onClick={async () => {
-                    // await ChatBotApiService.archiveConversation(idToken, c.id);
                     await ChatBotApiService.archiveConversation(c.id);
                     refreshConversations();
                     closeMenu();
@@ -169,7 +168,6 @@ export default function ChatBotConversations({
             aria-hidden="true"
           />
 
-          {/* Drawer */}
           <div className={`absolute  left-0 top-0 bottom-0 w-11/12 max-w-xs  backdrop-blur-md rounded-2xl p-3 overflow-auto
               ${isLight ? "bg-[#e9d9e3] border border-[#1d0e2d9c] " : "bg-[#1d0e2d] border border-white/30"}
             `}>
@@ -248,7 +246,6 @@ export default function ChatBotConversations({
                       <button
                         className="w-full text-left px-3 py-2 text-sm hover:bg-gray-200 rounded-md"
                         onClick={async () => {
-                          // await ChatBotApiService.archiveConversation(idToken, c.id);
                           await ChatBotApiService.archiveConversation(c.id);
                           refreshConversations();
                           closeMenu();
@@ -312,7 +309,6 @@ export default function ChatBotConversations({
 
               <button
                 onClick={async () => {
-                  // await ChatBotApiService.renameConversation(idToken, renamePopup.id, renamePopup.title);
                   await ChatBotApiService.renameConversation(renamePopup.id, renamePopup.title);
                   setRenamePopup(null);
                   refreshConversations();
@@ -345,7 +341,6 @@ export default function ChatBotConversations({
 
               <button
                 onClick={async () => {
-                  // await ChatBotApiService.deleteConversation(idToken, deletePopup.id);
                   await ChatBotApiService.deleteConversation(deletePopup.id);
                   setDeletePopup(null);
                   refreshConversations();

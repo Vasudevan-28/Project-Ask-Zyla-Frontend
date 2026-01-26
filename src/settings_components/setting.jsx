@@ -11,30 +11,23 @@ import { LiaToggleOnSolid, LiaToggleOffSolid } from "react-icons/lia";
 
 import { ThemeContext } from "../contexts/ThemeContext";
 
-import { clearCacheAPI, deleteAccountAPI } from "../services/backendAPI";
 
 import Location from "./location";
-import {
-  getAuth,
-  onAuthStateChanged,
-  deleteUser,
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-} from "firebase/auth";
 
 import { useNavigate } from "react-router-dom";
 import { updateCityAndState } from "./api/settingsAPI";
 
 import { setTimeFormatCookie, getTimeFormatCookie } from "../utils/timeformatCookie";
+import ClearCacheModal from "./ClearCacheModal";
+import DeleteAccountModal from "./DeleteAccountModal";
 
-// Common row style (inner row)
+
 const rowClasses =
   "w-full flex items-center justify-between h-[56px] px-4 border-b border-[#f1c6e0] text-[14px] text-[color:var(--text-main)]";
 
-// Toggle row using react-icons toggle in dark pink
 function ToggleRow({ icon, label, checked, onChange, helper, isLight }) {
   return (
-    // Outer wrapper responsive
+    
     <div className="w-full md:w-134  pt-1 pb-1">
       <div className={rowClasses}>
         {/* LEFT: icon + label */}
@@ -49,7 +42,6 @@ function ToggleRow({ icon, label, checked, onChange, helper, isLight }) {
         <div className="flex items-center gap-0">
           {helper && <span className="text-[12px]  opacity-70 min-w-[32px] text-right">{helper}</span>}
 
-          {/* Icon toggle – dark pink when ON, no focus ring / border */}
           <button
             type="button"
             onClick={onChange}
@@ -76,7 +68,6 @@ function ToggleRow({ icon, label, checked, onChange, helper, isLight }) {
   );
 }
 
-// Row with arrow icon on right – border is on inner div
 function ButtonRow({ icon, label, onClick }) {
   return (
     <button
@@ -86,7 +77,6 @@ function ButtonRow({ icon, label, onClick }) {
       style={{ outline: "none", boxShadow: "none" }}
     >
       <div className={rowClasses}>
-        {/* LEFT: icon + label */}
         <div className="flex items-center gap-3">
           <div className="w-6 h-6 flex items-center justify-center">
             {typeof icon === "string" ? <img src={icon} className="w-6 h-6" alt={label} /> : icon}
@@ -94,7 +84,6 @@ function ButtonRow({ icon, label, onClick }) {
           <span className="font-semibold text-[13px] md:text-[15px]">{label}</span>
         </div>
 
-        {/* RIGHT: same structure as toggle row */}
         <div className="flex items-center gap-3">
           <span className="text-[12px] opacity-0 min-w-[32px] text-right">
             &nbsp;
@@ -171,26 +160,11 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
 
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const auth = getAuth();
-  const user = auth.currentUser;
-
-  const [idToken, setIdToken] = useState("");
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (u) => {
-      setIdToken(await u.getIdToken(false));
-    });
-
-    return () => unsub();
-  }, [auth]);
-
-  const handleTimeToggle = () => {
-    setIs24h((prev) => !prev);
-  };
-
+  
   const handleLocationToggle = () => {
     const next = !locationOn;
     setLocationOn(next);
@@ -212,12 +186,7 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
 
     setLocationStatus(`Detected: ${city || "Unknown city"}, ${state || "Unknown state"}`);
 
-    if (!idToken) {
-      return;
-    }
-
     try {
-      // await updateCityAndState(idToken, city, state);
       await updateCityAndState(city, state);
 
       setLocationStatus(`Saved: ${city || "Unknown city"}, ${state || "Unknown state"}`);
@@ -231,51 +200,28 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
     }
   };
 
-  const handleDeleteAccount = async () => {
-    setError("");
-    setSuccess("");
 
-    if (!password) {
-      setError("Please enter your password to confirm.");
-      return;
-    }
+//   const handleDeleteAccount = async () => {
+//   setError("");
+//   setSuccess("");
 
-    try {
-      const credential = EmailAuthProvider.credential(user.email, password);
+//   if (!password) {
+//     setError("Please enter your password to confirm.");
+//     return;
+//   }
 
-      // Step 1: Re-authenticate
-      await reauthenticateWithCredential(user, credential);
+//   try {
+//     await reauthAndDeleteFirebaseUser(password);
 
-      // Step 2: Delete Firebase Auth user
-      await deleteUser(user);
+//     localStorage.clear();
+//     navigate("/signup");
+//   } catch (err) {
+//     console.error(err);
+//     setError("Incorrect password or deletion failed.");
+//   }
+// };
 
-      // Step 3: Delete from MongoDB
-      await deleteAccountAPI(user.email);
 
-      // Step 4: Redirect
-      localStorage.clear();
-      navigate("/signup");
-    } catch (err) {
-      console.error("Delete error:", err);
-      setError("Incorrect Password.");
-    }
-  };
-
-  const handleClearAndCache = async () => {
-    setError("");
-    setSuccess("");
-
-    try {
-      // await clearCacheAPI(idToken);
-      await clearCacheAPI();
-    } catch (err) {
-      console.error("Clear Cache error : ", err);
-      setError("Can't connect to backend");
-    }
-    setTimeout(() => navigate("/dashboard"), 1000);
-  };
-
-  // const [timeFormat, setTimeFormat] = useState(true)
 
   function toggleTimeFormat() {
   setIs24h(prev => {
@@ -293,21 +239,17 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
         isLight ? "bg-white text-slate-900" : "bg-white/10 text-slate-50"
       } rounded-2xl shadow-lg`}
     >
-      {/* Time zone toggle */}
       <ToggleRow icon={<FaRegClock className="w-6 h-6 " />} label="Time zone (12h / 24h)" checked={is24h} onChange={toggleTimeFormat} helper={is24h ? "24h" : "12h"} isLight={isLight} />
 
-      {/* Location toggle */}
       <ToggleRow icon={<IoLocationOutline className="w-9 h-6 " />} label="Location" checked={locationOn} onChange={handleLocationToggle} isLight={isLight} />
 
-      {/* Location status text + extra divider under it */}
       {locationStatus && (
         <>
           <div className={`text-[12px] pl-10 mt-1 mb-3 ${isLight ? "text-slate-800" : "text-slate-100"}`}>{locationStatus}</div>
-          {/* <div className="w-full border-b border-[#f1c6e0]" /> */}
+        
         </>
       )}
 
-      {/* Geolocation logic */}
       <Location enabled={locationOn} onLocationDetected={handleLocationDetectedInternal} />
 
       <LanguageButton icon={<IoLanguage className="w-6 h-6 " />} label="Language" isLight={isLight} />
@@ -327,7 +269,7 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
       {/* Clear data */}
       <ButtonRow icon={<MdOutlineCached className="w-6 h-6 " />} label="Clear Data & Cache" onClick={() => setClearCachePopup(true)} />
 
-      {/* Delete account – directly under list */}
+      {/* Delete account  */}
       <div className="mt-6 flex justify-center">
         <button
           type="button"
@@ -342,67 +284,19 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
       </div>
 
       {deletePopup && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className={`w-full max-w-md backdrop-blur-md rounded-xl p-6 shadow-xl space-y-4 ${isLight ? "bg-black/50 text-slate-100" : "bg-white/50 text-slate-800"}`}>
-            <h3 className="text-xl font-semibold text-center">Delete Account</h3>
+        <DeleteAccountModal
+  open={deletePopup}
+  onClose={() => setDeletePopup(false)}
+  isLight={isLight}
+/>
 
-            <p className={`text-sm text-center ${isLight ? "text-slate-200" : "text-slate-700"}`}>Enter your password to delete your account</p>
-            <div className="relative">
-              <input type={showConfirm ? "text" : "password"} placeholder="Enter your password to confirm" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 outline-none" />
-
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 cursor-pointer" onClick={() => setShowConfirm(!showConfirm)}>
-                {showConfirm ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.477 10.477A3 3 0 0113.5 13.5" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.53 6.53C4.398 8.088 2.917 10.356 2.458 12 c1.273 4.057 5.064 7 9.542 7 1.83 0 3.558-.41 5.064-1.14M17.47 17.47 C19.602 15.912 21.083 13.644 21.542 12 20.269 7.943 16.478 5 12 5 c-.96 0-1.89.14-2.771.402" />
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5 c4.478 0 8.269 2.943 9.542 7 -1.273 4.057 -5.064 7 -9.542 7 -4.477 0 -8.268 -2.943 -9.542 -7z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                )}
-              </span>
-            </div>
-
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            {success && <p className="text-green-600 text-sm">{success}</p>}
-
-            <div className="flex justify-center gap-8 pt-2">
-              <button className="px-3 py-1 cursor-pointer font-medium bg-red-500 hover:bg-red-600 text-white rounded-lg transition" onClick={handleDeleteAccount}>
-                Yes, Delete
-              </button>
-
-              <button className="px-3 py-1 cursor-pointer font-medium bg-green-400 hover:bg-green-500 text-white rounded-lg transition" onClick={() => setDeletePopup(false)}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
       )}
 
       {clearCachePopup && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className={`w-full max-w-md backdrop-blur-md rounded-xl p-6 shadow-xl space-y-4 ${isLight ? "bg-black/50 text-slate-100" : "bg-white/50 text-slate-800"}`}>
-            <h3 className="text-xl font-semibold text-center">Clear Cache</h3>
-
-            <p className={`text-sm text-center ${isLight ? "text-slate-200" : "text-slate-700"}`}>Are you sure to clear all the data ?</p>
-
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            {success && <p className="text-green-600 text-sm">{success}</p>}
-
-            <div className="flex justify-center gap-8 pt-2">
-              <button className="px-3 py-1 cursor-pointer bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition" onClick={handleClearAndCache}>
-                Yes, Clear
-              </button>
-
-              <button className="px-3 py-1 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-medium rounded-lg transition" onClick={() => setClearCachePopup(false)}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
+        <ClearCacheModal
+         open={clearCachePopup}
+         onClose={() => setClearCachePopup(false)}
+         isLight={isLight} />
       )}
     </section>
   );

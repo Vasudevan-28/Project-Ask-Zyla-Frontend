@@ -258,7 +258,6 @@ useEffect(() => {
     },
   ]);
 } catch (err) {
-  // Axios error handling
   const data = err.response?.data;
 
   if (data?.detail?.code === "TRIAL_EXHAUSTED") {
@@ -323,20 +322,8 @@ useEffect(() => {
             </div>
           </div>
 
-          {/* Controls */}
           <div className="flex items-center gap-4">
-            {/* {trialRemaining !== null && !trialOver && (
-              <span className="text-sm text-black font-medium">
-                Free chats left:{" "}
-                <span className="font-bold">{trialRemaining}</span>
-              </span>
-            )}
-
-            {trialOver && (
-              <span className="text-sm font-medium text-red-500">
-                Trial over – please sign up
-              </span>
-            )} */}
+           
 
             <button
               onClick={() => setBgTheme(bgTheme === "light" ? "dark" : "light")}

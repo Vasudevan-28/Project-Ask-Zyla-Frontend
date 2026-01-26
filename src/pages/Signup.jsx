@@ -31,28 +31,15 @@ export default function Signup() {
 
   };
 
+ 
   const handleGoogleSignup = async () => {
-    try {
-      const result = await loginWithGoogle();
-        if (result.status === "existing") {
-        if (result.skin_profile === false) {
-      navigate("/questionnaire");
-      } else {
-      navigate("/dashboard");
-      }
+  try {
+    await loginWithGoogle();
+  } catch (err) {
+    setError("Google sign up failed");
+  }
+};
 
-     } else {
-    navigate("/register", { 
-     state: { 
-       email: result.firebaseUser.email, 
-       isGoogle: true 
-     } })
-    };
-
-    } catch (err) {
-      setError("Google sign up failed");
-    }
-  };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-[#1A0D28] relative">

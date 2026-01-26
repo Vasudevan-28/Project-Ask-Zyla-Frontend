@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { submitSettFeedback } from "./api/settingsAPI";
 import { VscArrowCircleLeft } from "react-icons/vsc";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 import toast from "react-hot-toast";
@@ -17,20 +16,7 @@ function Feedback({ onBack }) {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
 
-  const [idToken, setIdToken] = useState("");
-
-  const auth = getAuth();
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (u) => {
-      setIdToken(await u.getIdToken(false));
-    });
-
-    return () => unsub();
-  }, [auth]);
-
-  const handleBackOrSkip = () => {
-    if (onBack) onBack();
-  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");

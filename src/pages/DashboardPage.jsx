@@ -7,7 +7,7 @@ import StreakBar from "../dashboard_components/StreakBar";
 import AddProductModal from "../dashboard_components/AddProductModal";
 import { ApiService } from "../services/dashboardApi";
 import { ThemeContext } from "../contexts/ThemeContext";
-import { getAuth } from "firebase/auth";
+
 import { toISODate } from "../utils/DateUtils";
 
 export default function DashboardPage() {
@@ -21,24 +21,10 @@ export default function DashboardPage() {
     afternoon: [],
     evening: [],
   });
-  const [userToken, setUserToken] = useState(null);
   const [completedDates, setCompletedDates] = useState([]);
 
   const selectedIso = toISODate(selectedDate);
 
-  useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = auth.onIdTokenChanged(async (user) => {
-      if (user) {
-        const token = await user.getIdToken(false);
-        setUserToken(token);
-      } else {
-        setUserToken(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   useEffect(() => {
     function onOpenAddProduct() {
@@ -56,9 +42,8 @@ export default function DashboardPage() {
     }
 
     async function onTodosUpdated() {
-      if (userToken) {
+   
         fetchCompletedDates();
-      }
     }
 
     window.addEventListener("askzyla:open-add-product", onOpenAddProduct);
@@ -67,18 +52,16 @@ export default function DashboardPage() {
       window.removeEventListener("askzyla:open-add-product", onOpenAddProduct);
       window.removeEventListener("zyla:todos-updated", onTodosUpdated);
     };
-  }, [userToken]);
+  }, []);
 
   useEffect(() => {
-    if (userToken) {
-      fetchRoutines();
-      fetchCompletedDates();
-    }
-  }, [userToken]);
+   
+    fetchRoutines();
+    fetchCompletedDates();
+  }, []);
 
   async function fetchRoutines() {
     try {
-      // const data = await ApiService.getProducts(userToken);
       const data = await ApiService.getProducts();
       setRoutines(data);
     } catch (err) {
@@ -88,7 +71,6 @@ export default function DashboardPage() {
 
   async function fetchCompletedDates() {
     try {
-      // const dates = await ApiService.getCompletedDates(userToken);
       const dates = await ApiService.getCompletedDates();
       setCompletedDates(dates);
     } catch (err) {
@@ -102,7 +84,6 @@ export default function DashboardPage() {
 
   async function handleAddProduct(product) {
     try {
-      // await ApiService.addProduct(product, userToken);
       await ApiService.addProduct(product);
       await fetchRoutines();
     } catch (err) {
@@ -113,7 +94,6 @@ export default function DashboardPage() {
 
   async function handleRemoveProduct(routineKey, id) {
     try {
-      // await ApiService.deleteProduct(id, userToken);
       await ApiService.deleteProduct(id);
       await fetchRoutines();
     } catch (err) {
@@ -162,12 +142,12 @@ export default function DashboardPage() {
 
           {/* Todo */}
           <div className="col-start-2 col-end-3 row-start-2 row-end-3 min-h-0">
-            <ToDoCard selectedDate={selectedDate} userToken={userToken} />
+            <ToDoCard selectedDate={selectedDate} />
           </div>
 
           {/* Streak / Daily Progress */}
           <div className="col-start-1 col-end-3 row-start-3 row-end-4">
-            <StreakBar userToken={userToken} selectedIso={selectedIso} />
+            <StreakBar selectedIso={selectedIso} />
           </div>
 
           {/* Buttons */}
@@ -190,14 +170,12 @@ export default function DashboardPage() {
       </div>
 
       <div className="w-full px-4 block md:hidden max-w-xl">
-        {/* Search at top */}
         <div className="mb-4">
           <SearchBar onSearch={handleSearch} />
         </div>
 
-        {/* Streak / Daily Progress */}
         <div className="mb-4">
-          <StreakBar userToken={userToken} selectedIso={selectedIso} />
+          <StreakBar selectedIso={selectedIso} />
         </div>
 
         {/* Calendar */}
@@ -209,9 +187,8 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* Todo */}
         <div className="mb-4">
-          <ToDoCard selectedDate={selectedDate} userToken={userToken} />
+          <ToDoCard selectedDate={selectedDate}  />
         </div>
 
         <div className="mb-6">

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useContext } from "react";
-// import ProductCard from "./ProductCard";
+
 import ChatMessage from "./ChatMessage";
 
 import ZylaChatPic from "../assets/Zyla-no-bg.png";
@@ -24,7 +24,6 @@ export default function Chatbot({
   speechSupported,
   isListening,
   toggleListening,
-  // idToken,
   onOpenConversations = () => {},
   interimText,
 }) {
@@ -40,12 +39,11 @@ useEffect(() => {
 
   textarea.style.height = "auto";
 
-  const maxHeight = 160; // matches max-h-40 (40 * 4px)
+  const maxHeight = 160; 
   const newHeight = Math.min(textarea.scrollHeight, maxHeight);
 
   textarea.style.height = newHeight + "px";
 
-  // Toggle scrollbar ONLY when needed
   textarea.style.overflowY =
     textarea.scrollHeight > maxHeight ? "auto" : "hidden";
 }, [input, interimText]);
@@ -64,7 +62,6 @@ useEffect(() => {
                 ${isLight ? " bg-white" : "bg-white/10"}
                 `}
           >
-            {/* Mobile menu button */}
             <button
               onClick={onOpenConversations}
               className="md:hidden ml-3 p-2 rounded-full  text-slate-800 bg-white/10 hover:bg-white/20"
@@ -86,7 +83,7 @@ useEffect(() => {
           <div
             ref={scrollerRef}
             className="flex-1 overflow-y-auto max-h-[calc(100vh-210px)] p-4  flex flex-col gap-4 min-h-0 relative z-10 scrollbar-hide"
-            // style={{ maxHeight: "calc(100vh - 210px)" }}
+           
           >
             {messages.map((m, idx) => {
               const lastAssistantMessage = [...messages].reverse().find((msg) => msg.role === "assistant");

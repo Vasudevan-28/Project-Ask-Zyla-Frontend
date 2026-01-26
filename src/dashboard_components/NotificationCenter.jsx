@@ -8,12 +8,10 @@ export default function NotificationCenter({
   notifications,
   onClose,
   onMarkRead,
-  onMarkAllRead,
-  // userToken,
+  onMarkAllRead
 }) {
   const handleMarkRead = async (id) => {
     try {
-      // await ApiService.markNotificationRead(id, userToken);
       await ApiService.markNotificationRead(id);
       onMarkRead(id);
     } catch (error) {
@@ -23,7 +21,6 @@ export default function NotificationCenter({
 
   const handleMarkAllRead = async () => {
     try {
-      // await ApiService.markAllNotificationsRead(userToken);
       await ApiService.markAllNotificationsRead();
       onMarkAllRead();
     } catch (error) {
@@ -63,12 +60,10 @@ export default function NotificationCenter({
         overflow-hidden animate-fade-in custom-scrollbar
       "
     >
-      {/* Header */}
       <div className="bg-purple-50 px-4 py-2.5 border-b border-purple-100 flex justify-between items-center">
         
-        {/* Left Section: Image + Title */}
         <div className="flex items-center gap-2">
-          {/* Small icon image */}
+
           <img
             src={Zylaaa}
             alt="App icon"
@@ -76,12 +71,11 @@ export default function NotificationCenter({
           />
 
           <div className="text-[#1d0e2d]">
-            {/* Title */}
+        
             <h3 className="font-medium text-[13px]  leading-tight">
               Notifications
             </h3>
 
-            {/* Subtitle */}
             <p className="text-[10px] ">
               {unreadCount > 0 ? `${unreadCount} unread` : "You're all caught up"}
             </p>
@@ -97,17 +91,10 @@ export default function NotificationCenter({
               Mark all
             </button>
           )}
-          {/* <button
-            onClick={onClose}
-            className="text-purple-300 hover:text-[#1d0e2d] transition text-sm"
-            aria-label="Close notifications"
-          >
-            ✕
-          </button> */}
+         
         </div>
       </div>
 
-      {/* Notification List */}
       <div className="max-h-[260px] overflow-y-auto custom-scrollbar">
         {notifications.length === 0 ? (
           <div className="p-5 text-center text-gray-400 text-xs space-y-1.5">
@@ -134,7 +121,6 @@ export default function NotificationCenter({
 
                 <div className="pl-3 pr-1">
                   <div className="flex justify-between items-start">
-                    {/* Smaller Title */}
                     <h4
                       className={`text-[11px] ${
                         notif.read
@@ -145,7 +131,6 @@ export default function NotificationCenter({
                       {notif.title}
                     </h4>
 
-                    {/* Mark read */}
                     {!notif.read && (
                       <button
                         onClick={() => handleMarkRead(notif.id)}

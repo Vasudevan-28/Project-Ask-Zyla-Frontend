@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import { toISODate, todayISO } from "../utils/DateUtils";
-// import StorageService from "../utils/StorageService";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { IoMdArrowDropright, IoMdArrowDropleft } from "react-icons/io";
 import { IoMdHeart } from "react-icons/io";
@@ -20,7 +19,6 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
     if (selectedDate) setViewDate(new Date(selectedDate));
   }, [selectedDate]);
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (monthDropdownRef.current && !monthDropdownRef.current.contains(event.target)) {
