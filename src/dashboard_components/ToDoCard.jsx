@@ -151,8 +151,10 @@ export default function ToDoCard({ selectedDate }) {
                 className={`flex-1 wrap-break-word text-sm md:text-base ${
                   task.checked ? "line-through opacity-70" : ""
                 }`}
+                title={task.text}
               >
-                {task.text}
+                {/* {task.text} */}
+                {task.text.length > 26 ? task.text.slice(0,26) + "..." : task.text}
               </span>
             </div>
             <button

@@ -2,7 +2,6 @@ import { useContext } from "react";
 import NormPurf from "../gifs/norm-purf.gif"
 import { ThemeContext } from "../contexts/ThemeContext";
 
-
 export default function AIDescription({zylaSum}) {
   const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";

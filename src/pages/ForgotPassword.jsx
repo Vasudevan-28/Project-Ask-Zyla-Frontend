@@ -57,9 +57,9 @@ export default function ForgotPassword() {
     } catch (err) {
       const msg = err?.message || String(err) || "Something went wrong.";
       if (msg.includes("Too many OTP") || msg.includes("429")) {
-        setError("❌ Too many OTP requests. Try again after 30 minutes.");
+        setError("Too many OTP requests. Try again after 30 minutes.");
       } else {
-        setError("❌ " + msg);
+        setError(msg);
       }
     } finally {
       setLoading(false);
