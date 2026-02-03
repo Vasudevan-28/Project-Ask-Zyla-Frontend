@@ -48,7 +48,7 @@ export default function Location({ enabled, onLocationDetected }) {
             longitude,
           };
 
-          fetchedRef.current = true; // mark as fetched
+          fetchedRef.current = true; 
           if (typeof onLocationDetected === "function") {
             onLocationDetected(location);
           }

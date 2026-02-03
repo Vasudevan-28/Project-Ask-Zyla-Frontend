@@ -65,9 +65,12 @@ function Profile() {
   }
 
   useEffect(() => {
-    
     fetchProfile();
   }, []);
+
+  // useEffect(() => {
+  //   fetchProfile()
+  // }, [])
 
   function handleChange(e) {
     const { name, value } = e.target;

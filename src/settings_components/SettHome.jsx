@@ -25,6 +25,8 @@ function SettHome() {
     footRoute || "settings"
   );
 
+  const [profileRefreshKey, setProfileRefreshKey] = useState(0)
+
    const handleLogout = async () => {
       try {
         await signOut(auth);
@@ -47,7 +49,7 @@ function SettHome() {
       <main className="flex-1 flex justify-center px-4 py-16 mb-16 md:py-18 md:px-16">
         
         <div className="flex w-full max-w-5xl  gap-4 md:gap-4  flex-col md:flex-row">
-          <Profile />
+          <Profile key={profileRefreshKey} />
 
     
           <div className="w-full md:flex-1 ">
@@ -56,7 +58,8 @@ function SettHome() {
                 onOpenSupport={() => setActiveRightPanel("support")}
                 onOpenFeedback={() => setActiveRightPanel("feedback")}
                 onOpenRating={() => setActiveRightPanel("rating")}
-                onOpenPrivacy={() => setShowPrivacy(true)}
+                // onOpenPrivacy={() => setShowPrivacy(true)}
+                onLocationUpdated={ () => setProfileRefreshKey(prev => prev + 1)}
               />
             )}
 

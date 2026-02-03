@@ -11,8 +11,8 @@ import { LiaToggleOnSolid, LiaToggleOffSolid } from "react-icons/lia";
 
 import { ThemeContext } from "../contexts/ThemeContext";
 
-
 import Location from "./location";
+import LocationConfirmModal from "./LocationConfirmModal";
 
 import { useNavigate } from "react-router-dom";
 import { updateCityAndState } from "./api/settingsAPI";
@@ -21,16 +21,13 @@ import { setTimeFormatCookie, getTimeFormatCookie } from "../utils/timeformatCoo
 import ClearCacheModal from "./ClearCacheModal";
 import DeleteAccountModal from "./DeleteAccountModal";
 
-
 const rowClasses =
   "w-full flex items-center justify-between h-[56px] px-4 border-b border-[#f1c6e0] text-[14px] text-[color:var(--text-main)]";
 
 function ToggleRow({ icon, label, checked, onChange, helper, isLight }) {
   return (
-    
-    <div className="w-full md:w-134  pt-1 pb-1">
+    <div className="w-full  pt-1 pb-1">
       <div className={rowClasses}>
-        {/* LEFT: icon + label */}
         <div className="flex items-center gap-3">
           <div className="w-6 h-6 flex items-center justify-center">
             {typeof icon === "string" ? <img src={icon} className="w-6 h-6" alt={label} /> : icon}
@@ -38,7 +35,6 @@ function ToggleRow({ icon, label, checked, onChange, helper, isLight }) {
           <span className="font-semibold text-[13px] md:text-[15px]">{label}</span>
         </div>
 
-        {/* RIGHT: helper + toggle icon */}
         <div className="flex items-center gap-0">
           {helper && <span className="text-[12px]  opacity-70 min-w-[32px] text-right">{helper}</span>}
 
@@ -85,11 +81,10 @@ function ButtonRow({ icon, label, onClick }) {
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-[12px] opacity-0 min-w-[32px] text-right">
+          <span className="text-[12px] opacity-0 min-w-8 text-right">
             &nbsp;
           </span>
 
-          {/* Arrow */}
           <span className="text-2xl leading-none text-gray-400">›</span>
         </div>
       </div>
@@ -134,7 +129,7 @@ function LanguageButton({ icon, label, selectedLanguage, onLanguageChange, isLig
   );
 }
 
-function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRating, onOpenPrivacy }) {
+function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRating, onLocationUpdated}) {
   const [is24h, setIs24h] = useState(true);
 
   useEffect(() => {
@@ -154,25 +149,21 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
   const [deletePopup, setDeletePopup] = useState(false);
   const [clearCachePopup, setClearCachePopup] = useState(false);
 
-  const [password, setPassword] = useState("");
+  const [pendingLocation, setPendingLocation] = useState(null);
+  const [isUpdatingLocation, setIsUpdatingLocation] = useState(false);
 
   const navigate = useNavigate();
 
-  const [showConfirm, setShowConfirm] = useState(false);
-
-
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
-  
   const handleLocationToggle = () => {
     const next = !locationOn;
     setLocationOn(next);
 
     if (!next) {
-      setLocationStatus("Location disabled");
+      setLocationStatus("");
+      setPendingLocation(null);
     } else {
       setLocationStatus("Detecting location...");
+      setPendingLocation(null);
     }
   };
 
@@ -184,54 +175,44 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
 
     const { city, state } = location || {};
 
+    setPendingLocation(location);
     setLocationStatus(`Detected: ${city || "Unknown city"}, ${state || "Unknown state"}`);
-
-    try {
-      await updateCityAndState(city, state);
-
-      setLocationStatus(`Saved: ${city || "Unknown city"}, ${state || "Unknown state"}`);
-    } catch (err) {
-      console.error("Failed to save location in profile:", err);
-      setLocationStatus("Failed to save location");
-    }
 
     if (typeof onLocationDetected === "function") {
       onLocationDetected(location);
     }
   };
 
+  async function confirmUpdateLocation() {
+    if (!pendingLocation) return;
+    setIsUpdatingLocation(true);
+    try {
+      const { city, state } = pendingLocation;
+      await updateCityAndState(city, state);
+      setLocationStatus(`Saved: ${city || "Unknown city"}, ${state || "Unknown state"}`);
+      onLocationUpdated()
+      setPendingLocation(null);
+    } catch (err) {
+      console.error("Failed to save location in profile:", err);
+      setLocationStatus("Failed to save location");
+    } finally {
+      setIsUpdatingLocation(false);
+    }
+  }
 
-//   const handleDeleteAccount = async () => {
-//   setError("");
-//   setSuccess("");
-
-//   if (!password) {
-//     setError("Please enter your password to confirm.");
-//     return;
-//   }
-
-//   try {
-//     await reauthAndDeleteFirebaseUser(password);
-
-//     localStorage.clear();
-//     navigate("/signup");
-//   } catch (err) {
-//     console.error(err);
-//     setError("Incorrect password or deletion failed.");
-//   }
-// };
-
-
+  function cancelPendingLocation() {
+    setLocationOn(false);
+    setPendingLocation(null);
+    setLocationStatus("");
+  }
 
   function toggleTimeFormat() {
-  setIs24h(prev => {
-    const next = !prev;
-    setTimeFormatCookie(next);
-    return next;
-  });
-  console.log(is24h)
-}
-
+    setIs24h(prev => {
+      const next = !prev;
+      setTimeFormatCookie(next);
+      return next;
+    });
+  }
 
   return (
     <section
@@ -244,10 +225,7 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
       <ToggleRow icon={<IoLocationOutline className="w-9 h-6 " />} label="Location" checked={locationOn} onChange={handleLocationToggle} isLight={isLight} />
 
       {locationStatus && (
-        <>
-          <div className={`text-[12px] pl-10 mt-1 mb-3 ${isLight ? "text-slate-800" : "text-slate-100"}`}>{locationStatus}</div>
-        
-        </>
+        <div className={`text-[12px] pl-10 mt-1 mb-3 ${isLight ? "text-slate-800" : "text-slate-100"}`}>{locationStatus}</div>
       )}
 
       <Location enabled={locationOn} onLocationDetected={handleLocationDetectedInternal} />
@@ -285,11 +263,10 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
 
       {deletePopup && (
         <DeleteAccountModal
-  open={deletePopup}
-  onClose={() => setDeletePopup(false)}
-  isLight={isLight}
-/>
-
+          open={deletePopup}
+          onClose={() => setDeletePopup(false)}
+          isLight={isLight}
+        />
       )}
 
       {clearCachePopup && (
@@ -298,6 +275,15 @@ function Setting({ onLocationDetected, onOpenSupport, onOpenFeedback, onOpenRati
          onClose={() => setClearCachePopup(false)}
          isLight={isLight} />
       )}
+
+      <LocationConfirmModal
+        open={!!pendingLocation && !pendingLocation.error}
+        location={pendingLocation}
+        onConfirm={confirmUpdateLocation}
+        onCancel={cancelPendingLocation}
+        isLight={isLight}
+        isLoading={isUpdatingLocation}
+      />
     </section>
   );
 }
