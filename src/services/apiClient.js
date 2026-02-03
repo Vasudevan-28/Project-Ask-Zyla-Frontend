@@ -27,13 +27,13 @@ apiClient.interceptors.request.use(async (config) => {
   return config;
 });
 
-apiClient.interceptors.response.use(
-  (r) => r,
-  async (error) => {
-    if (error.response?.status === 401) {
-      await signOut(auth);
-      window.location.href = "/login";
-    }
-    return Promise.reject(error);
-  }
-);
+// apiClient.interceptors.response.use(
+//   (r) => r,
+//   async (error) => {
+//     if (error.response?.status === 401) {
+//       await signOut(auth);
+//       window.location.href = "/login";
+//     }
+//     return Promise.reject(error);
+//   }
+// );

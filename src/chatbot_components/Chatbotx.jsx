@@ -49,6 +49,7 @@ useEffect(() => {
 }, [input, interimText]);
 
 
+
   return (
     <div className="flex-1 flex flex-col p-1 custom-scrollbar max-h-[85vh] md:max-h-[95vh]">
       <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full min-h-0">
@@ -128,6 +129,7 @@ useEffect(() => {
   value={input + (isListening && interimText ? " " + interimText : "")}
   onChange={(e) => setInput(e.target.value)}
   disabled={loading}
+  // readOnly={loading}
   onKeyDown={(e) => {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();

@@ -172,14 +172,14 @@ export default function HeaderPromo() {
           <div className="flex items-center gap-2 md:gap-4">
             <button
               onClick={newTab}
-              className="px-3 py-1 text-sm font-semibold rounded border border-[#1A0D28] text-[#1A0D28] hover:bg-[#1A0D28] hover:text-white transition"
+              className="px-3 py-1 cursor-pointer text-sm font-semibold rounded border border-[#1A0D28] text-[#1A0D28] hover:bg-[#1A0D28] hover:text-white transition"
             >
               Login
             </button>
 
             <button
               onClick={newTabSignUp}
-              className="hidden md:inline-flex px-3 py-1 text-sm font-semibold rounded text-white bg-linear-to-r from-[#1A0D28] to-[#3B2B5C] hover:scale-105 transition"
+              className="hidden md:inline-flex px-3 py-1 cursor-pointer text-sm font-semibold rounded text-white bg-linear-to-r from-[#1A0D28] to-[#3B2B5C] hover:scale-105 transition"
             >
               Register
             </button>

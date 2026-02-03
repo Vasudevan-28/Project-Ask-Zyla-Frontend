@@ -2,6 +2,7 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { ArchiveChatBotApiService } from "../services/archive_chatbot_api";
 import { useNavigate } from "react-router-dom";
+import { MdVisibility } from "react-icons/md";
 
 export default function ArchiveConversations({
   createNewConversation,
@@ -10,7 +11,6 @@ export default function ArchiveConversations({
   openConversation,
   currentConversationId,
   refreshConversations,
-  isArchived,
   isMobileOpen = false,
   onClose = () => {},
 }) {
@@ -52,7 +52,7 @@ export default function ArchiveConversations({
 
       <div className="flex items-center w-40 justify-between mb-4 relative z-10">
         <div className="text-base font-semibold tracking-wide drop-shadow-sm">
-          {isArchived ? "Archived Chats" : "Recent Chats"}
+          Archived Chats
         </div>
 
         <button
@@ -83,7 +83,7 @@ export default function ArchiveConversations({
             >
               <div className="relative overflow-hidden w-full" title={c.title}>
                 <div className="inline-block whitespace-nowrap text-sm text-white/90 drop-shadow-sm">
-                  {c.title ? (c.title.length > 20 ? c.title.slice(0, 18) + "..." : c.title) : "Untitled"}
+                  {c.title ? (c.title.length > 15 ? c.title.slice(0, 19) + "..." : c.title) : "Untitled"}
                 </div>
               </div>
 
@@ -92,7 +92,7 @@ export default function ArchiveConversations({
                   e.stopPropagation();
                   toggleMenu(c.id);
                 }}
-                className="px-2 pr-3 text-white/80 hover:text-white transition opacity-0 group-hover:opacity-100"
+                className="pr-2 text-white/80  hover:text-white transition opacity-0 group-hover:opacity-100"
                 aria-label="Open conversation menu"
                 type="button"
               >
@@ -169,8 +169,16 @@ export default function ArchiveConversations({
             `}>
             <div className={`flex items-center justify-between mb-3
                   ${isLight ? "text-black" : "text-white"}`}>
-              <div className="text-lg font-semibold">{isArchived ? "Archived Chats" : "Recent Chats"}</div>
-             
+              <div className="text-lg font-semibold">Archived Chats</div>
+              <div className="flex gap-2">
+               <button
+              className="w-8 h-8 rounded-md bg-gray-100 flex items-center justify-center text-gray-500"
+              onClick={() =>
+                navigate("/loading", { state: { nextPage: "/chatbot" } })
+              }
+              >
+                <MdVisibility />
+              </button>
               <button
                 onClick={() => {
                   createNewConversation();
@@ -183,7 +191,7 @@ export default function ArchiveConversations({
               </button>
 
             </div>
-
+</div>
             <div className="overflow-y-auto" style={{ maxHeight: "calc(100vh - 140px)" }}>
               {loadingConversations && (
                 <div className="flex items-center justify-center py-3">
@@ -268,7 +276,7 @@ export default function ArchiveConversations({
               )}
             </div>
 
-               <div className="absolute bottom-4 left-22" >
+               {/* <div className="absolute bottom-4 left-22" >
             <button
               onClick={() =>
                 navigate("/loading", { state: { nextPage: "/chatbot" } })
@@ -281,7 +289,7 @@ export default function ArchiveConversations({
             >
               Recent Chats
             </button>
-            </div>
+            </div> */}
 
           </div>
         </div>

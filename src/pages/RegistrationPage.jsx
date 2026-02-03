@@ -21,6 +21,13 @@ function RegistrationPage() {
   isGoogle = authUser ? true : false
 
   useEffect(() => {
+    if (emid == ""){
+      navigate("/login")
+    }
+    return
+  },[emid])
+
+  useEffect(() => {
     if (loading) return;
 
     if (authUser && profile?.registered) {

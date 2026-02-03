@@ -85,7 +85,7 @@ import ProtectedLayout from "./routes/ProtectedLayout.jsx";
 import OpenLayout from "./routes/OpenLayout.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  // <StrictMode>
     <AuthProvider>
       <CookieProvider>
         <ThemeProvider>
@@ -152,7 +152,7 @@ createRoot(document.getElementById("root")).render(
         </ThemeProvider>
       </CookieProvider>
     </AuthProvider>
-  </StrictMode>,
+  // </StrictMode>
 );
 
 

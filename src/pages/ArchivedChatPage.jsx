@@ -7,6 +7,7 @@ import Chatbot from "../chatbot_components/Chatbotx";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 import { ArchiveChatBotApiService } from "../services/archive_chatbot_api"
+import { TextInitial } from "lucide-react";
 
 
 const QUICK_QUESTIONS = [
@@ -316,12 +317,18 @@ useEffect(() => {
     }
   }
 
+  // async function emptyState(textt) {
+  //   createNewConversation()
+  //   sendMessage(textt)
+  // }
+
   async function sendMessage(textArg) {
     const userText = textArg?.trim() ?? input.trim();
     if (!userText) return;
 
     if (!currentConversationId) {
-      alert("Select or create a conversation before sending messages.");
+      createNewConversation()
+      // emptyState(textArg)
       return;
     }
 
@@ -343,7 +350,7 @@ useEffect(() => {
           // hits: intent_recommend ? hits : [],
         },
       ]);
-
+      setLoading(false)
       await loadConversations();
     } catch (err) {
       console.error(err);
@@ -351,7 +358,7 @@ useEffect(() => {
         ...prev,
         {
           role: "assistant",
-          text: "Sorry, I couldn't reach the server. Check your backend URL in settings.",
+          text: "Sorry, I couldn't reach the server.",
         },
       ]);
     } finally {
@@ -378,7 +385,6 @@ useEffect(() => {
             setIsConversationsOpen(false);
           }}
           refreshConversations={loadConversations}
-          isArchived={true}
 
           isMobileOpen={isConversationsOpen}
           onClose={() => setIsConversationsOpen(false)}

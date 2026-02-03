@@ -3,10 +3,6 @@ import { useNavigate } from "react-router-dom";
 function Lightbutton({ children, onClick}) {
   const navigate = useNavigate()
 
-  // const openTab  = () => {
-  //   window.open('/login', "_blank")
-  // }
-
   return (
     <button
       // onClick={() => {navigate('/TrialChat')}}

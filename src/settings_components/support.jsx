@@ -67,7 +67,7 @@ const handleSubmit = async (e) => {
     <section className={`w-full md:w-[90%] max-w-[900px] flex-1 min-w-0 h-full px-4 md:px-6 pt-4 pb-6 flex flex-col rounded-2xl overflow-y-auto ${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"}`}>
 
       <div style={{ display: "flex", alignItems: "center", marginBottom: "24px" }}>
-        <button type="button" onClick={() => onBack && onBack()}>
+        <button type="button" className="cursor-pointer"  onClick={() => onBack && onBack()}>
           <VscArrowCircleLeft size={40} />
         </button>
 
@@ -94,7 +94,7 @@ const handleSubmit = async (e) => {
               setIssue(e.target.value);
               setSuccess("");
             }}
-            className={`w-full min-h-[120px] rounded-[12px] border px-4 py-3 text-sm resize-vertical outline-none shadow-sm ${!isLight ? "placeholder-slate-50/30" : "placeholder-slate-900/30"}`}
+            className={`w-full min-h-[120px] rounded-xl border px-4 py-3 text-sm resize-vertical outline-none shadow-sm ${!isLight ? "placeholder-slate-50/30" : "placeholder-slate-900/30"}`}
             style={{
               borderColor: "#e0c4ea",
               boxShadow: "0 4px 8px rgba(125,25,92,0.08)",
@@ -115,7 +115,7 @@ const handleSubmit = async (e) => {
               setHelp(e.target.value);
               setSuccess("");
             }}
-            className={`w-full min-h-[120px] rounded-[12px] border px-4 py-3 text-sm resize-vertical outline-none shadow-sm ${!isLight ? "placeholder-slate-50/30" : "placeholder-slate-900/30"}`}
+            className={`w-full min-h-[120px] rounded-xl border px-4 py-3 text-sm resize-vertical outline-none shadow-sm ${!isLight ? "placeholder-slate-50/30" : "placeholder-slate-900/30"}`}
             style={{
               borderColor: "#e0c4ea",
               boxShadow: "0 4px 8px rgba(125,25,92,0.08)",
@@ -127,7 +127,7 @@ const handleSubmit = async (e) => {
           <button
             type="submit"
             disabled={saving}
-            className={`px-6 py-2.5 rounded-md text-sm font-semibold tracking-wider uppercase text-white cursor-pointer ${isLight ? "bg-linear-to-r from-[#994A97] to-[#CA88B1]" : "bg-white/10 hover:bg-white/20"} ${saving ? "opacity-70 cursor-not-allowed" : "hover:opacity-90"}`}
+            className={`px-6 py-2.5  rounded-md text-sm font-semibold tracking-wider uppercase text-white cursor-pointer ${isLight ? "bg-linear-to-r from-[#994A97] to-[#CA88B1]" : "bg-white/10 hover:bg-white/20"} ${saving ? "opacity-70 cursor-not-allowed" : "hover:opacity-90"}`}
           >
             {saving ? "SUBMITTING..." : "SUBMIT"}
           </button>

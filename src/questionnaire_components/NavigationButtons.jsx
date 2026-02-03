@@ -203,7 +203,7 @@ const NextButton = ({ current, setCurrent, questions, selected, setSelected, q }
       role="toolbar"
       aria-label="Question navigation"
     >
-      {/* Skip button only for cycle questions */}
+    
       {q.type === "cycle" && (
         <button
           onClick={handleSkip}

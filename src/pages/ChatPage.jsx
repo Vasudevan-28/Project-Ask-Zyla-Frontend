@@ -20,10 +20,9 @@ const QUICK_QUESTIONS = [
 ];
 
 export default function ChatPage() {
-
-    const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const isLight = theme === "light";
-  
+
   const navigate = useNavigate();
   const scrollerRef = useRef(null);
 
@@ -47,96 +46,94 @@ export default function ChatPage() {
   const [speakingId, setSpeakingId] = useState(null);
 
   const recognitionRef = useRef(null);
-  const voiceRef = useRef(null)
-  
+  const voiceRef = useRef(null);
 
-const [randomQs, setRandomQs] = useState([]);
-
+  const [randomQs, setRandomQs] = useState([]);
   const [isConversationsOpen, setIsConversationsOpen] = useState(false);
 
   const [interimText, setInterimText] = useState("");
-const finalTextRef = useRef("");
-const silenceTimerRef = useRef(null);
+  const finalTextRef = useRef("");
+  const silenceTimerRef = useRef(null);
 
+  const isCreatingRef = useRef(false);
+  const isLoadingConvosRef = useRef(false);
+  const loadOnceRef = useRef(false);
 
+  useEffect(() => {
+    const shuffled = [...QUICK_QUESTIONS].sort(() => 0.5 - Math.random());
+    setRandomQs(shuffled.slice(0, 5));
+  }, []);
 
-useEffect(() => {
-  const shuffled = [...QUICK_QUESTIONS].sort(() => 0.5 - Math.random());
-  setRandomQs(shuffled.slice(0, 5));
-}, []);
-
-useEffect(() => {
-  if (
-    typeof window === "undefined" ||
-    (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window))
-  ) {
-    setSpeechSupported(false);
-    return;
-  }
-
-  const SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
-
-  const recognition = new SpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
-  recognition.lang = "en-US";
-
-  recognition.onstart = () => {
-    setIsListening(true);
-    setInterimText("");
-  };
-
-  recognition.onresult = (event) => {
-  let interim = "";
-  let finalChunk = "";
-
-  for (let i = event.resultIndex; i < event.results.length; i++) {
-    const transcript = event.results[i][0].transcript;
-
-    if (event.results[i].isFinal) {
-      finalChunk += transcript;
-    } else {
-      interim += transcript;
+  useEffect(() => {
+    if (
+      typeof window === "undefined" ||
+      (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window))
+    ) {
+      setSpeechSupported(false);
+      return;
     }
-  }
 
-  if (finalChunk) {
-    finalTextRef.current =
-      (finalTextRef.current + " " + finalChunk).trim();
-  }
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  setInput(
-    (finalTextRef.current + " " + interim).trim()
-  );
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
 
-  if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-  silenceTimerRef.current = setTimeout(() => {
-    recognition.stop();
-  }, 3000); 
-};
+    recognition.onstart = () => {
+      setIsListening(true);
+      setInterimText("");
+    };
 
-  recognition.onerror = (e) => {
-  if (e.error === "aborted") return; 
-  console.warn("Speech recognition error:", e.error);
-  setIsListening(false);
-};
+    recognition.onresult = (event) => {
+      let interim = "";
+      let finalChunk = "";
 
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
 
-  recognition.onend = () => {
-    setIsListening(false);
-    setInterimText("");
-    if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-  };
+        if (event.results[i].isFinal) {
+          finalChunk += transcript;
+        } else {
+          interim += transcript;
+        }
+      }
 
-  recognitionRef.current = recognition;
+      if (finalChunk) {
+        finalTextRef.current =
+          (finalTextRef.current + " " + finalChunk).trim();
+      }
 
-  return () => {
-    recognition.abort(); 
-    if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-  };
-}, []);
+      setInput((finalTextRef.current + " " + interim).trim());
 
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = setTimeout(() => {
+        recognition.stop();
+      }, 3000);
+    };
+
+    recognition.onerror = (e) => {
+      if (e.error === "aborted") return;
+      console.warn("Speech recognition error:", e.error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+      setInterimText("");
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+    };
+
+    recognitionRef.current = recognition;
+
+    return () => {
+      try {
+        recognition.abort();
+      } catch (e) {}
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) {
@@ -149,11 +146,7 @@ useEffect(() => {
       if (!voices.length) return;
 
       voiceRef.current =
-        voices.find(
-          (v) =>
-            v.lang === "en-US" &&
-            v.name.toLowerCase().includes("female")
-        ) ||
+        voices.find((v) => v.lang === "en-US" && v.name.toLowerCase().includes("female")) ||
         voices.find((v) => v.lang === "en-US") ||
         voices[0];
     };
@@ -162,77 +155,77 @@ useEffect(() => {
     window.speechSynthesis.onvoiceschanged = loadVoices;
   }, []);
 
+  const toggleListening = () => {
+    if (!speechSupported || !recognitionRef.current) return;
 
- const toggleListening = () => {
-  if (!speechSupported || !recognitionRef.current) return;
+    try {
+      if (isListening) {
+        if (silenceTimerRef.current) {
+          clearTimeout(silenceTimerRef.current);
+          silenceTimerRef.current = null;
+        }
 
-  try {
-    if (isListening) {
-      if (silenceTimerRef.current) {
-        clearTimeout(silenceTimerRef.current);
-        silenceTimerRef.current = null;
+        recognitionRef.current.abort();
+        setIsListening(false);
+        setInterimText("");
+      } else {
+        finalTextRef.current = input || "";
+        recognitionRef.current.start();
       }
-
-      recognitionRef.current.abort(); 
-      setIsListening(false);
-      setInterimText("");
-    } else {
-      finalTextRef.current = input || "";
-      recognitionRef.current.start();
+    } catch (err) {
+      console.warn("Mic toggle error:", err);
     }
-  } catch (err) {
-    console.warn("Mic toggle error:", err);
-  }
-};
+  };
 
+  const utteranceRef = useRef(null);
 
+  const handleSpeak = (text, id) => {
+    if (!ttsSupported || !voiceRef.current) return;
 
-  const utteranceRef = useRef(null)
+    const synth = window.speechSynthesis;
 
-const handleSpeak = (text, id) => {
-  if (!ttsSupported || !voiceRef.current) return;
+    if (speakingId === id) {
+      synth.cancel();
+      utteranceRef.current = null;
+      setSpeakingId(null);
+      return;
+    }
 
-  const synth = window.speechSynthesis;
-
-  if (speakingId === id) {
     synth.cancel();
-    utteranceRef.current = null;
-    setSpeakingId(null);
-    return;
-  }
 
-  synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = voiceRef.current;
+    utterance.lang = "en-US";
 
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.voice = voiceRef.current;
-  utterance.lang = "en-US";
+    utteranceRef.current = utterance;
 
-  utteranceRef.current = utterance;
+    utterance.onend = () => {
+      if (utteranceRef.current !== utterance) return;
+      utteranceRef.current = null;
+      setSpeakingId(null);
+    };
 
-  utterance.onend = () => {
-    if (utteranceRef.current !== utterance) return;
-    utteranceRef.current = null;
-    setSpeakingId(null);
+    utterance.onerror = () => {
+      if (utteranceRef.current !== utterance) return;
+      utteranceRef.current = null;
+      setSpeakingId(null);
+    };
+
+    setSpeakingId(id);
+
+    setTimeout(() => {
+      synth.speak(utterance);
+    }, 0);
   };
 
-  utterance.onerror = () => {
-    if (utteranceRef.current !== utterance) return;
-    utteranceRef.current = null;
-    setSpeakingId(null);
-  };
+  const [pageLoading, setPageLoading] = useState(true);
 
-  setSpeakingId(id);
-
-  setTimeout(() => {
-    synth.speak(utterance);
-  }, 0);
-};
-
-const [pageLoading, setPageLoading] = useState(true);
-  
   useEffect(() => {
+    if (loadOnceRef.current) return;
+    loadOnceRef.current = true;
+
     setPageLoading(false);
-    loadConversations();
+    loadConversations(); 
   }, []);
 
   useEffect(() => {
@@ -248,63 +241,97 @@ const [pageLoading, setPageLoading] = useState(true);
     }
   };
 
-
-  async function loadConversations() {
-  setLoadingConversations(true);
-  try {
-   const data = await ChatBotApiService.loadConversations()
-
-    if (!data || data.length === 0) {
-      await createNewConversation({ autoOpen: true, fromLoad: true });
-      return; 
+  async function loadConversations({ createIfEmpty = true } = {}) {
+    if (isLoadingConvosRef.current) {
+      return;
     }
-
-    setConversations(data || []);
-
-    if ((data || []).length > 0 && !currentConversationId) {
-      openConversation(data[0].id); 
-    }
-  } catch (err) {
-    console.error("Failed to load conversations:", err);
-  } finally {
-    setLoadingConversations(false);
-  }
-}
-
-
-  async function createNewConversation({ autoOpen = true } = {}) {
-  try {
-    const data = await ChatBotApiService.createNewConvo()
-
-    const newConversation = {
-      id: data.id,
-      title: data.title || "New chat",
-    };
-
-    setConversations((prev) => [newConversation, ...prev]);
-
- 
-    if (autoOpen) {
-      await openConversation(newConversation.id);
-    }
-  } catch (err) {
-    console.error("Failed to create conversation:", err);
-    alert("Could not create a new chat. Check console for details.");
-  }
-}
-
-
-  async function openConversation(id) {
-    setCurrentConversationId(id);
+    isLoadingConvosRef.current = true;
+    setLoadingConversations(true);
 
     try {
+      const data = await ChatBotApiService.loadConversations();
+
+      if (!data || data.length === 0) {
+        setConversations([]);
+        setCurrentConversationId(null);
+
+        if (createIfEmpty) {
+          await createNewConversation({ autoOpen: true, refreshAfterCreate: true });
+        } else {
+          setMessages([
+            {
+              role: "assistant",
+              text: "Hi! I'm Zyla 💜. Ask me anything—routines, ingredients, or product help.",
+            },
+          ]);
+        }
+        return;
+      }
+
+      setConversations(data);
+
+      if (currentConversationId && !data.some((c) => c.id === currentConversationId)) {
+        setCurrentConversationId(null);
+      }
+
+      if (data.length > 0 && !currentConversationId) {
+        await openConversation(data[0].id);
+      }
+    } catch (err) {
+      console.error("Failed to load conversations:", err);
+    } finally {
+      setLoadingConversations(false);
+      isLoadingConvosRef.current = false;
+    }
+  }
+
+  async function createNewConversation({ autoOpen = true, refreshAfterCreate = true } = {}) {
+    if (isCreatingRef.current) {
+      return;
+    }
+    isCreatingRef.current = true;
+
+    try {
+      const data = await ChatBotApiService.createNewConvo();
+
+      if (!data || !data.id) {
+        throw new Error("Invalid response from createNewConvo");
+      }
+
+      const newConversation = {
+        id: data.id,
+        title: data.title || "New chat",
+      };
+
+      setConversations((prev) => {
+        if (prev.some((c) => c.id === newConversation.id)) return prev;
+        return [newConversation, ...prev];
+      });
+
+      if (autoOpen) {
+        await openConversation(newConversation.id);
+      }
+
+      if (refreshAfterCreate) {
+        await loadConversations({ createIfEmpty: false });
+      }
+    } catch (err) {
+      console.error("Failed to create conversation:", err);
+      alert("Could not create a new chat. Check console for details.");
+    } finally {
+      isCreatingRef.current = false;
+    }
+  }
+
+ 
+  async function openConversation(id) {
+    try {
       setLoading(true);
-     const data = await ChatBotApiService.openConversation(id)
+      const data = await ChatBotApiService.openConversation(id);
 
       const mapped = (data || []).map((m) => ({
         role: m.role,
         text: m.content,
-        // hits: m.hits,
       }));
 
       if (mapped.length === 0) {
@@ -317,8 +344,23 @@ const [pageLoading, setPageLoading] = useState(true);
       } else {
         setMessages(mapped);
       }
+
+      setCurrentConversationId(id);
     } catch (err) {
-      console.error("Failed to load messages:", err);
+      console.error("Failed to load messages for conversation", id, err);
+
+      const status = err?.response?.status;
+      if (status === 404) {
+        setConversations((prev) => prev.filter((c) => c.id !== id));
+      }
+
+      try {
+        await loadConversations();
+      } catch (e) {
+        console.error("Error while refreshing conversations after failed open:", e);
+      }
+
+      setCurrentConversationId(null);
       alert("Could not load messages for this conversation.");
       setMessages([
         {
@@ -330,8 +372,6 @@ const [pageLoading, setPageLoading] = useState(true);
       setLoading(false);
     }
   }
-
-
 
   async function sendMessage(textArg) {
     const userText = textArg?.trim() ?? input.trim();
@@ -347,10 +387,8 @@ const [pageLoading, setPageLoading] = useState(true);
     setInput("");
 
     try {
-      
-      const data = await ChatBotApiService.sendMessage(currentConversationId, userText)
+      const data = await ChatBotApiService.sendMessage(currentConversationId, userText);
 
-      // const { reply, hits, intent_recommend } = data || {};
       const { reply } = data || {};
 
       setMessages((prev) => [
@@ -358,11 +396,11 @@ const [pageLoading, setPageLoading] = useState(true);
         {
           role: "assistant",
           text: reply || "",
-          // hits: intent_recommend ? hits : [],
         },
       ]);
       setLoading(false);
-      await loadConversations();
+
+      await loadConversations({ createIfEmpty: false });
     } catch (err) {
       console.error(err);
       setMessages((prev) => [
@@ -382,16 +420,20 @@ const [pageLoading, setPageLoading] = useState(true);
     sendMessage();
   }
 
-  if (pageLoading){
-    return(
-      <div className={`min-h-screen min-w-screen flex justify-center items-center
+  if (pageLoading) {
+    return (
+      <div
+        className={`min-h-screen min-w-screen flex justify-center items-center
        ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}
-      `}>
-        <div  className={`animate-spin h-8 w-8 rounded-full border-3  border-t-transparent
+      `}
+      >
+        <div
+          className={`animate-spin h-8 w-8 rounded-full border-3  border-t-transparent
           ${!isLight ? "border-[#e9d9e3]" : "border-[#1d0e2d]"}
-          `} ></div>
+          `}
+        ></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -399,7 +441,6 @@ const [pageLoading, setPageLoading] = useState(true);
       className={`min-h-screen w-full overflow-auto text-white flex flex-col 
         ${isLight ? "bg-[#e9d9e3]" : "bg-[#1d0e2d]"}`}
     >
-
       <div className="flex-1 flex p-3 mt-15">
         <Conversations
           conversations={conversations}
@@ -411,7 +452,6 @@ const [pageLoading, setPageLoading] = useState(true);
             setIsConversationsOpen(false);
           }}
           refreshConversations={loadConversations}
-          isArchived={false}
           isMobileOpen={isConversationsOpen}
           onClose={() => setIsConversationsOpen(false)}
         />
@@ -430,7 +470,7 @@ const [pageLoading, setPageLoading] = useState(true);
           isListening={isListening}
           toggleListening={toggleListening}
           onOpenConversations={() => setIsConversationsOpen(true)}
-          interim = {interimText}
+          interim={interimText}
         />
 
         <div className="hidden md:flex w-50 flex-col justify-center rounded-2xl m-1 p-4 relative overflow-hidden">
@@ -463,9 +503,7 @@ const [pageLoading, setPageLoading] = useState(true);
                 navigate("/loading", { state: { nextPage: "/archivedchats" } })
               }
               className={`py-1 px-3 text-sm rounded-md text-white font-semibold cursor-pointer ${
-                isLight
-                  ? "bg-linear-to-r from-[#4f4d4f]  to-[#bdbcbd]"
-                  : "bg-white/10"
+                isLight ? "bg-linear-to-r from-[#4f4d4f]  to-[#bdbcbd]" : "bg-white/10"
               }`}
             >
               Archived Chats

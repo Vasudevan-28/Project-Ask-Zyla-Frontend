@@ -63,14 +63,11 @@ export default function NewPassword() {
       <div className="flex items-center min-h-[80vh] justify-center p-4">
         <div className="w-full max-w-xl bg-white/20 backdrop-blur-xl shadow-xl rounded-3xl py-8 px-6  border border-white/30 relative">
           
-          <h2 className="text-center text-2xl sm:text-3xl font-semibold  mb-2 text-white">
+          <h2 className="text-center text-2xl sm:text-3xl font-semibold  mb-8 text-white">
             Set New Password
           </h2>
 
-          <p className="text-center text-white/90 mb-6 px-4  text-sm">
-            Set the new password for your account so you can log in and access
-            all features.
-          </p>
+         
 
           <div className="mb-4 relative">
             <input

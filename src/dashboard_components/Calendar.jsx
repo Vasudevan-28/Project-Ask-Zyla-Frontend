@@ -118,9 +118,9 @@ export default function Calendar({ selectedDate, onDateChange, completedDates = 
         <div className="mb-2 flex items-center justify-between">
           <div className="text-base md:text-lg font-extrabold">Calendar</div>
           <button
-            className="rounded-xl border border-black/5 text-white bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] px-3 py-2 text-sm font-bold shadow-sm
+            className="rounded-xl border cursor-pointer border-black/5 text-white bg-linear-to-b from-[#a78bfa] to-[#8b5cf6] px-3 py-2 text-sm font-bold shadow-sm
                        hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-300
-                       dark:border-white/15 dark:bg-white/10 dark:hover:bg-white/20"
+                      "
             onClick={() => {
               const d = new Date();
               const normalized = new Date(d.getFullYear(), d.getMonth(), d.getDate());

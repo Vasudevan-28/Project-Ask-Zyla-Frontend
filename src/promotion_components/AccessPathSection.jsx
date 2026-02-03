@@ -50,7 +50,6 @@ const AccessPathSection = () => {
 
     <section id="access-path" className="relative min-h-[600px] bg-[#423550] px-4 sm:px-6 py-20 text-center overflow-hidden">
       
-      {/* Top neon glow */}
       <motion.div
         className="absolute top-0 left-0 w-full h-20"
         style={{

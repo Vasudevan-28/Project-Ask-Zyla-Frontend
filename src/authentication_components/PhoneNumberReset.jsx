@@ -68,15 +68,13 @@ export default function PhoneNumberReset() {
           )}
 </div>
  
-        {/* Reset Link */}
 <p
-          onClick={() => navigate("/forgot-password")} // 👉 routing added
+          onClick={() => navigate("/forgot-password")} 
           className="text-right text-white/80 text-sm mt-4 cursor-pointer hover:underline"
 >
           Reset with email?
 </p>
  
-        {/* Continue Button */}
 <button
           onClick={handleContinue}
           className="mt-8 w-full bg-[#3A3146] hover:bg-[#2e2537] text-white font-semibold py-3 rounded-xl shadow-lg active:scale-[0.98] transition"

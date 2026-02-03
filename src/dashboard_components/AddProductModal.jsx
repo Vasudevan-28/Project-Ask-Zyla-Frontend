@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import ConflictModal from "./ConflictModal";
 import SuccessModal from "./SuccessModal";
 import { ThemeContext } from "../contexts/ThemeContext";
-import TimePickerr from "../TimePickerr";
+import TimePickerr from "./TimePickerr";
 
 import { getTimeFormatCookie } from "../utils/timeformatCookie" 
 

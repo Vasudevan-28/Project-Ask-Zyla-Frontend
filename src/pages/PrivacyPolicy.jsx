@@ -77,7 +77,7 @@ export default function PrivacyPolicy() {
         {/* BACK BUTTON */}
         <button
           onClick={() => navigate(-1)}
-          className="fixed top-4 left-4 w-14 h-14 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition z-50"
+          className="fixed top-4 cursor-pointer left-4 w-14 h-14 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition z-50"
         >
           <ArrowLeft size={32} />
         </button>

@@ -82,7 +82,7 @@ export default function VerificationPage() {
     try {
       if (email) {
         await verifyEmailOtp(email, otp);
-        localStorage.setItem("reset_email", email);
+        // localStorage.setItem("reset_email", email);
         navigate("/resetPassword", { state: { email }, replace: true },);
       } 
       // else if (phone) {

@@ -438,7 +438,7 @@ useEffect(() => {
         return (
           <label
             key={option}
-            className={`flex items-center space-x-2 mb-2 p-2 rounded-xl transition-all cursor-pointer ${
+            className={`flex items-center space-x-2 mb-2 p-2 rounded-lg transition-all cursor-pointer ${
               isSelected
                 ? 'bg-[#B9A3C7] text-white/90'
                 : `${isLight ? "bg-white text-slate-900 border border-slate-300 " : "bg-white/10 text-slate-50"}`
@@ -692,7 +692,7 @@ if (profileCleared) {
           {!isEditing ? (
             <button
               onClick={handleEdit}
-              className="flex items-center gap-2  bg-[#B9A3C7] text-white px-3 py-1.5 rounded-lg hover:bg-[#883885] transition-colors text-sm"
+              className="flex items-center gap-2 cursor-pointer  bg-[#B9A3C7] text-white px-3 py-1.5 rounded-lg hover:bg-[#883885] transition-colors text-sm"
             >
               <FiEdit className="w-3 h-3" />
               Edit Profile
@@ -701,14 +701,14 @@ if (profileCleared) {
             <div className="flex gap-2">
               <button
                 onClick={handleCancel}
-                className="flex items-center gap-2 bg-gray-500 text-white px-3 py-1.5 rounded-lg hover:bg-gray-600 transition-colors text-sm"
+                className="flex items-center gap-2 cursor-pointer bg-gray-500 text-white px-3 py-1.5 rounded-lg hover:bg-gray-600 transition-colors text-sm"
               >
                 <FiX className="w-3 h-3" />
                 Cancel
               </button>
               <button
                 onClick={handleSave}
-                className="flex items-center gap-2 bg-[#B9A3C7] text-white px-3 py-1.5 rounded-lg hover:bg-[#BA78A1] transition-colors text-sm"
+                className="flex items-center gap-2 cursor-pointer bg-[#B9A3C7] text-white px-3 py-1.5 rounded-lg hover:bg-[#BA78A1] transition-colors text-sm"
               >
                 <FiSave className="w-3 h-3" />
                 Save
@@ -787,9 +787,6 @@ if (profileCleared) {
       </div>
       </div>
 
-    
-   
-      {/* <FooterMain /> */}
     </div>
   );
 };

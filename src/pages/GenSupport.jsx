@@ -3,11 +3,9 @@ import { ThemeContext } from "../contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
 
 import { sendGenSupport } from "../settings_components/api/settingsAPI";
-import HeaderQP from "../home_components/HeaderQP";
-import FooterMain from "../home_components/FooterMain";
+
 import FooterPromo from "../home_components/FooterPromo";
 import Header from "../home_components/HeaderPromo";
-import HeaderMain from "../home_components/HeaderMain";
 
 function SuccessPopup({ message, onClose }) {
   const navigate = useNavigate();
@@ -32,7 +30,7 @@ function SuccessPopup({ message, onClose }) {
         <button
           onClick={() => navigate("/")}
           className="
-            px-6 py-2 rounded-md text-sm font-semibold text-white 
+            px-6 py-2 rounded-md cursor-pointer text-sm font-semibold text-white 
             bg-linear-to-r from-[#994A97] to-[#CA88B1] 
             shadow-[0_4px_10px_rgba(125,25,92,0.4)]
             hover:opacity-90 transition
@@ -46,13 +44,11 @@ function SuccessPopup({ message, onClose }) {
 }
 
 function GenSupport() {
-  // Inputs
   const [issue, setIssue] = useState("");
   const [help, setHelp] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
-  // Validation / UI
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -170,7 +166,6 @@ function GenSupport() {
       `}
     >
       <Header />
-      {/* Main */}
       <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8">
         <section
           className={`
@@ -197,7 +192,7 @@ function GenSupport() {
           <form onSubmit={handleSubmit} className="w-full">
 
             <div className="flex flex-col sm:flex-row gap-6 mb-6">
-              {/* Name */}
+              
               <div className="flex-1">
                 <label className="block mb-1.5 text-sm">
                   Name <span className="text-red-500">*</span>
@@ -216,7 +211,6 @@ function GenSupport() {
                 />
               </div>
 
-              {/* Email */}
               <div className="flex-1">
                 <label className="block mb-1.5 text-sm">
                   Email <span className="text-red-500">*</span>
@@ -239,7 +233,6 @@ function GenSupport() {
               </div>
             </div>
 
-            {/* Issue */}
             <div className="mb-5">
               <label className="block mb-1.5 text-sm">
                 What is your issue? <span className="text-red-500">*</span>
@@ -262,7 +255,6 @@ function GenSupport() {
               </div>
             </div>
 
-            {/* Help */}
             <div className="mb-6">
               <label className="block mb-1.5 text-sm">
                 How can we help? <span className="text-red-500">*</span>
@@ -285,13 +277,12 @@ function GenSupport() {
               </div>
             </div>
 
-            {/* Submit */}
             <div className="flex justify-center">
               <button
                 type="submit"
                 disabled={saving}
                 className={`
-                  px-8 sm:px-10 py-2.5 rounded-md text-sm sm:text-base font-semibold uppercase
+                  px-8 sm:px-10 py-2.5 cursor-pointer rounded-md text-sm sm:text-base font-semibold uppercase
                   text-white bg-white/20
                   transition-opacity
                   ${saving ? "opacity-60 cursor-not-allowed" : "hover:opacity-90"}

@@ -45,7 +45,6 @@ export default function Signup() {
     <div className="min-h-screen flex flex-col md:flex-row bg-[#1A0D28] relative">
       <HeaderAuth />
 
-      {/* LEFT GIF */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6 md:p-0">
  <motion.div
         initial={{ opacity: 0, x: -50 }}
@@ -61,7 +60,7 @@ export default function Signup() {
       </motion.div>
 
       </div>
-      {/* RIGHT */}
+
       <div className="w-full md:w-1/2 flex justify-center items-center px-4 md:py-10">
         <form
           className="w-full max-w-lg bg-white/20 backdrop-blur-xl shadow-xl rounded-3xl p-6 md:p-8 border border-white/30"
@@ -89,7 +88,6 @@ export default function Signup() {
               SIGN UP
             </button>
 
-              {/* OR Divider */}
             <div className="flex items-center my-2">
               <div className="grow h-px bg-gray-300"></div>
               <span className="px-3 text-gray-500 font-medium text-sm">OR</span>

@@ -2,6 +2,7 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { ChatBotApiService } from "../services/chatbot_api";
 import { useNavigate } from "react-router-dom";
+import { MdVisibilityOff } from "react-icons/md";
 
 export default function ChatBotConversations({
   createNewConversation,
@@ -10,7 +11,6 @@ export default function ChatBotConversations({
   openConversation,
   currentConversationId,
   refreshConversations,
-  isArchived,
   isMobileOpen = false,
   onClose = () => {},
 }) {
@@ -30,6 +30,10 @@ export default function ChatBotConversations({
   };
 
   const closeMenu = () => setMenuOpenFor(null);
+
+  //  useEffect(() => {
+  //     loadConversations();
+  //   }, []);
 
   useEffect(() => {
     function handleClick(e) {
@@ -52,7 +56,7 @@ export default function ChatBotConversations({
 
       <div className="flex items-center w-40 justify-between mb-4 relative z-10">
         <div className="text-base font-semibold tracking-wide drop-shadow-sm">
-          {isArchived ? "Archived Chats" : "Recent Chats"}
+          Recent Chats
         </div>
 
         <button
@@ -92,7 +96,7 @@ export default function ChatBotConversations({
                   e.stopPropagation();
                   toggleMenu(c.id);
                 }}
-                className="px-2 pr-3 text-white/80 hover:text-white transition opacity-0 group-hover:opacity-100"
+                className="pr-2 text-white/80 hover:text-white transition opacity-0 group-hover:opacity-100"
                 aria-label="Open conversation menu"
                 type="button"
               >
@@ -158,7 +162,7 @@ export default function ChatBotConversations({
       
       {isMobileOpen && (
         <div
-          className="fixed h-[85vh] w-100 rounded-2xl z-50 md:hidden"
+          className="fixed h-[85vh]  w-100 rounded-2xl z-50 md:hidden"
           
         >
           
@@ -168,14 +172,22 @@ export default function ChatBotConversations({
             aria-hidden="true"
           />
 
-          <div className={`absolute  left-0 top-0 bottom-0 w-11/12 max-w-xs  backdrop-blur-md rounded-2xl p-3 overflow-auto
+          <div className={`absolute  left-0 top-0 bottom-0 w-11/12 max-w-xs  backdrop-blur-md rounded-2xl p-3 overflow-hidden
               ${isLight ? "bg-[#e9d9e3] border border-[#1d0e2d9c] " : "bg-[#1d0e2d] border border-white/30"}
             `}>
             <div className={`flex items-center  justify-between mb-3
                ${isLight ? "text-black" : "text-white"}
               `}>
-              <div className="text-lg font-semibold">{isArchived ? "Archived Chats" : "Recent Chats"}</div>
-             
+              <div className="text-lg font-semibold">Recent Chats</div>
+              <div className="flex gap-2">
+              <button
+              className="w-8 h-8 rounded-md bg-gray-100 flex items-center justify-center text-gray-500"
+              onClick={() =>
+                navigate("/loading", { state: { nextPage: "/archivedchats" } })
+              }
+              >
+                <MdVisibilityOff />
+              </button>
               <button
                 onClick={() => {
                   createNewConversation();
@@ -186,7 +198,7 @@ export default function ChatBotConversations({
               >
                 +
               </button>
-
+</div>
             </div>
 
             <div className="overflow-y-auto" style={{ maxHeight: "calc(100vh - 140px)" }}>
@@ -272,7 +284,7 @@ export default function ChatBotConversations({
                 <div className="text-sm text-white/70 p-2">No conversations yet — create one.</div>
               )}
             </div>
-            <div className="absolute bottom-4 left-22" >
+            {/* <div className="absolute bottom-4 left-22" >
             <button
               onClick={() =>
                 navigate("/loading", { state: { nextPage: "/archivedchats" } })
@@ -285,7 +297,7 @@ export default function ChatBotConversations({
             >
               Archived Chats
             </button>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

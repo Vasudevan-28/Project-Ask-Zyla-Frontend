@@ -64,9 +64,9 @@ function Feedback({ onBack }) {
 
   return (
     <section className={`w-full md:w-[90%] max-w-[900px]  flex-1 min-w-0 h-full px-4 md:px-6 pt-4 pb-6 flex flex-col rounded-2xl overflow-y-auto ${isLight ? "bg-white text-slate-900 " : "bg-white/10 text-slate-50"}`}>
-      {/* Top row: back + title */}
+      
       <div style={{ display: "flex", alignItems: "center", marginBottom: "24px" }}>
-        <button type="button" onClick={() => onBack && onBack()}>
+        <button type="button" className="cursor-pointer"  onClick={() => onBack && onBack()}>
           <VscArrowCircleLeft size={40} />
         </button>
 
@@ -79,7 +79,7 @@ function Feedback({ onBack }) {
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="w-full max-w-[520px]">
-        {/* Name field (UI only for now) */}
+        
         <div className="mb-6">
           <label className="block mb-2 text-base">Your Name</label>
           <input
@@ -108,7 +108,7 @@ function Feedback({ onBack }) {
 
         {/* Bottom button */}
         <div className="flex justify-between items-center">
-          <button type="submit" disabled={saving} className={`px-6 py-2.5 rounded-md text-sm font-semibold tracking-wider uppercase text-white ${isLight ? "bg-linear-to-r from-[#994A97] to-[#CA88B1]" : "bg-white/10 hover:bg-white/20"} ${saving ? "opacity-70 cursor-not-allowed" : "hover:opacity-90"}`}>
+          <button type="submit" disabled={saving} className={`px-6 py-2.5 cursor-pointer rounded-md text-sm font-semibold tracking-wider uppercase text-white ${isLight ? "bg-linear-to-r from-[#994A97] to-[#CA88B1]" : "bg-white/10 hover:bg-white/20"} ${saving ? "opacity-70 cursor-not-allowed" : "hover:opacity-90"}`}>
             {saving ? "SAVING..." : "SUBMIT FEEDBACK"}
           </button>
         </div>

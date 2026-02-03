@@ -1,5 +1,3 @@
-// DateUtils.js
-// Helper functions for parsing/formatting and comparisons
 export function toISODate(date){
   if(!date) return null;
   if(typeof date === "string") return date;

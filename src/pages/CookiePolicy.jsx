@@ -19,7 +19,7 @@ export default function CookiePolicy() {
         {/* BACK BUTTON */}
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-6 left-6 w-14 h-14 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition z-50"
+          className="absolute top-6 cursor-pointer left-6 w-14 h-14 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition z-50"
         >
           <ArrowLeft size={28} />
         </button>

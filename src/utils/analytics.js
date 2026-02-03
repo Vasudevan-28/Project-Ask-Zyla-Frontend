@@ -1,10 +1,11 @@
 export function loadAnalytics() {
+  const GACODE = import.meta.env.VITE_GACODE
   if (window.__gaLoaded) return;
   window.__gaLoaded = true;
 
   const script = document.createElement("script");
   script.async = true;
-  script.src = "https://www.googletagmanager.com/gtag/js?id=G-03H4Q3B576";
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GACODE}`;
   document.head.appendChild(script);
 
   window.dataLayer = window.dataLayer || [];
@@ -14,5 +15,5 @@ export function loadAnalytics() {
   window.gtag = gtag;
 
   gtag("js", new Date());
-  gtag("config", "G-03H4Q3B576", { anonymize_ip: true });
+  gtag("config", GACODE, { anonymize_ip: true });
 }

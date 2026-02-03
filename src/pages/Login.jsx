@@ -177,7 +177,7 @@ const handleLogin = async (e) => {
     const status = error?.response?.status
 
 if (status === 404) {
-  setPasswordError("User Not Found")
+  setEmailPhoneError("User Not Found")
 }
 else if (status === 401) {
   registerFailedAttempt();
