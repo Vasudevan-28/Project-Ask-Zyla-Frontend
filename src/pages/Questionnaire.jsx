@@ -73,7 +73,7 @@ function Questionnaire() {
             </h2>
           </div>
 
-          {/* Question Image - hidden on small screens to save space */}
+          {/* Question Image*/}
           {q.image && (
             <div className="hidden md:block ml-4">
               <img src={q.image} alt="illustration" className="w-40 md:w-50 shrink-0" />

@@ -388,7 +388,7 @@ useEffect(() => {
 
                 <button
                   onClick={handleSignupClick}
-                  className="px-6 py-3 w-full rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition-all"
+                  className="px-6 py-3 w-full cursor-pointer rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition-all"
                 >
                   Sign up / Login
                 </button>

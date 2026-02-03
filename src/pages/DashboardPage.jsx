@@ -26,36 +26,35 @@ export default function DashboardPage() {
   const selectedIso = toISODate(selectedDate);
 
 
-  useEffect(() => {
-    function onOpenAddProduct() {
-      setShowAddProduct(true);
-    }
-    window.addEventListener("askzyla:open-add-product", onOpenAddProduct);
-    return () => {
-      window.removeEventListener("askzyla:open-add-product", onOpenAddProduct);
-    };
-  }, []);
+  // useEffect(() => {
+  //   function onOpenAddProduct() {
+  //     setShowAddProduct(true);
+  //   }
+  //   window.addEventListener("askzyla:open-add-product", onOpenAddProduct);
+  //   return () => {
+  //     window.removeEventListener("askzyla:open-add-product", onOpenAddProduct);
+  //   };
+  // }, []);
 
-  useEffect(() => {
-    function onOpenAddProduct() {
-      setShowAddProduct(true);
-    }
+  // useEffect(() => {
+  //   function onOpenAddProduct() {
+  //     setShowAddProduct(true);
+  //   }
 
-    async function onTodosUpdated() {
+  //   async function onTodosUpdated() {
    
-        fetchCompletedDates();
-    }
+  //       fetchCompletedDates();
+  //   }
 
-    window.addEventListener("askzyla:open-add-product", onOpenAddProduct);
-    window.addEventListener("zyla:todos-updated", onTodosUpdated);
-    return () => {
-      window.removeEventListener("askzyla:open-add-product", onOpenAddProduct);
-      window.removeEventListener("zyla:todos-updated", onTodosUpdated);
-    };
-  }, []);
+  //   window.addEventListener("askzyla:open-add-product", onOpenAddProduct);
+  //   window.addEventListener("zyla:todos-updated", onTodosUpdated);
+  //   return () => {
+  //     window.removeEventListener("askzyla:open-add-product", onOpenAddProduct);
+  //     window.removeEventListener("zyla:todos-updated", onTodosUpdated);
+  //   };
+  // }, []);
 
   useEffect(() => {
-   
     fetchRoutines();
     fetchCompletedDates();
   }, []);

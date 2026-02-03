@@ -1,12 +1,12 @@
 import React, { useContext} from "react";
-import { ThemeContext } from "../contexts/ThemeContext";
+// import { ThemeContext } from "../contexts/ThemeContext";
 import ZaLogo from "../assets/ZaLogo.png";
 
 export default function HeaderNew() {
   
-    const { theme, toggleTheme } = useContext(ThemeContext); 
+  //   const { theme, toggleTheme } = useContext(ThemeContext); 
 
-  const knobPositionRight = theme === "dark";
+  // const knobPositionRight = theme === "dark";
 
 return (
   <>

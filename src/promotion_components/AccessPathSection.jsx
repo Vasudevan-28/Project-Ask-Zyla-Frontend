@@ -11,8 +11,8 @@ const AccessPathSection = () => {
   const steps = [
     {
       num: 1,
-      text: "Sign in and let me meet you. Google, Apple, email… however you want to say hello.",
-      btn: "SIGN IN"
+      text: "Sign up and let me meet you. Google, Apple, email… however you want to say hello.",
+      btn: "SIGN UP"
     },
     {
       num: 2,
