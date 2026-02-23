@@ -299,7 +299,7 @@ console.log("navigated to success")
                     err = "Date cannot be earlier than 1950";
                   } else {
                     const age = (now - dob) / (1000 * 60 * 60 * 24 * 365.25);
-                    if (age < 13) err = "You must be at least 13 years old";
+                    if (age < 5) err = "You must be at least 5 years old";
                   }
 
                   setErrors((prev) => ({ ...prev, dob: err }));

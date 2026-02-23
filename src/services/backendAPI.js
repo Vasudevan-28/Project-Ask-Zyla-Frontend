@@ -71,12 +71,12 @@ export const verifyEmailOtp = async (email, otp) => {       // paxx     // Verif
 
 
 // ---------------------- RESET PASSWORD ----------------------
-export const resetEmailPassword = async (new_password) => {
+export const resetEmailPassword = async (email,new_password) => {
   try {
     const { data } = await apiClient.post(     // paxx       // NewPassword & ResetPassword & RegistrationPage
-      `/auth/resetpassemail`,
-      // { email, new_password }
-      { new_password}
+      `/auth/forgotpassemail`,
+      { email, new_password }
+      // { new_password}
     );
     return data;
   } catch (error) {
