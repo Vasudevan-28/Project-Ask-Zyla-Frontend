@@ -253,6 +253,7 @@ function Profile() {
                     type="text"
                     className={inputClass}
                     value={form.name}
+                    maxLength={30}
                     onChange={handleChange}
                   />
                 ) : (
@@ -327,6 +328,7 @@ function Profile() {
                     type="text"
                     className={inputClass}
                     value={form.city}
+                    maxLength={20}
                     onChange={handleChange}
                   />
                 ) : (
@@ -345,6 +347,7 @@ function Profile() {
                     type="text"
                     className={inputClass}
                     value={form.state}
+                    maxLength={20}
                     onChange={handleChange}
                   />
                 ) : (

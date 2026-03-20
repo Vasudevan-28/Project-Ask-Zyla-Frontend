@@ -46,6 +46,7 @@ export default function SearchBar({ onSearch }) {
           aria-label="Search date (DD/MM/YYYY)"
           placeholder="Search tasks by date (dd/mm/yyyy)"
           value={value}
+          maxLength={10}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={onKeyDown}
           className={`font-bold pr-12 rounded-[15px] focus:outline-none focus:ring-2 focus:ring-purple-400 w-full

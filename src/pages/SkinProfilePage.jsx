@@ -580,6 +580,7 @@ useEffect(() => {
           {hasValue && (
             <textarea
               value={details}
+              maxLength={200}
               onChange={(e) =>
                 setTempData((prev) => ({
                   ...prev,
